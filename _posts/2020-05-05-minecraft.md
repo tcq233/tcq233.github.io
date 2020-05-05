@@ -74,10 +74,11 @@ Tab：玩家列表
 ```
 ## 我的世界游戏服务器
 
-让我们看看 “我的世界”服务器最低要求：
+我的世界服务器最低要求：
+
 CPU：双核或更好。
+
 内存： 2 GB （20-40 用户量)，3 GB（30-60 用户量），8 GB（60+ 用户量）。
-系统： 不需要图形化用户接口，可以留出更多的空闲资源。
 
 ## 配置服务器代码
 ```
@@ -100,8 +101,8 @@ wget http://files.minecraftforge.net/maven/net/minecraftforge/forge/1.7.10-10.13
 java -jar forge-1.7.10-10.13.2.1291-installer.jar nogui --installServer #安装forge
 java -jar forge-1.7.10-10.13.2.1291-universal.jar nogui  #启动forge
 
- /stop
 java -Xmx1024M -Xms1024M -jar minecraft_server.1.14.4.jar nogui  #启动游戏服务端
+/stop 停止游戏服务端
 ```
 1.14.4版本
 -Xms:初始启动分配的内存（-Xms512m）
