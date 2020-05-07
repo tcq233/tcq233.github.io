@@ -126,9 +126,9 @@ EULA=True
 eula =true
 eula= true
 eula = true
-```
+````
 
-```
+````
 #Minecraft server properties
 #Fri Jan 05 22:45:30 CST 2018
 generator-settings=
