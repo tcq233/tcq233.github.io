@@ -74,9 +74,7 @@ Tab：玩家列表
 ```
 ## 我的世界游戏服务器
 
-> 我的世界服务器最低要求：CPU：双核或更好。
-
-> 内存： 2 GB （20-40 用户量)，3 GB（30-60 用户量），8 GB（60+ 用户量）。
+> 服务器最低要求：CPU：双核或更好。内存： 2 GB （20-40 用户量)，3 GB（30-60 用户量），8 GB（60+ 用户量）。
 
 ## 配置服务器代码
 
@@ -102,14 +100,13 @@ java -jar forge-1.7.10-10.13.2.1291-universal.jar nogui  #启动forge
 
 java -Xmx1024M -Xms1024M -jar minecraft_server.1.14.4.jar nogui  #启动游戏服务端
 /stop 停止游戏服务端
+
+#-Xms:初始启动分配的内存（-Xms512m）
+#-Xmx:最大分配的内存（-Xmx1024m）
+#nogui:用于以基于文本的界面来显示，可减少内存使用。如果使用图形化界面，那么移除nogui选项。
 ```
-> -Xms:初始启动分配的内存（-Xms512m）-Xmx:最大分配的内存（-Xmx1024m）
 
-> nogui:用于以基于文本的界面来显示，可减少内存使用。如果使用图形化界面，那么移除nogui选项。
-
-> 首次启动不会成功启动，会生成一个eula.txt 文件。
-
-> 用vim打开，将行 eula = false 更改为 eula = true，并保存文件，表示同意许可协议，然后重新运行启动游戏服务的命令。
+> 首次启动不会成功启动，会生成一个eula.txt 文件。 用vim打开，将行 eula = false 更改为 eula = true，并保存文件，表示同意许可协议，然后重新运行启动游戏服务的命令。
 
 ````
 #By changing the setting below to TRUE you are indicating your agreement to our EULA (https://account.mojang.com/documents/minecraft_eula).
@@ -128,15 +125,7 @@ eula = true
 
 ## 服务器配置文件
 
-如果客户端连接报错，修改服务器端server.propertices文件：
-
-把 online_mode=true 改成online_mode=false，重启服务再试。
-
-这个选项表示是否连接正版服务器验证用户。
-
-其中server.propertices是mc服务端配置文件，可设置游戏难度、世界类型、
-
-游戏模式、允许玩家数量、世界大小、黑白名单等等。配置文件内容：
+> 如果客户端连接报错，修改服务器端server.propertices文件：把 online_mode=true 改成online_mode=false，重启服务再试。这个选项表示是否连接正版服务器验证用户。其中server.propertices是mc服务端配置文件，可设置游戏难度、世界类型、游戏模式、允许玩家数量、世界大小、黑白名单等等。配置文件内容：
 
 ```
 #Minecraft server properties
