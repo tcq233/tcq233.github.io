@@ -98,14 +98,14 @@ wget http://files.minecraftforge.net/maven/net/minecraftforge/forge/1.7.10-10.13
 java -jar forge-1.7.10-10.13.2.1291-installer.jar nogui --installServer #安装forge
 java -jar forge-1.7.10-10.13.2.1291-universal.jar nogui  #启动forge
 
-java -Xmx1024M -Xms1024M -jar minecraft_server.1.14.4.jar nogui  #启动游戏服务端
+java -Xmx1024M -Xms1024M -jar minecraft_server.1.14.4.jar nogui  #启动游戏服务端 
+
 /stop 停止游戏服务端
 
 #-Xms:初始启动分配的内存（-Xms512m）
 #-Xmx:最大分配的内存（-Xmx1024m）
 #nogui:用于以基于文本的界面来显示，可减少内存使用。如果使用图形化界面，那么移除nogui选项。
 ```
-
 
 ## 服务器配置文件
 
