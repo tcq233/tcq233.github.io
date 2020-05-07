@@ -74,7 +74,9 @@ Tab：玩家列表
 ```
 ## 我的世界游戏服务器
 
-> 我的世界服务器最低要求：CPU：双核或更好。内存： 2 GB （20-40 用户量)，3 GB（30-60 用户量），8 GB（60+ 用户量）。
+> 我的世界服务器最低要求：CPU：双核或更好。
+
+> 内存： 2 GB （20-40 用户量)，3 GB（30-60 用户量），8 GB（60+ 用户量）。
 
 ## 配置服务器代码
 
@@ -101,15 +103,13 @@ java -jar forge-1.7.10-10.13.2.1291-universal.jar nogui  #启动forge
 java -Xmx1024M -Xms1024M -jar minecraft_server.1.14.4.jar nogui  #启动游戏服务端
 /stop 停止游戏服务端
 ```
--Xms:初始启动分配的内存（-Xms512m）
+> -Xms:初始启动分配的内存（-Xms512m）-Xmx:最大分配的内存（-Xmx1024m）
 
--Xmx:最大分配的内存（-Xmx1024m）
+> nogui:用于以基于文本的界面来显示，可减少内存使用。如果使用图形化界面，那么移除nogui选项。
 
-nogui:用于以基于文本的界面来显示，可减少内存使用。如果使用图形化界面，那么移除nogui选项。
+> 首次启动不会成功启动，会生成一个eula.txt 文件。
 
-首次启动不会成功启动，会生成一个eula.txt 文件。
-
-用vim打开，将行 eula = false 更改为 eula = true，并保存文件，表示同意许可协议，然后重新运行启动游戏服务的命令。
+> 用vim打开，将行 eula = false 更改为 eula = true，并保存文件，表示同意许可协议，然后重新运行启动游戏服务的命令。
 
 ````
 #By changing the setting below to TRUE you are indicating your agreement to our EULA (https://account.mojang.com/documents/minecraft_eula).
