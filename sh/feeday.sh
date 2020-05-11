@@ -178,7 +178,7 @@ function nx(){
 }
 
 echo "------------------------------------------------------------"
-echo 'CentOS 7 Configure By Puck:'
+echo 'CentOS 7 Configure By Feeday:'
 echo "1) Install Software" #安装常用软件
 echo "2) AppNode Web" #安装网页管理软件
 echo "3) Test Serve" #测试服务器
