@@ -195,12 +195,13 @@
 
 
 <!-- jquery.murlgo.js -->
-<script language="javascript" type="text/javascript">
-function goPAGE() {
-	if ((navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
-		window.location.href="https://feeday.github.io/m/";
-}
-goPAGE();
+<script language='javascript'>
+function is_mobile() {
+ var regex_match = /(nokia|iphone|android|motorola|^mot-|softbank|foma|docomo|kddi|up.browser|up.link|htc|dopod|blazer|netfront|helio|hosin|huawei|novarra|CoolPad|webos|techfaith|palmsource|blackberry|alcatel|amoi|ktouch|nexian|samsung|^sam-|s[cg]h|^lge|ericsson|philips|sagem|wellcom|bunjalloo|maui|symbian|smartphone|midp|wap|phone|windows ce|iemobile|^spice|^bird|^zte-|longcos|pantech|gionee|^sie-|portalmmm|jigs browser|hiptop|^benq|haier|^lct|operas*mobi|opera*mini|320x320|240x320|176x220)/i;
+ var u = navigator.userAgent;
+ if (is_mobile()) {
+ document.location.href= 'https://feeday.github.io/m/';
+ }
 </script>
 
 <!-- jquery.tagcloud.js -->
