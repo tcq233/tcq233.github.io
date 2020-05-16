@@ -111,7 +111,6 @@ function mc(){
 	java -jar minecraft_server.1.7.10.jar nogui
 }
 
-function mcs(){
 echo "------------------------------------------------------------"
 echo 'Minecraft Server By Feeday:'
 echo "1) Net-IPtables-Web-SSH" 
@@ -146,5 +145,3 @@ case $cof in
 		exit
 	;; 	
 esac   
-
-}
