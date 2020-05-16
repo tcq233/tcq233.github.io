@@ -21,7 +21,6 @@ iptables -X      #清空所有自定义规则
 iptables -Z      #所有计数器归0
 
 iptables -A INPUT -p tcp --dport 22 -j ACCEPT   #开放22端口
-iptables -A INPUT -p tcp --dport 7681 -j ACCEPT   #开放25565端口(ttyd)
 iptables -A INPUT -p tcp --dport 25565 -j ACCEPT   #开放25565端口(minecraft)
 iptables -A INPUT -p icmp --icmp-type 8 -j ACCEPT  #允许ping
 
@@ -41,42 +40,6 @@ systemctl start iptables.service    #启动服务
 systemctl status iptables.service   #查看服务状态
 iptables -L -n #查看防火墙规则
 nmap localhost #查看开放的端口
-}
-
-function et2(){
-cat > ttyd.service <<END
-[Unit]
-Description=ttyd
-After=network.target
-
-[Service]
-ExecStart=/usr/sbin/ttyd -c feeday:feeday.io bash
-
-[Install]
-WantedBy=multi-user.target
-END
-}
-
-#终端网页管理服务
-function sweb(){
-wget -O ttyd https://github.com/tsl0922/ttyd/releases/download/1.6.0/ttyd_linux.x86_64
-chmod +x ttyd #添加执行权限
-mv ttyd /usr/sbin #移动目录
-
-cd /etc/systemd/system/
-touch ttyd.service
-et2
-
-systemctl start ttyd #启动ttyd
-systemctl enable ttyd #开机启动
-systemctl restart ttyd #重启ttyd
-
-ttyd -v
-
-echo 'SSH WEB：IP:7681'
-echo 'SSH WEB USER：feeday'
-echo 'SSH WEB PASS：feeday.io'
-
 }
 
 
@@ -111,9 +74,10 @@ function mc(){
 	java -jar minecraft_server.1.7.10.jar nogui
 }
 
+
 echo "------------------------------------------------------------"
 echo 'Minecraft Server By Feeday:'
-echo "1) Net-IPtables-Web-SSH" 
+echo "1) Server Management APPNode" 
 echo "2) MC-Service-Install" 
 echo "3) MC-Service-Start" 
 echo "4) MC-Forge-Start" 
@@ -124,7 +88,7 @@ read -p ":" cof
 case $cof in      
 	1)   
 		ips
-		sweb
+		INSTALL_AGENT=1 INIT_SWAPFILE=1 bash -c "$(curl -sS http://dl.appnode.com/install.sh)"
 	;;
 	2)   
 		mc
