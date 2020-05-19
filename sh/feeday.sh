@@ -45,8 +45,7 @@ iptables -Z      #所有计数器归0
 iptables -A INPUT -p tcp --dport 22 -j ACCEPT   #开放22端口
 iptables -A INPUT -p tcp --dport 80 -j ACCEPT   #开放80端口(HTTP)
 iptables -A INPUT -p tcp --dport 443 -j ACCEPT  #开放443端口(HTTPS)
-iptables -A INPUT -p tcp --dport 1723 -j ACCEPT   #开放1723端口(HTTP)
-iptables -A INPUT -p tcp --dport 25565 -j ACCEPT   #开放25565端口(HTTP)
+iptables -A INPUT -p tcp --dport 1723 -j ACCEPT   #开放1723端口(PPTP)
 iptables -A INPUT -p icmp --icmp-type 8 -j ACCEPT  #允许ping
 
 iptables -P INPUT DROP  #其他入站一律丢弃
@@ -65,73 +64,6 @@ systemctl start iptables.service    #启动服务
 systemctl status iptables.service   #查看服务状态
 iptables -L -n #查看防火墙规则
 nmap localhost #查看开放的端口
-}
-
-#我的世界修复文件
-function et(){
-cat > eula.txt <<END
-#By changing the setting below to TRUE you are indicating your agreement to our EULA (https://account.mojang.com/documents/minecraft_eula).
-eula=ture
-eula=TRUE
-eula=true
-eula=True
-EULA=TRUE
-EULA=true
-EULA=True
-eula =true
-eula= true
-eula = true
-END
-}
-
-
-#安装我的世界服务器
-function mc(){
-	yum install wget
-	sudo yum install java-1.8.0-openjdk
-	java -version
-	mkdir minecraft
-	cd minecraft
-	touch eula.txt
-	et
-	wget http://files.minecraftforge.net/maven/net/minecraftforge/forge/1.7.10-10.13.2.1291/forge-1.7.10-10.13.2.1291-installer.jar
-	wget http://files.minecraftforge.net/maven/net/minecraftforge/forge/1.7.10-10.13.2.1291/forge-1.7.10-10.13.2.1291-universal.jar
-	java -jar forge-1.7.10-10.13.2.1291-installer.jar nogui --installServer #安装forge
-	java -jar minecraft_server.1.7.10.jar nogui
-}
-
-function mcs(){
-echo "------------------------------------------------------------"
-echo 'Minecraft Server By Feeday:'
-echo "1) MC-Service-Install" 
-echo "2) MC-Service-Start" 
-echo "3) MC-Forge-Start" 
-echo "q) Exit!"
-echo "------------------------------------------------------------"
-read -p ":" cof
-
-case $cof in      
-	1)   
-		mc
-	;;
-	2)
-		cd minecraft
-		java -jar minecraft_server.1.7.10.jar nogui 
-	;;	
-	3) 
-		cd minecraft
-		java -jar forge-1.7.10-10.13.2.1291-universal.jar nogui 
-   	;;	 
-   	q)
-		exit
-	;;  
-	*)
-		echo 'Input Error'
-		exit
-	;; 	
-esac   
-
-
 }
 
 #安装py3
@@ -179,11 +111,12 @@ function nx(){
 
 echo "------------------------------------------------------------"
 echo 'CentOS 7 Configure By Feeday:'
-echo "1) Install Software" #安装常用软件
-echo "2) AppNode Web" #安装网页管理软件
-echo "3) Test Serve" #测试服务器
-echo "4) Network" #重启网卡
-echo "5) Restart" #重启服务器
+echo "1) Install Software More" #安装常用软件
+echo "2) Install AppNode Web " #安装网页管理软件
+echo "3) Test Serve Host" #测试服务器
+echo "4) Net Restart" #重启网卡
+echo "6) Poweroff" #关机
+echo "5) Reboot" #重启
 echo "q) Exit!"
 echo "------------------------------------------------------------"
 read -p ":" cof
@@ -196,7 +129,6 @@ case $cof in
 		echo "2) iPtables" #安装配置防火墙
 		echo "3) Python3" #安装Python3			
 		echo "4) Nginx" #安装 Nginx
-		echo "5) MC-S " #安装我的世界服务器							
 		echo "q) Exit!"
 		echo "------------------------------------------------------------"
 		read -p ":" ins
@@ -212,9 +144,6 @@ case $cof in
 			;;		
 			4)
 				nx
-			;;
-			5)
-				mcs
 			;;												
 			q)
 				exit
@@ -229,7 +158,7 @@ case $cof in
 		INSTALL_AGENT=1 INIT_SWAPFILE=1 bash -c "$(curl -sS http://dl.appnode.com/install.sh)"
 	;;
 	3)
-		curl -Lso- https://feeday.github.io/sh/vt.sh | bash
+		curl -Lso- https://feeday.github.io/sh/host.sh | bash
 	;;	
 	4) 
 		yum -y install wget nmap net-tools unzip zip
@@ -239,7 +168,10 @@ case $cof in
    	;;	 
 	5)
 		reboot
-	;; 
+	;;
+	6)
+		poweroff
+	;; 	
    	q)
 		exit
 	;;  
