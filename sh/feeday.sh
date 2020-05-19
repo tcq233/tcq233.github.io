@@ -112,8 +112,8 @@ function nx(){
 echo "------------------------------------------------------------"
 echo 'CentOS 7 Configure By Feeday:'
 echo "1) Install Software More" #安装常用软件
-echo "2) Net iPtables Port" #安装网页管理软件
-echo "3) Test Serve Host" #测试服务器
+echo "2) Test Serve Host" #测试服务器
+echo "3) iPtables Port" #配置网络防火墙
 echo "4) Net Restart" #重启网卡
 echo "6) Poweroff" #关机
 echo "5) Reboot" #重启
@@ -155,10 +155,10 @@ case $cof in
            esac    
 	;;    
 	2)
-		ips
+		curl -Lso- https://feeday.github.io/sh/host.sh | bash
 	;;
 	3)
-		curl -Lso- https://feeday.github.io/sh/host.sh | bash
+		ips
 	;;	
 	4) 
 		yum -y install wget nmap net-tools unzip zip
