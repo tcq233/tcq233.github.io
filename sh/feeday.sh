@@ -112,7 +112,7 @@ function nx(){
 echo "------------------------------------------------------------"
 echo 'CentOS 7 Configure By Feeday:'
 echo "1) Install Software More" #安装常用软件
-echo "2) Install AppNode Web " #安装网页管理软件
+echo "2) Net iPtables Port" #安装网页管理软件
 echo "3) Test Serve Host" #测试服务器
 echo "4) Net Restart" #重启网卡
 echo "6) Poweroff" #关机
@@ -125,8 +125,8 @@ case $cof in
 	1) 
 		echo "------------------------------------------------------------"
 		echo 'Software Install By Feeday:'
-		echo "1) Net-Tools" #安装常用网络工具
-		echo "2) iPtables" #安装配置防火墙
+		echo "1) AppNode Web" #安装服务器管理软件
+		echo "2) Net-Tools" #安装常用网络工具
 		echo "3) Python3" #安装Python3			
 		echo "4) Nginx" #安装 Nginx
 		echo "q) Exit!"
@@ -134,10 +134,10 @@ case $cof in
 		read -p ":" ins
 		case $ins in    
 			1)
-				nt
+				INSTALL_AGENT=1 INIT_SWAPFILE=1 bash -c "$(curl -sS http://dl.appnode.com/install.sh)"
 			;;
 			2)
-				ips
+				nt
 			;;
 			3)
 				py3
@@ -155,7 +155,7 @@ case $cof in
            esac    
 	;;    
 	2)
-		INSTALL_AGENT=1 INIT_SWAPFILE=1 bash -c "$(curl -sS http://dl.appnode.com/install.sh)"
+		ips
 	;;
 	3)
 		curl -Lso- https://feeday.github.io/sh/host.sh | bash
