@@ -78,9 +78,10 @@ function mc(){
 echo "------------------------------------------------------------"
 echo 'Minecraft Server By Feeday:'
 echo "1) Server Management APPNode" 
-echo "2) MC-Service-Install" 
-echo "3) MC-Service-Start" 
-echo "4) MC-Forge-Start" 
+echo "2) Test Host Network Server " 
+echo "3) MC-Service-Install" 
+echo "4) MC-Service-Start" 
+echo "5) MC-Forge-Start" 
 echo "q) Exit!"
 echo "------------------------------------------------------------"
 read -p ":" cof
@@ -91,13 +92,16 @@ case $cof in
 		INSTALL_AGENT=1 INIT_SWAPFILE=1 bash -c "$(curl -sS http://dl.appnode.com/install.sh)"
 	;;
 	2)   
+		bash -c "$(curl -sS http://feeday.github.io/sh/host.sh)"
+	;;	
+	3)   
 		mc
 	;;
-	3)
+	4)
 		cd minecraft
 		java -jar minecraft_server.1.7.10.jar nogui 
 	;;	
-	4) 
+	5) 
 		cd minecraft
 		java -jar forge-1.7.10-10.13.2.1291-universal.jar nogui 
    	;;	 
