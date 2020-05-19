@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
-#!/usr/bin/env bash
 # Description: Auto test download & I/O speed script
 # Edit Revision VPS.BEST Teddysun <i@teddysun.com>
 # Copyright (C) 2020 feeday <0xf197@gmail.com>
@@ -174,7 +173,7 @@ go(){
 	system_info
 	io_test "io_test_1"
 	io_test "io_test_2"
-    speed
+        speed
 	backtracetest
 	[[ ${action} == "a" ]] && benchtest
 	echo "測試脚本执行完毕！日志文件: ${logfile}"
