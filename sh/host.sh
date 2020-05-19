@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
+#!/usr/bin/env bash
 # Description: Auto test download & I/O speed script
-# Copyright (C) 2015 - 2016 Teddysun <i@teddysun.com>
-# Thanks: LookBack <admin@dwhd.org>
-# Teddysun: https://teddysun.com/444.html
-# Toyo: https://doub.io
-# For https://VPS.BEST
+# Edit Revision VPS.BEST Teddysun <i@teddysun.com>
+# Copyright (C) 2020 feeday <0xf197@gmail.com>
 
 RED='\033[0;31m' && GREEN='\033[0;32m' && YELLOW='\033[0;33m' && PLAIN='\033[0m'
 next() { printf "%-70s\n" "-" | sed 's/\s/-/g'; }
@@ -141,50 +139,8 @@ speed_test() {
 }
 speed() {
 	printf "%-32s%-24s%-14s\n" "Node Name:" "IPv4 address:" "Download Speed"
-#    speed_test 'http://cachefly.cachefly.net/100mb.test' 'CacheFly'
-	speed_test 'http://speedtest.tokyo.linode.com/100MB-tokyo.bin' 'Linode, Tokyo, JP'
-	speed_test 'http://speedtest.tokyo2.linode.com/100MB-tokyo2.bin' 'Linode, Tokyo2, JP'
-	speed_test 'http://speedtest.singapore.linode.com/100MB-singapore.bin' 'Linode, Singapore, SG'
-	speed_test 'http://speedtest.fremont.linode.com/100MB-fremont.bin' 'Linode, Fremont, CA'
-	speed_test 'http://speedtest.newark.linode.com/100MB-newark.bin' 'Linode, Newark, NJ'
-	speed_test 'http://speedtest.london.linode.com/100MB-london.bin' 'Linode, London, UK'
-	speed_test 'http://speedtest.frankfurt.linode.com/100MB-frankfurt.bin' 'Linode, Frankfurt, DE'
-	speed_test 'http://speedtest.tok02.softlayer.com/downloads/test100.zip' 'Softlayer, Tokyo, JP'
-	speed_test 'http://speedtest.sng01.softlayer.com/downloads/test100.zip' 'Softlayer, Singapore, SG'
-	speed_test 'http://speedtest.sng01.softlayer.com/downloads/test100.zip' 'Softlayer, Seoul, KR'
-	speed_test 'http://speedtest.hkg02.softlayer.com/downloads/test100.zip' 'Softlayer, HongKong, CN'
-	speed_test 'http://speedtest.dal13.softlayer.com/downloads/test100.zip' 'Softlayer, Dallas, TX'
-	speed_test 'http://speedtest.sea01.softlayer.com/downloads/test100.zip' 'Softlayer, Seattle, WA'
-	speed_test 'http://speedtest.fra02.softlayer.com/downloads/test100.zip' 'Softlayer, Frankfurt, DE'
-	speed_test 'http://speedtest.par01.softlayer.com/downloads/test100.zip' 'Softlayer, Paris, FR'
-	speed_test 'http://mirror.hk.leaseweb.net/speedtest/100mb.bin' 'Leaseweb, HongKong, CN'
-	speed_test 'http://mirror.sg.leaseweb.net/speedtest/100mb.bin' 'Leaseweb, Singapore, SG'
-	speed_test 'http://chi.testfiles.ubiquityservers.com/100mb.txt' 'Leaseweb, Chicago, US'
-#	speed_test 'http://phx.testfiles.ubiquityservers.com/100mb.txt' 'Leaseweb, Phoenix, US'
-	speed_test 'http://mirror.wdc1.us.leaseweb.net/speedtest/100mb.bin' 'Leaseweb, Washington D.C., US'
-	speed_test 'http://chi.testfiles.ubiquityservers.com/100mb.txt' 'Leaseweb, Chicago, US'
-	speed_test 'http://mirror.sfo12.us.leaseweb.net/speedtest/100mb.bin' 'Leaseweb, San Francisco, US'
-	speed_test 'http://mirror.nl.leaseweb.net/speedtest/100mb.bin' 'Leaseweb, Netherlands, NL'
-	speed_test 'http://proof.ovh.ca/files/100Mio.dat' 'OVH, Montreal, CA'
-	speed_test 'http://183.60.137.161/dl.softmgr.qq.com/original/game/DuiZhanSetup1_8_4_2042_win10.exe' 'ChinaTelecom, Dongguan, CN'
-	speed_test 'http://14.29.72.152/dl.softmgr.qq.com/original/game/DuiZhanSetup1_8_4_2042_win10.exe' 'ChinaTelecom, Foshan, CN'
-	speed_test 'http://222.73.131.40/dl.softmgr.qq.com/original/game/DuiZhanSetup1_8_4_2042_win10.exe' 'ChinaTelecom, Shanghai, CN'
-	speed_test 'http://163.177.153.71/dl.softmgr.qq.com/original/game/DuiZhanSetup1_8_4_2042_win10.exe' 'ChinaUnicom, Foshan, CN'
-	speed_test 'http://112.90.51.172/dl.softmgr.qq.com/original/game/DuiZhanSetup1_8_4_2042_win10.exe' 'ChinaUnicom, Zhongshan, CN'
-	speed_test 'http://111.202.98.38/dl.softmgr.qq.com/original/game/DuiZhanSetup1_8_4_2042_win10.exe' 'ChinaUnicom, Beijing, CN'
-	speed_test 'http://223.82.245.41/dl.softmgr.qq.com/original/game/DuiZhanSetup1_8_4_2042_win10.exe' 'ChinaMobile, Jiangxi, CN'
-	speed_test 'http://61.233.79.5/setup.exe' 'ChinaTieTong, Henan, CN'
-	speed_test 'http://101.4.60.106/setup.exe' 'CERNET, Beijing, CN'
-	speed_test 'http://mirrors.opencas.org/apache/ode/apache-ode-war-1.3.6.zip' 'CSTNET, Beijing, CN'
-	speed_test 'http://tpdb.speed2.hinet.net/test_100m.zip' 'Hinet, Taiwan, TW'
-	next | tee -a $logfile
-}
-speed_test_cli(){
-	echo "===== 开始speedtest =====" | tee -a $logfile
-	wget -q --no-check-certificate https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py && 
-	python speedtest.py --share | tee -a $logfile
-	echo -e "===== speedtest完成 =====" | tee -a $logfile
-	rm -rf speedtest.py
+# speed_test 'http://cachefly.cachefly.net/100mb.test' 'CacheFly'
+	speed_test 'https://dldir1.qq.com/weixin/Windows/WeChatSetup.exe' 'WeChat, EXE, CN'	
 	next | tee -a $logfile
 }
 mtrgo(){
@@ -205,45 +161,10 @@ mtrback(){
 }
 tracetest(){
 	mtrgo "http://www.ipip.net/traceroute.php?as=1&a=get&n=1&id=254&ip=$IP" "北京电信"
-	mtrgo "http://www.ipip.net/traceroute.php?as=1&a=get&n=1&id=275&ip=$IP" "上海电信"
-	mtrgo "http://www.ipip.net/traceroute.php?as=1&a=get&n=1&id=163&ip=$IP" "金华电信"
-	mtrgo "http://www.ipip.net/traceroute.php?as=1&a=get&n=1&id=274&ip=$IP" "广州电信"
-	mtrgo "http://www.ipip.net/traceroute.php?as=1&a=get&n=1&id=20&ip=$IP" "厦门电信CN2"
-	mtrgo "http://www.ipip.net/traceroute.php?as=1&a=get&n=1&id=7&ip=$IP" "天津联通"
-	mtrgo "http://www.ipip.net/traceroute.php?as=1&a=get&n=1&id=12&ip=$IP" "重庆联通"
-	mtrgo "http://www.ipip.net/traceroute.php?as=1&a=get&n=1&id=298&ip=$IP" "金华联通"
-	mtrgo "http://www.ipip.net/traceroute.php?as=1&a=get&n=1&id=339&ip=$IP" "福州联通"
-	mtrgo "http://www.ipip.net/traceroute.php?as=1&a=get&n=1&id=2&ip=$IP" "天津移动"
-	mtrgo "http://www.ipip.net/traceroute.php?as=1&a=get&n=1&id=315&ip=$IP" "镇江移动"
-	mtrgo "http://www.ipip.net/traceroute.php?as=1&a=get&n=1&id=160&ip=$IP" "北京教育网"
-	mtrgo "http://www.ipip.net/traceroute.php?as=1&a=get&n=1&id=41&ip=$IP" "北京鹏博士"
 	next | tee -a $logfile
 }
 backtracetest(){
-	mtrback "183.60.137.161" "东莞电信"
-	mtrback "14.29.72.152" "佛山电信"
-	mtrback "222.73.131.40" "上海电信"
-	mtrback "163.177.153.71" "佛山联通"
-	mtrback "112.90.51.172" "舟山联通"
-	mtrback "111.202.98.38" "北京联通"
-	mtrback "223.82.245.41" "江西移动"
-	mtrback "101.4.60.106" "北京科技网"
-	next | tee -a $logfile
-}
-benchtest(){
-	if ! wget -qc http://lamp.teddysun.com/files/UnixBench5.1.3.tgz; then
-		echo "UnixBench 5.1.3.tgz 下载失败" && exit 1
-	fi
-	tar -xzf UnixBench5.1.3.tgz
-	cd UnixBench/
-	make
-	echo "===== 开始测试CPU性能測試 =====" | tee -a ../${logfilename}
-	./Run
-	benchfile=$(ls results/ | grep -v '\.')
-	cat results/${benchfile} >> ../${logfilename}
-	echo "===== CPU性能测试结束 =====" | tee -a ../${logfilename}	
-	cd ..
-	rm -rf UnixBench5.1.3.tgz UnixBench
+	mtrback "aliyun.com" "阿里云"
 	next | tee -a $logfile
 }
 go(){
@@ -253,9 +174,7 @@ go(){
 	system_info
 	io_test "io_test_1"
 	io_test "io_test_2"
-	speed_test_cli
-	speed
-	tracetest
+    speed
 	backtracetest
 	[[ ${action} == "a" ]] && benchtest
 	echo "測試脚本执行完毕！日志文件: ${logfile}"
