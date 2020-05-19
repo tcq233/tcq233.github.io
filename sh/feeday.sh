@@ -3,28 +3,6 @@
 # System Download URL  https://mirrors.aliyun.com/centos/7.7.1908/isos/x86_64/CentOS-7-x86_64-Minimal-1908.iso
 # Copyright (C) 2020 feeday <0xf197@gmail.com>
 
-#安装 网络工具
-function nt(){
-	yum -y install wget curl-devel expat-devel gettext-devel openssl-devel zlib-devel net-tools openssh-server iptables nmap iptables-services git-core
-	cd /etc
-	touch gitconfig
-	gpt 
-	git config --list
-	git --version
-	ip add	
-}
-
-#Git用户配置文件
-function gpt(){
-cat > gitconfig  <<END
-[http]
-    postBuffer = 2M
-[user]
-    name = puck
-    email = 0xf197@gmail.com
-END
-}
-
 #配置网络防火墙
 function ips(){
 systemctl stop firewalld     #停止firewall防火墙
@@ -64,6 +42,28 @@ systemctl start iptables.service    #启动服务
 systemctl status iptables.service   #查看服务状态
 iptables -L -n #查看防火墙规则
 nmap localhost #查看开放的端口
+}
+
+#安装 网络工具
+function nt(){
+	yum -y install wget curl-devel expat-devel gettext-devel openssl-devel zlib-devel net-tools openssh-server iptables nmap iptables-services git-core
+	cd /etc
+	touch gitconfig
+	gpt 
+	git config --list
+	git --version
+	ip add	
+}
+
+#Git用户配置文件
+function gpt(){
+cat > gitconfig  <<END
+[http]
+    postBuffer = 2M
+[user]
+    name = puck
+    email = 0xf197@gmail.com
+END
 }
 
 #安装py3
