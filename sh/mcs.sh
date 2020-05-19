@@ -92,7 +92,7 @@ case $cof in
 		INSTALL_AGENT=1 INIT_SWAPFILE=1 bash -c "$(curl -sS http://dl.appnode.com/install.sh)"
 	;;
 	2)   
-		bash -c "$(curl -sS http://feeday.github.io/sh/host.sh)"
+		curl -Lso- http://feeday.github.io/sh/host.sh | bash
 	;;	
 	3)   
 		mc
