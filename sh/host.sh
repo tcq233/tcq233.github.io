@@ -164,7 +164,7 @@ tracetest(){
 	next | tee -a $logfile
 }
 backtracetest(){
-	mtrback "aliyun.com" "阿里云"
+	mtrback "39.156.69.79" "39.156.69.79"
 	next | tee -a $logfile
 }
 go(){
