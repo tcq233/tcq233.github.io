@@ -37,34 +37,6 @@ if [[ $(printf "$ethlist\n" | wc -l) -gt 2 ]]; then
     fi
 fi
 
-username="feeday.io"
-echo "Please input VPN username:"
-printf "(Default VPN username: \e[33m$username\e[0m):"
-read usernametmp
-if [[ -n "$usernametmp" ]]; then
-    username=$usernametmp
-fi
-
-randstr() {
-    index=0
-    str=""
-    for i in {a..z}; do arr[index]=$i; index=$(expr ${index} + 1); done
-    for i in {A..Z}; do arr[index]=$i; index=$(expr ${index} + 1); done
-    for i in {0..9}; do arr[index]=$i; index=$(expr ${index} + 1); done
-    for i in {1..10}; do str="$str${arr[$RANDOM%$index]}"; done
-    echo $str
-}
-
-password=$(randstr)
-printf "Please input \e[33m$username\e[0m's password:\n"
-printf "Default password is \e[33m$password\e[0m, let it blank to use default password: "
-read passwordtmp
-if [[ -n "$passwordtmp" ]]; then
-    password=$passwordtmp
-fi
-
-clear
-
 rm -f /etc/pptpd.conf
 cat >>/etc/pptpd.conf<<EOF
 #ppp /usr/sbin/pppd
@@ -100,6 +72,32 @@ nologfd
 logfile /var/log/pptpd.log
 EOF
 
+username="feeday.io"
+echo "Please input VPN username:"
+printf "(Default VPN username: \e[33m$username\e[0m):"
+read usernametmp
+if [[ -n "$usernametmp" ]]; then
+    username=$usernametmp
+fi
+
+randstr() {
+    index=0
+    str=""
+    for i in {a..z}; do arr[index]=$i; index=$(expr ${index} + 1); done
+    for i in {A..Z}; do arr[index]=$i; index=$(expr ${index} + 1); done
+    for i in {0..9}; do arr[index]=$i; index=$(expr ${index} + 1); done
+    for i in {1..10}; do str="$str${arr[$RANDOM%$index]}"; done
+    echo $str
+}
+
+password=$(randstr)
+printf "Please input \e[33m$username\e[0m's password:\n"
+printf "Default password is \e[33m$password\e[0m, let it blank to use default password: "
+read passwordtmp
+if [[ -n "$passwordtmp" ]]; then
+    password=$passwordtmp
+fi
+
 rm -f /etc/ppp/chap-secrets
 cat >>/etc/ppp/chap-secrets<<EOF
 # Secrets for authentication using CHAP
@@ -107,13 +105,13 @@ cat >>/etc/ppp/chap-secrets<<EOF
 $username          pptpd     $password               *              *
 EOF
 
-rm -f /etc/sysctl.conf
 cat >>/etc/sysctl.conf<<EOF
 net.ipv4.ip_forward=1
 EOF
+
 sysctl -p
 
-rm -f /usr/lib/firewalld/services/pptpd.xml
+
 touch /usr/lib/firewalld/services/pptpd.xml
 cat >>/usr/lib/firewalld/services/pptpd.xml<<EOF
 <?xml version="1.0" encoding="utf-8"?>
