@@ -146,3 +146,12 @@ firewall-cmd --permanent --direct --passthrough ipv4 -t nat -I POSTROUTING -o en
 
 firewall-cmd --reload
 systemctl restart pptpd
+
+nmap localhsot
+
+printf"
+user/password IP:
+ServerIP: $serverip
+username: $username
+password: $password
+"
