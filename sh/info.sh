@@ -4,7 +4,7 @@ export PATH
 # Description: Auto test download & I/O speed script
 # Edit Revision VPS.BEST Teddysun <i@teddysun.com>
 # Copyright (C) 2020 feeday <0xf197@gmail.com>
-
+yum -y install mtr
 RED='\033[0;31m' && GREEN='\033[0;32m' && YELLOW='\033[0;33m' && PLAIN='\033[0m'
 next() { printf "%-70s\n" "-" | sed 's/\s/-/g'; }
 get_opsy() {
@@ -63,9 +63,6 @@ get_info(){
 	disk_used_size=$( calc_disk ${disk_size2[@]} )
 }
 system_info(){
-	clear
-	echo "========== 开始记录测试信息 ==========" > $logfile
-	echo "测试时间：$time" | tee -a $logfile
 	next | tee -a $logfile
 	echo "CPU model            : $cname" | tee -a $logfile
 	echo "Number of cores      : $cores" | tee -a $logfile
@@ -166,7 +163,6 @@ go(){
         speed
 	backtracetest
 	[[ ${action} == "a" ]] && benchtest
-	echo "測試脚本执行完毕！日志文件: ${logfile}"
 }
 action=$1
 go
