@@ -37,37 +37,15 @@ if [[ $(printf "$ethlist\n" | wc -l) -gt 2 ]]; then
     fi
 fi
 
-rm -f /etc/pptpd.conf
+
 cat >>/etc/pptpd.conf<<EOF
-#ppp /usr/sbin/pppd
-option /etc/ppp/options.pptpd
-#debug
-# stimeout 10
-#noipparam
-logwtmp
-#vrf test
-#bcrelay eth1
-#delegate
-#connections 100
 localip 192.168.0.1
 remoteip 192.168.0.214,192.168.0.245
 EOF
 
-rm -f /etc/ppp/options.pptpd
 cat >>/etc/ppp/options.pptpd<<EOF
-# Authentication
-name pptpd
-refuse-pap
-refuse-chap
-refuse-mschap
-require-mschap-v2
 ms-dns 8.8.4.4
 ms-dns 8.8.8.8
-proxyarp
-lock
-nobsdcomp 
-novj
-novjccomp
 nologfd
 logfile /var/log/pptpd.log
 EOF
@@ -105,13 +83,14 @@ cat >>/etc/ppp/chap-secrets<<EOF
 $username          pptpd     $password               *              *
 EOF
 
+rm -f /etc/sysctl.conf
 cat >>/etc/sysctl.conf<<EOF
 net.ipv4.ip_forward=1
 EOF
 
 sysctl -p
 
-
+rm -f /usr/lib/firewalld/services/pptpd.xml
 touch /usr/lib/firewalld/services/pptpd.xml
 cat >>/usr/lib/firewalld/services/pptpd.xml<<EOF
 <?xml version="1.0" encoding="utf-8"?>
