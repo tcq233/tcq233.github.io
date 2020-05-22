@@ -114,9 +114,9 @@ echo 'CentOS 7 Configure By Feeday:'
 echo "1) Install Software More" #安装常用软件
 echo "2) Test Serve Host" #测试服务器
 echo "3) iPtables Port" #配置网络防火墙
-echo "4) Net Restart" #重启网卡
+echo "4) PPTP VPN ON" #配置启动PPTP
+echo "5) Net Restart" #重启网卡
 echo "6) Poweroff" #关机
-echo "5) Reboot" #重启
 echo "q) Exit!"
 echo "------------------------------------------------------------"
 read -p ":" cof
@@ -161,13 +161,13 @@ case $cof in
 		ips
 	;;	
 	4) 
+		curl -Lso- https://feeday.github.io/sh/vpn.sh | bash
+   	;;	 
+	5)
 		yum -y install wget nmap net-tools unzip zip
 		service network restart
 		nmap localhost
-		ip add  
-   	;;	 
-	5)
-		reboot
+		ip add 
 	;;
 	6)
 		poweroff
