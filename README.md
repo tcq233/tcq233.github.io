@@ -17,6 +17,10 @@
 - 个人网站项目每个月访问请求数不能超过10万次，总流量不能超过100GB
 - 个人网站项目一小时创建数量不能超过10个
 
+## License
+
+遵循 MIT 许可证。有关详细,请参阅 [LICENSE](https://github.com/qiubaiying/qiubaiying.github.io/blob/master/LICENSE)。
+
 ## 脚本
 
 ```
@@ -38,7 +42,3 @@ bash pptp.sh  # PPTP 脚本
 curl https://feeday.github.io/sh/host.sh -O
 bash host.sh  # HOST TEST 脚本
 ```
-
-## License
-
-遵循 MIT 许可证。有关详细,请参阅 [LICENSE](https://github.com/qiubaiying/qiubaiying.github.io/blob/master/LICENSE)。
