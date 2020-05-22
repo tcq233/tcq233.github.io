@@ -137,13 +137,9 @@ firewall-cmd --permanent --zone=public --add-port=1723/tcp
 firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p gre -j ACCEPT
 firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 0 -p gre -j ACCEPT
 
-firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -i ppp+ -o eth0 -j ACCEPT
-firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -i eth0 -o ppp+ -j ACCEPT
-firewall-cmd --permanent --direct --passthrough ipv4 -t nat -I POSTROUTING -o eth0 -j MASQUERADE -s 192.168.0.0/24
-
-firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -i ppp+ -o enp0s3 -j ACCEPT
-firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -i enp0s3 -o ppp+ -j ACCEPT
-firewall-cmd --permanent --direct --passthrough ipv4 -t nat -I POSTROUTING -o enp0s3 -j MASQUERADE -s 192.168.0.0/24
+firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -i ppp+ -o $eth -j ACCEPT
+firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -i $eth -o ppp+ -j ACCEPT
+firewall-cmd --permanent --direct --passthrough ipv4 -t nat -I POSTROUTING -o $eth -j MASQUERADE -s 192.168.0.0/24
 
 firewall-cmd --reload
 systemctl restart pptpd
