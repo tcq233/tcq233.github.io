@@ -30,7 +30,7 @@ bash feeday.sh  # CentOS-7 脚本
 
 ```
 curl https://feeday.github.io/sh/mcs.sh -O
-bash mcs.sh  # Minecraft脚本
+bash mcs.sh  # Minecraft 脚本
 ```
 
 ```
