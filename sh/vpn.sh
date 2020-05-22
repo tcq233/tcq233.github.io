@@ -37,7 +37,7 @@ fi
 
 username="feeday.io"
 echo "Please input VPN username:"
-printf "(Default VPN username: \e[33mueibo.com\e[0m): "
+printf "(Default VPN username: \e[33feeday.io\e[0m): "
 read usernametmp
 if [[ -n "$usernametmp" ]]; then
     username=$usernametmp
