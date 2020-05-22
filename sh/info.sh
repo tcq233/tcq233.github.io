@@ -125,7 +125,6 @@ speed_test() {
 }
 speed() {
 	printf "%-32s%-24s%-14s\n" "Node Name:" "IPv4 address:" "Download Speed"
-# speed_test 'http://cachefly.cachefly.net/100mb.test' 'CacheFly'
 	speed_test 'https://dldir1.qq.com/weixin/Windows/WeChatSetup.exe' 'WeChat, EXE, CN'	
 	next | tee -a $logfile
 }
@@ -155,12 +154,11 @@ backtracetest(){
 }
 go(){
 	check_sys
-	Installation_dependency
 	get_info
 	system_info
-	io_test "io_test_1"
-	io_test "io_test_2"
-        speed
+	#io_test "io_test_1"
+	#io_test "io_test_2"
+    #speed
 	backtracetest
 	[[ ${action} == "a" ]] && benchtest
 }
