@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Description: PPTP Centos7
+# Edit by https://www.cnblogs.com/coveredwithdust/p/7967036.html
 # Copyright (C) 2020 feeday <0xf197@gmail.com>
 
 yum install -y ppp
@@ -7,7 +8,9 @@ wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 rpm -ivh epel-release-latest-7.noarch.rpm
 yum repolist
 yum -y update
-yum install -y pptpd
+yum install -y pptpd nmap
+yum install net-tools.x86_64 
+
 
 serverip=$(ifconfig -a |grep -w "inet"| grep -v "127.0.0.1" |awk '{print $2;}')
 printf "(Default server IP: \e[33m$serverip\e[0m):"
@@ -15,6 +18,7 @@ read serveriptmp
 if [[ -n "$serveriptmp" ]]; then
     serverip=$serveriptmp
 fi
+
 
 ethlist=$(ifconfig | grep ": flags" | cut -d ":" -f1)
 eth=$(printf "$ethlist\n" | head -n 1)
@@ -134,9 +138,11 @@ firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 0 -p gre -j ACCE
 
 firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -i ppp+ -o eth0 -j ACCEPT
 firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -i eth0 -o ppp+ -j ACCEPT
-
 firewall-cmd --permanent --direct --passthrough ipv4 -t nat -I POSTROUTING -o eth0 -j MASQUERADE -s 192.168.0.0/24
 
+firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -i ppp+ -o enp0s3 -j ACCEPT
+firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -i enp0s3 -o ppp+ -j ACCEPT
+firewall-cmd --permanent --direct --passthrough ipv4 -t nat -I POSTROUTING -o enp0s3 -j MASQUERADE -s 192.168.0.0/24
 
 firewall-cmd --reload
 systemctl restart pptpd
