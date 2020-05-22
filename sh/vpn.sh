@@ -3,14 +3,16 @@
 # Edit by https://www.cnblogs.com/coveredwithdust/p/7967036.html
 # Copyright (C) 2020 feeday <0xf197@gmail.com>
 
+cd /home
 yum install -y ppp
+cd /home
 wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 rpm -ivh epel-release-latest-7.noarch.rpm
 yum repolist
 yum -y update
 yum install -y pptpd nmap
 yum install net-tools.x86_64 
-
+rm -f epel-release-latest-7.noarch.rpm
 
 serverip=$(ifconfig -a |grep -w "inet"| grep -v "127.0.0.1" |awk '{print $2;}')
 printf "(Default server IP: \e[33m$serverip\e[0m):"
@@ -144,11 +146,10 @@ firewall-cmd --permanent --direct --passthrough ipv4 -t nat -I POSTROUTING -o $e
 firewall-cmd --reload
 systemctl restart pptpd
 
-nmap localhsot
-
-printf"
+printf "
 IP user/password :
 ServerIP: \e[33m$serverip\e[0m
 username: \e[33m$username\e[0m
 password: \e[33m$password\e[0m
 "
+nmap localhost
