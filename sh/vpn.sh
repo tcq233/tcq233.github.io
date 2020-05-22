@@ -37,7 +37,7 @@ fi
 
 username="feeday.io"
 echo "Please input VPN username:"
-printf "(Default VPN username: \e[33feeday.io\e[0m): "
+printf "(Default VPN username: \e[33m$username\e[0m):"
 read usernametmp
 if [[ -n "$usernametmp" ]]; then
     username=$usernametmp
@@ -111,6 +111,7 @@ net.ipv4.ip_forward=1
 EOF
 sysctl -p
 
+rm -f /usr/lib/firewalld/services/pptpd.xml
 touch /usr/lib/firewalld/services/pptpd.xml
 cat >>/usr/lib/firewalld/services/pptpd.xml<<EOF
 <?xml version="1.0" encoding="utf-8"?>
@@ -150,8 +151,8 @@ systemctl restart pptpd
 nmap localhsot
 
 printf"
-user/password IP:
-ServerIP: $serverip
-username: $username
-password: $password
+IP user/password :
+ServerIP: \e[33m$serverip\e[0m
+username: \e[33m$username\e[0m
+password: \e[33m$password\e[0m
 "
