@@ -108,7 +108,7 @@ cat >>/usr/lib/firewalld/services/pptpd.xml<<EOF
 
        <port protocol="tcp" port="1723"/>
 
-</service>           *
+</service>
 EOF
 
 systemctl start firewalld.service
