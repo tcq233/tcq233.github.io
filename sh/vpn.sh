@@ -1,17 +1,16 @@
 #!/usr/bin/env bash
-# Description: PPTP Centos7
+# Description: PPTP CentOS7
 # Edit by https://www.cnblogs.com/coveredwithdust/p/7967036.html
 # Copyright (C) 2020 feeday <0xf197@gmail.com>
 
 cd /home
-yum install -y ppp
-cd /home
+yum install -y ppp 
+yum install net-tools.x86_64 nmap wget
 wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 rpm -ivh epel-release-latest-7.noarch.rpm
 yum repolist
 yum -y update
-yum install -y pptpd nmap
-yum install net-tools.x86_64 
+yum install -y pptpd 
 rm -f epel-release-latest-7.noarch.rpm
 
 serverip=$(ifconfig -a |grep -w "inet"| grep -v "127.0.0.1" |awk '{print $2;}')
@@ -21,31 +20,37 @@ if [[ -n "$serveriptmp" ]]; then
     serverip=$serveriptmp
 fi
 
-
-ethlist=$(ifconfig | grep ": flags" | cut -d ":" -f1)
-eth=$(printf "$ethlist\n" | head -n 1)
-if [[ $(printf "$ethlist\n" | wc -l) -gt 2 ]]; then
-    echo ======================================
-    echo "Network Interface list:"
-    printf "\e[33m$ethlist\e[0m\n"
-    echo ======================================
-    echo "Which network interface you want to listen for ocserv?"
-    printf "Default network interface is \e[33m$eth\e[0m, let it blank to use default network interface: "
-    read ethtmp
-    if [ -n "$ethtmp" ]; then
-        eth=$ethtmp
-    fi
-fi
-
-
+rm -f /etc/pptpd.conf
 cat >>/etc/pptpd.conf<<EOF
+#ppp /usr/sbin/pppd
+option /etc/ppp/options.pptpd
+#debug
+# stimeout 10
+#noipparam
+logwtmp
+#vrf test
+#bcrelay eth1
+#delegate
+#connections 100
 localip 192.168.0.1
 remoteip 192.168.0.214,192.168.0.245
 EOF
 
+rm -f /etc/ppp/options.pptpd
 cat >>/etc/ppp/options.pptpd<<EOF
+# Authentication
+name pptpd
+refuse-pap
+refuse-chap
+refuse-mschap
+require-mschap-v2
 ms-dns 8.8.4.4
 ms-dns 8.8.8.8
+proxyarp
+lock
+nobsdcomp 
+novj
+novjccomp
 nologfd
 logfile /var/log/pptpd.log
 EOF
@@ -70,7 +75,7 @@ randstr() {
 
 password=$(randstr)
 printf "Please input \e[33m$username\e[0m's password:\n"
-printf "Default password is \e[33m$password\e[0m, let it blank to use default password: "
+printf "(Default password is \e[33m$password\e[0m): "
 read passwordtmp
 if [[ -n "$passwordtmp" ]]; then
     password=$passwordtmp
@@ -115,6 +120,21 @@ firewall-cmd --permanent --zone=public --add-port=1723/tcp
 
 firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p gre -j ACCEPT
 firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 0 -p gre -j ACCEPT
+
+ethlist=$(ifconfig | grep ": flags" | cut -d ":" -f1)
+eth=$(printf "$ethlist\n" | head -n 1)
+if [[ $(printf "$ethlist\n" | wc -l) -gt 2 ]]; then
+    echo ======================================
+    echo "Network Interface list:"
+    printf "\e[33m$ethlist\e[0m\n"
+    echo ======================================
+    echo "Which network interface you want to listen for ocserv?"
+    printf "Default network interface is \e[33m$eth\e[0m, let it blank to use default network interface: "
+    read ethtmp
+    if [ -n "$ethtmp" ]; then
+        eth=$ethtmp
+    fi
+fi
 
 firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -i ppp+ -o $eth -j ACCEPT
 firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -i $eth -o ppp+ -j ACCEPT
