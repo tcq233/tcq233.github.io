@@ -25,7 +25,7 @@
 
 ```
 curl https://feeday.github.io/sh/feeday.sh -O
-bash feeday.sh  # CentOS-7 常用脚本
+bash feeday.sh  # CentOS-7 脚本
 ```
 
 ```
