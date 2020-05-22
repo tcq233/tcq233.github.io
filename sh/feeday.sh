@@ -114,9 +114,8 @@ echo 'CentOS 7 Configure By Feeday:'
 echo "1) Install Software More" #安装常用软件
 echo "2) Test Serve Host" #测试服务器
 echo "3) iPtables Port" #配置网络防火墙
-echo "4) PPTP VPN ON" #配置启动PPTP
-echo "5) Net Restart" #重启网卡
-echo "6) Poweroff" #关机
+echo "4) AppNode Web" ##安装服务器管理软件
+echo "5) Poweroff" #关机
 echo "q) Exit!"
 echo "------------------------------------------------------------"
 read -p ":" cof
@@ -125,24 +124,20 @@ case $cof in
 	1) 
 		echo "------------------------------------------------------------"
 		echo 'Software Install By Feeday:'
-		echo "1) AppNode Web" #安装服务器管理软件
-		echo "2) Net-Tools" #安装常用网络工具
-		echo "3) Python3" #安装Python3			
-		echo "4) Nginx" #安装 Nginx
+		echo "1) Net-Tools" #安装常用网络工具
+		echo "2) Python3" #安装Python3			
+		echo "3) Nginx" #安装 Nginx
 		echo "q) Exit!"
 		echo "------------------------------------------------------------"
 		read -p ":" ins
 		case $ins in    
 			1)
-				INSTALL_AGENT=1 INIT_SWAPFILE=1 bash -c "$(curl -sS http://dl.appnode.com/install.sh)"
-			;;
-			2)
 				nt
 			;;
-			3)
+			1)
 				py3
 			;;		
-			4)
+			3)
 				nx
 			;;												
 			q)
@@ -160,16 +155,16 @@ case $cof in
 	3)
 		ips
 	;;	
-	4) 
-		curl -Lso- https://feeday.github.io/sh/vpn.sh | bash
+	3) 
+		INSTALL_AGENT=1 INIT_SWAPFILE=1 bash -c "$(curl -sS http://dl.appnode.com/install.sh)"
    	;;	 
-	5)
+	4)
 		yum -y install wget nmap net-tools unzip zip
 		service network restart
 		nmap localhost
 		ip add 
 	;;
-	6)
+	5)
 		poweroff
 	;; 	
    	q)
