@@ -43,8 +43,6 @@ Installation_dependency(){
 }
 get_info(){
 	logfile="test.log"
-    localIP=$(ifconfig -a |grep -w "inet"| grep -v "127.0.0.1" |awk '{print $2;}')
-    IPname=$(ifconfig | grep ": flags" | cut -d ":" -f1)
 	IP=$(curl -s myip.ipip.net | awk -F ' ' '{print $2}' | awk -F '：' '{print $2}')
 	IPaddr=$(curl -s myip.ipip.net | awk -F '：' '{print $3}')
 	if [[ -z "$IP" ]]; then
@@ -90,8 +88,7 @@ system_info(){
 	echo "OS                   : $opsy" | tee -a $logfile
 	echo "Arch                 : $arch ($lbit Bit)" | tee -a $logfile
 	echo "Kernel               : $kern" | tee -a $logfile
-    echo "Local IP $IPname     : $localIP
-	echo "Net IP               : $IP" | tee -a $logfilename
+	echo "ip                   : $IP" | tee -a $logfilename
 	echo "ipaddr               : $IPaddr" | tee -a $logfilename
 	echo "vm                   : $vm" | tee -a $logfilename
 	next | tee -a $logfile
