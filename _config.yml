@@ -17,8 +17,8 @@ sidebar-avatar: /img/about-BY-gentle.jpg      # use absolute URL, seeing it's us
 # SNS settings
 RSS: false
 # weibo_username:   123
-b_username:    feeday/feeday.github.io/blob/master/sh/feeday.sh
-m_username:    edits
+b_username:    feeday/feeday.github.io/blob/master/sh/
+# m_username:    edits
 g_username:    feeday/feeday.github.io/tree/master/_posts
 # zhihu_username:     qiubaiying
 github_username:    qiubaiying
