@@ -115,7 +115,8 @@ echo "1) Install Software More" #安装常用软件
 echo "2) Test Serve Host" #测试服务器
 echo "3) iPtables Port" #配置网络防火墙
 echo "4) AppNode Web" ##安装服务器管理软件
-echo "5) Poweroff" #关机
+echo "5) Minecraft" ##安装服务器管理软件
+echo "6) Poweroff" #关机
 echo "q) Exit!"
 echo "------------------------------------------------------------"
 read -p ":" cof
@@ -155,16 +156,13 @@ case $cof in
 	3)
 		ips
 	;;	
-	3) 
+	4) 
 		INSTALL_AGENT=1 INIT_SWAPFILE=1 bash -c "$(curl -sS http://dl.appnode.com/install.sh)"
    	;;	 
-	4)
-		yum -y install wget nmap net-tools unzip zip
-		service network restart
-		nmap localhost
-		ip add 
-	;;
 	5)
+		curl -Lso- https://feeday.github.io/sh/mcs.sh | bash
+	;;
+	6)
 		poweroff
 	;; 	
    	q)
