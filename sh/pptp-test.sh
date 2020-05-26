@@ -4,7 +4,7 @@
 # Edit by https://blog.shuspieler.com/756/
 # Copyright (C) 2020 feeday <0xf197@gmail.com>
 
-function updown(){
+function ups(){
 rm -f /etc/ppp/ip-up
 cat >>/etc/ppp/ip-up<<EOF
 #!/bin/bash
@@ -25,8 +25,9 @@ echo "vpnIP: $4" >> /var/log/VPN-${1}.log
 echo "assignIP: $5" >> /var/log/VPN-${1}.log
 echo "logintime: `date -d today +%F_%T`" >> /var/log/VPN-${1}.log
 EOF
+}
 
-
+function downs(){
 rm -f /etc/ppp/ip-down
 cat >>/etc/ppp/ip-down<<EOF
 #!/bin/bash
@@ -62,6 +63,7 @@ rpm -ivh epel-release-latest-7.noarch.rpm
 yum repolist
 yum -y update
 yum install -y pptpd 
+yum install bc
 rm -f epel-release-latest-7.noarch.rpm
 
 serverip=$(ifconfig -a |grep -w "inet"| grep -v "127.0.0.1" |awk '{print $2;}')
@@ -191,6 +193,9 @@ firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -i ppp+ -o $e
 firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -i $eth -o ppp+ -j ACCEPT
 firewall-cmd --permanent --direct --passthrough ipv4 -t nat -I POSTROUTING -o $eth -j MASQUERADE -s 192.168.0.0/24
 
+downs
+ups
+
 firewall-cmd --reload
 systemctl restart pptpd
 
@@ -219,8 +224,6 @@ case $cof in
 	;;	
 	2)   
 		pptp
-		yum install bc
-		updown
 	;;
 	3)
 		cat /var/log/VPN-ppp0.log
