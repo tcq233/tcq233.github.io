@@ -1,14 +1,21 @@
 #!/bin/bash
 # This file should not be modified -- make local changes to
 # /etc/ppp/ip-down.local instead
+
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 export PATH
+
 LOGDEVICE=$6
 REALDEVICE=$1
+
 /etc/ppp/ip-down.ipv6to4 ${LOGDEVICE}
+
 [ -x /etc/ppp/ip-down.local ] && /etc/ppp/ip-down.local "$@"
 /etc/sysconfig/network-scripts/ifdown-post --realdevice ${REALDEVICE} \
     ifcfg-${LOGDEVICE}
+    
+exit 0
+
 echo "downtime: `date -d today +%F_%T`" >> /var/log/VPN-${1}.log
 echo "bytes sent: $BYTES_SENT B" >> /var/log/VPN-${1}.log
 echo "bytes received: $BYTES_RCVD B" >> /var/log/VPN-${1}.log
