@@ -193,8 +193,14 @@ firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -i ppp+ -o $e
 firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -i $eth -o ppp+ -j ACCEPT
 firewall-cmd --permanent --direct --passthrough ipv4 -t nat -I POSTROUTING -o $eth -j MASQUERADE -s 192.168.0.0/24
 
-downs
-ups
+mkdir /var/log/pptpdlog
+rm -f /etc/ppp/ip-up
+rm -f /etc/ppp/ip-down
+
+cd /etc/ppp/
+
+curl http://feeday.github.io/sh/ip-up -O
+curl http://feeday.github.io/sh/ip-down -O
 
 firewall-cmd --reload
 systemctl restart pptpd
