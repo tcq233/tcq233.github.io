@@ -189,10 +189,10 @@ password: \e[33m$password\e[0m
 "
 nmap localhost
 }
-echo "PPTP: modprobe ppp-compress-18 && echo ok"
+echo "PPTP: modprobe" ppp-compress-18 && echo ok
 echo "------------------------------------------------------------"
 echo 'PPTP Server By Feeday:'
-echo "1) Test Host Network Server " 
+echo "1) Test Host Server " 
 echo "2) PPTP-Install" 
 echo "3) PPTP-INFO" 
 echo "4) Restart" 
