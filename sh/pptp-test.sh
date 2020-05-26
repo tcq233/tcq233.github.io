@@ -194,13 +194,11 @@ firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -i $eth -o pp
 firewall-cmd --permanent --direct --passthrough ipv4 -t nat -I POSTROUTING -o $eth -j MASQUERADE -s 192.168.0.0/24
 
 mkdir /var/log/pptpdlog
-rm -f /etc/ppp/ip-up
-rm -f /etc/ppp/ip-down
-
-cd /etc/ppp/
-
-curl http://feeday.github.io/sh/ip-up -O
-curl http://feeday.github.io/sh/ip-down -O
+#rm -f /etc/ppp/ip-up
+#rm -f /etc/ppp/ip-down
+#cd /etc/ppp/
+#curl http://feeday.github.io/sh/ip-up -O
+#curl http://feeday.github.io/sh/ip-down -O
 
 firewall-cmd --reload
 systemctl restart pptpd
@@ -213,7 +211,7 @@ password: \e[33m$password\e[0m
 "
 nmap localhost
 }
-
+echo "PPTP: modprobe ppp-compress-18 && echo ok"
 echo "------------------------------------------------------------"
 echo 'PPTP Server By Feeday:'
 echo "1) Test Host Network Server " 
