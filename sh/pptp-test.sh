@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Description: PPTP CentOS7
 # Edit by https://www.cnblogs.com/coveredwithdust/p/7967036.html
+# Edit by https://blog.shuspieler.com/756/
 # Copyright (C) 2020 feeday <0xf197@gmail.com>
-
 
 function updown(){
 rm -f /etc/ppp/ip-up
@@ -219,10 +219,11 @@ case $cof in
 	;;	
 	2)   
 		pptp
+		yum install bc
 		updown
 	;;
 	3)
-	        cat /var/log/VPN-ppp0.log
+		cat /var/log/VPN-ppp0.log
 	;;	
 	4) 
 		systemctl restart pptpd
