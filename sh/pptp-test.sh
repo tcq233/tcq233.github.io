@@ -5,18 +5,8 @@
 # Copyright (C) 2020 feeday <0xf197@gmail.com>
 
 function ups(){
-rm -f /etc/ppp/ip-up
+
 cat >>/etc/ppp/ip-up<<EOF
-#!/bin/bash
-# This file should not be modified -- make local changes to
-# /etc/ppp/ip-up.local instead
-PATH=/sbin:/usr/sbin:/bin:/usr/bin
-export PATH
-LOGDEVICE=$6
-REALDEVICE=$1
-[ -f /etc/sysconfig/network-scripts/ifcfg-${LOGDEVICE} ] && /etc/sysconfig/network-scripts/ifup-post --realdevice ${REALDEVICE} ifcfg-${LOGDEVICE}
-/etc/ppp/ip-up.ipv6to4 ${LOGDEVICE}
-[ -x /etc/ppp/ip-up.local ] && /etc/ppp/ip-up.local "$@"
 echo "****************************************************" >> /var/log/VPN-${1}.log
 echo "username: $PEERNAME" >> /var/log/VPN-${1}.log
 echo "clientIP: $6" >> /var/log/VPN-${1}.log
@@ -28,19 +18,7 @@ EOF
 }
 
 function downs(){
-rm -f /etc/ppp/ip-down
 cat >>/etc/ppp/ip-down<<EOF
-#!/bin/bash
-# This file should not be modified -- make local changes to
-# /etc/ppp/ip-down.local instead
-PATH=/sbin:/usr/sbin:/bin:/usr/bin
-export PATH
-LOGDEVICE=$6
-REALDEVICE=$1
-/etc/ppp/ip-down.ipv6to4 ${LOGDEVICE}
-[ -x /etc/ppp/ip-down.local ] && /etc/ppp/ip-down.local "$@"
-/etc/sysconfig/network-scripts/ifdown-post --realdevice ${REALDEVICE} \
-    ifcfg-${LOGDEVICE}
 echo "downtime: `date -d today +%F_%T`" >> /var/log/VPN-${1}.log
 echo "bytes sent: $BYTES_SENT B" >> /var/log/VPN-${1}.log
 echo "bytes received: $BYTES_RCVD B" >> /var/log/VPN-${1}.log
