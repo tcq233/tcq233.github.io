@@ -219,16 +219,16 @@ case $cof in
 	;;	
 	2)   
 		pptp
+		updown
 	;;
 	3)
-    updown
-	  cat /var/log/VPN-ppp0.log
+	        cat /var/log/VPN-ppp0.log
 	;;	
 	4) 
-		 systemctl restart pptpd
-     nmap localhost
-  ;;	 
-  q)
+		systemctl restart pptpd
+                nmap localhost
+        ;;	 
+        q)
 		exit
 	;;  
 	*)
