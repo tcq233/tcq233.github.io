@@ -41,7 +41,6 @@ rpm -ivh epel-release-latest-7.noarch.rpm
 yum repolist
 yum -y update
 yum install -y pptpd 
-yum install bc
 rm -f epel-release-latest-7.noarch.rpm
 
 serverip=$(ifconfig -a |grep -w "inet"| grep -v "127.0.0.1" |awk '{print $2;}')
@@ -172,11 +171,12 @@ firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -i $eth -o pp
 firewall-cmd --permanent --direct --passthrough ipv4 -t nat -I POSTROUTING -o $eth -j MASQUERADE -s 192.168.0.0/24
 
 mkdir /var/log/pptpdlog
+yum install bc
 #rm -f /etc/ppp/ip-up
 #rm -f /etc/ppp/ip-down
-#cd /etc/ppp/
-#curl http://feeday.github.io/sh/ip-up -O
-#curl http://feeday.github.io/sh/ip-down -O
+cd /etc/ppp/
+curl http://feeday.github.io/sh/ip-up -O
+curl http://feeday.github.io/sh/ip-down -O
 
 firewall-cmd --reload
 systemctl restart pptpd
