@@ -22,31 +22,7 @@ description: keep hungry keep foolish
 <div class="container">
 	<div class="row">
 		<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <!-- 标签云 -->
-			
-			<div style="text-align:center;">     
-
-
-  
-<div class="panel" style="margin-bottom:10px; margin-top:10px;margin-left:90px;margin-right:90px;" >
-<iframe id="iframe" scrolling="no" src="http://cpuck.com/html5s/animal-chess-game/" frameborder="0" height="461px" width="310px"></iframe> 
-<iframe id="iframe" scrolling="no" src="http://cpuck.com/html5s/chinese-chess/" frameborder="0" height="461px" width="450px"></iframe>  
-  
-  <iframe id="iframe" scrolling="no" src="http://cpuck.com/html5s/num/" frameborder="0" height="461px" width="400px"></iframe>
-  
-
-
- </div>
-
-
-
- <div style="text-align:center;">        
-<iframe id="iframe" scrolling="no" src="http://cpuck.com/html5s/go/" frameborder="0" height="625px" width="650px"></iframe>
-
-<iframe id="iframe" scrolling="no" src="http://cpuck.com/html5s/css3-3d-rubik-cube/" frameborder="0" height="625px" width="510px"></iframe>
- </div>    
-</div>	
-			
+            <!-- 标签云 -->	
 			<div id='tag_cloud' class="tags">
 				{% for tag in site.tags %}
 				<a href="#{{ tag[0] }}" title="{{ tag[0] }}" rel="{{ tag[1].size }}">{{ tag[0] }}</a>
