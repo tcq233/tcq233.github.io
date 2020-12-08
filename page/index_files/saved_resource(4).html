@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<!-- saved from url=(0027)http://cpuck.com/html5s/go/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>GO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-7">
+                <div style="width: 620px; height: 620px" id="board"><canvas id="board" height="620" width="620"></canvas></div>
+            </div>
+            <div class="col-md-4">
+                <div style="width: 240px;height: 300px" id="sboard"></div>
+            </div>
+        </div>
+    </div>
+    <script src="./jquery.min.js.下载"></script>
+    <script src="./pubsub.js.下载"></script>
+    <script src="./weiqiboard.js.下载"></script>
+    <script>
+        board = new WeiQiBoard("board", {
+            playmode: 1
+        });
+        board.err_handle = function() {
+            alert("err")
+        }
+        board.getStart()
+    </script>
+
+
+</body></html>

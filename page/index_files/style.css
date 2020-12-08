@@ -1,0 +1,1774 @@
+/*
+Theme Name: Simplelin
+Theme URI: http://ninethemes.wordpress.com/2018/04/03/simplelin
+Author: Nine Themes
+Author URI: http://ninethemes.wordpress.com/
+Description: Simplelin is a Minimal and Clean WordPress Theme. Mobile-friendly (responsive), optimized for speed, and implements SEO (Search Engine Optimization) best practices.
+Version: 1.0.5
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: simplelin
+Tags: blog, education, portfolio, two-columns, right-sidebar, custom-logo, custom-menu, custom-header, custom-background, custom-colors
+
+This theme, like WordPress, is licensed under the GPL. Use it to make something cool, have fun, and share what you've learned with others.
+*/
+
+/*--------------------------------------------------------------
+>>> TABLE OF CONTENTS:
+----------------------------------------------------------------
+1.0 Normalize
+2.0 Accessibility
+3.0 Alignments
+4.0 Clearings
+	4.1 Helper
+5.0 Typography
+6.0 Forms
+7.0 Lists
+8.0 Tables
+9.0 Links
+10.0 Layout
+	10.1 Header
+	10.2 Menu
+	10.3 Posts
+	10.4 Footer
+11.0 Comments
+12.0 Widgets
+13.0 Media
+	13.1 Galleries
+14.0 Media Queries
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+1.0 Normalize
+Styles based on Normalize v5.0.0 @link https://github.com/necolas/normalize.css
+--------------------------------------------------------------*/
+
+html {
+	font-family: sans-serif;
+	line-height: 1.15;
+	-ms-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+}
+
+body {
+	margin: 0;
+}
+
+article,
+aside,
+footer,
+header,
+nav,
+section {
+	display: block;
+}
+
+h1 {
+	font-size: 2em;
+	margin: 0.67em 0;
+}
+
+figcaption,
+figure,
+main {
+	display: block;
+}
+
+figure {
+	margin: 1em 0;
+}
+
+hr {
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+	height: 0;
+	overflow: visible;
+}
+
+pre {
+	font-family: monospace, monospace;
+	font-size: 1em;
+}
+
+a {
+	background-color: transparent;
+	-webkit-text-decoration-skip: objects;
+}
+
+a:active,
+a:hover {
+	outline-width: 0;
+}
+
+b,
+strong {
+	font-weight: inherit;
+}
+
+b,
+strong {
+	font-weight: 700;
+}
+
+code,
+kbd,
+samp {
+	font-family: monospace, monospace;
+	font-size: 1em;
+}
+
+dfn {
+	font-style: italic;
+}
+
+mark {
+	background-color: #eee;
+	color: #222;
+}
+
+small {
+	font-size: 80%;
+}
+
+sub,
+sup {
+	font-size: 75%;
+	line-height: 0;
+	position: relative;
+	vertical-align: baseline;
+}
+
+sub {
+	bottom: -0.25em;
+}
+
+sup {
+	top: -0.5em;
+}
+
+audio,
+video {
+	display: inline-block;
+}
+
+audio:not([controls]) {
+	display: none;
+	height: 0;
+}
+
+img {
+	border-style: none;
+	max-width: 100%
+}
+
+svg:not(:root) {
+	overflow: hidden;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+	font-family: sans-serif;
+	font-size: 100%;
+	line-height: 1.15;
+	margin: 0;
+}
+
+button,
+input {
+	overflow: visible;
+}
+
+button,
+select {
+	text-transform: none;
+}
+
+button,
+html [type="button"],
+[type="reset"],
+[type="submit"] {
+	-webkit-appearance: button;
+}
+
+button::moz-focus-inner,
+[type="button"]::-moz-focus-inner,
+[type="reset"]::-moz-focus-inner,
+[type="submit"]::-moz-focus-inner {
+	border-style: none;
+	padding: 0;
+}
+
+button:-moz-focusring,
+[type="button"]:-moz-focusring,
+[type="reset"]:-moz-focusring,
+[type="submit"]:-moz-focusring {
+	outline: 1px dotted ButtonText;
+}
+
+fieldset {
+	border: 1px solid #bbb;
+	margin: 0 2px;
+	min-width: inherit;
+	padding: 0.35em 0.625em 0.75em;
+}
+
+legend {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	color: inherit;
+	display: table;
+	max-width: 100%;
+	padding: 0;
+	white-space: normal;
+}
+
+progress {
+	display: inline-block;
+	vertical-align: baseline;
+}
+
+textarea {
+	overflow: auto;
+}
+
+[type="checkbox"],
+[type="radio"] {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 0;
+}
+
+[type="number"]::-webkit-inner-spin-button,
+[type="number"]::-webkit-outer-spin-button {
+	height: auto;
+}
+
+[type="search"] {
+	-webkit-appearance: textfield;
+	outline-offset: -2px;
+}
+
+[type="search"]::-webkit-search-cancel-button,
+[type="search"]::-webkit-search-decoration {
+	-webkit-appearance: none;
+}
+
+::-webkit-file-upload-button {
+	-webkit-appearance: button;
+	font: inherit;
+}
+
+details,
+menu {
+	display: block;
+}
+
+summary {
+	display: list-item;
+}
+
+canvas {
+	display: inline-block;
+}
+
+template {
+	display: none;
+}
+
+[hidden] {
+	display: none;
+}
+
+/*--------------------------------------------------------------
+2.0 Accessibility
+--------------------------------------------------------------*/
+
+/* Text meant only for screen readers. */
+
+.screen-reader-text {
+	clip: rect(1px, 1px, 1px, 1px);
+	height: 1px;
+	overflow: hidden;
+	position: absolute !important;
+	width: 1px;
+	word-wrap: normal !important;/* Many screen reader and browser combination announce broken words as they would appear visually. */
+}
+
+.screen-reader-text:focus {
+	background-color: #f1f1f1;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	-webkit-box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.6);
+	box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.6);
+	clip: auto !important;
+	color: #21759b;
+	display: block;
+	font-size: 14px;
+	font-size: 0.875rem;
+	font-weight: 700;
+	height: auto;
+	left: 5px;
+	line-height: normal;
+	padding: 15px 23px 14px;
+	text-decoration: none;
+	top: 5px;
+	width: auto;
+	z-index: 100000; /* Above WP toolbar. */
+}
+
+
+/*--------------------------------------------------------------
+3.0 Alignments
+--------------------------------------------------------------*/
+
+.alignleft {
+	display: inline;
+	float: left;
+	margin-right: 1.5em;
+}
+
+.alignright {
+	display: inline;
+	float: right;
+	margin-left: 1.5em;
+}
+
+.aligncenter {
+	clear: both;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/*--------------------------------------------------------------
+4.0 Clearings
+--------------------------------------------------------------*/
+
+.clear:before,
+.clear:after,
+.entry-content:before,
+.entry-content:after,
+.entry-footer:before,
+.entry-footer:after,
+.comment-content:before,
+.comment-content:after,
+.site-header:before,
+.site-header:after,
+.site-content:before,
+.site-content:after,
+.site-header:before,
+.site-header:after,
+.site-content:before,
+.site-content:after,
+.site-footer:before,
+.site-footer:after,
+.nav-links:before,
+.nav-links:after,
+.pagination:before,
+.pagination:after,
+.comment-author:before,
+.comment-author:after,
+.widget-area:before,
+.widget-area:after,
+.widget:before,
+.widget:after,
+.comment-meta:before,
+.comment-meta:after {
+	content: "";
+	display: table;
+	table-layout: fixed;
+}
+
+.clear:after,
+.entry-content:after,
+.entry-footer:after,
+.comment-content:after,
+.site-header:after,
+.site-content:after,
+.site-header:after,
+.site-content:after,
+.site-footer:after,
+.nav-links:after,
+.pagination:after,
+.comment-author:after,
+.widget-area:after,
+.widget:after,
+.comment-meta:after {
+	clear: both;
+}
+
+/*--------------------------------------------------------------
+4.1 Helper
+--------------------------------------------------------------*/
+
+.hide {
+	display: none;
+}
+
+/*--------------------------------------------------------------
+5.0 Typography
+--------------------------------------------------------------*/
+
+body,
+button,
+input,
+select,
+textarea {
+	color: #333;
+	font-family: Arial, sans-serif;
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 1.625;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	color: #333;
+	font-family: Georgia, serif;
+	font-weight: 700;
+	margin-bottom: 15px;
+	line-height: 1.1;
+}
+
+h1 {
+	font-size: 32px;
+}
+
+h2 {
+	font-size: 28px;
+}
+
+h3 {
+	font-size: 22px;
+}
+
+h4 {
+	font-size: 20px;
+}
+
+h5 {
+	font-size: 18px;
+}
+
+h6 {
+	font-size: 16px;
+}
+
+p {
+	margin: 0 0 20px;
+	padding: 0;
+}
+
+dfn,
+cite,
+em,
+i {
+	font-style: italic;
+}
+
+blockquote {
+	border: 1px solid #bbb;
+	border-left: 4px solid #4aa0d5;
+	margin: 0;
+	margin-bottom: 20px;
+	padding: 20px;
+}
+
+blockquote p:last-child {
+	margin: 0;
+}
+
+address {
+	margin-bottom: 20px;
+}
+
+pre {
+	background-color: #777;
+	color: #fff;
+	font-family: Consolas, monospace;
+	font-size: 16px;
+	line-height: 1.6;
+	margin-bottom: 20px;
+	max-width: 100%;
+	padding: 20px;
+	overflow: auto;
+
+}
+
+pre > code {
+	font-family: inherit;
+}
+
+code,
+kbd,
+samp,
+var,
+tt {
+	font-family: monospace, monospace ;
+	font-size: 15px;
+}
+
+abbr,
+acronym {
+	border-bottom: 1px dotted #bbb;
+	cursor: help;
+	text-decoration: none;
+}
+
+mark,
+ins {
+	background-color: #eee;
+	text-decoration: none;
+}
+
+big {
+	font-size: 125%;
+}
+
+q {
+	quotes: "“" "”" "‘" "’";
+}
+
+:focus {
+	outline: none;
+}
+
+/*--------------------------------------------------------------
+6.0 Forms
+--------------------------------------------------------------*/
+
+label {
+	color: #333;
+	display: block;
+	font-weight: 700;
+}
+
+fieldset {
+	margin-bottom: 20px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="url"],
+input[type="password"],
+input[type="search"],
+input[type="number"],
+input[type="tel"],
+input[type="range"],
+input[type="date"],
+input[type="mounth"],
+input[type="week"],
+input[type="time"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="color"],
+textarea {
+	color: #333;
+	background: #fff;
+	border: 1px solid #bbb;
+	border-radius: 3px;
+	font-size: 14px;
+	font-weight: 400;
+	padding: 10px 12px;
+	width: 100%;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus,
+input[type="range"]:focus,
+input[type="date"]:focus,
+input[type="mounth"]:focus,
+input[type="week"]:focus,
+input[type="time"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="color"]:focus,
+textarea:focus {
+	border: 1px solid #333;
+	outline: none;
+}
+
+textarea {
+	resize: vertical;
+}
+
+select {
+	border: 1px solid #bbb;
+	border-radius: 3px;
+	font-size: 1em;
+	height: 2em;
+	outline: none;
+	overflow: auto;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+	margin-right: 10px;
+}
+
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"],
+.button {
+	background-color: #4aa0d5;
+	border: none;
+	border-radius: 3px;
+	cursor: pointer;
+	color: #fff;
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 1;
+	padding: 10px 12px;
+	transition: background-color 0.25s;
+	-webkit-transition: background-color 0.25s;
+	-moz-transition: background-color 0.25s;
+	-ms-transition: background-color 0.25s;
+	width: auto;
+}
+
+button:hover,
+input[type="button"]:hover,
+input[type="reset"]:hover,
+input[type="submit"]:hover,
+.button:hover {
+	background-color: #333;
+}
+
+.button {
+	display: inline-block;
+}
+
+/*--------------------------------------------------------------
+7.0 Formatting
+--------------------------------------------------------------*/
+
+hr {
+	border-bottom: 1px solid #bbb;
+	border-left: none;
+	border-right: none;
+	border-top: none;
+	margin-bottom: 20px;
+}
+
+/*--------------------------------------------------------------
+8.0 Lists
+--------------------------------------------------------------*/
+
+ol,
+ul {
+	margin: 0;
+	padding: 0;
+}
+
+li {
+	list-style-type: none;
+}
+
+/* List for .entry-content. */
+
+.entry-content ol,
+.entry-content ul {
+	margin-bottom: 20px;
+	margin-top: 10px;
+	margin-left: 30px;
+}
+
+.entry-content ol ol,
+.entry-content ul ul {
+	margin-bottom: 0;
+}
+
+.entry-content ol > li {
+	list-style-type: decimal;
+	margin-bottom: 10px;
+}
+
+.entry-content ul > li {
+	list-style-type: disc;
+	margin-bottom: 10px;
+}
+
+/*--------------------------------------------------------------
+9.0 Tables
+--------------------------------------------------------------*/
+
+table {
+	border-collapse: collapse;
+	margin-bottom: 20px;
+	width: 100%;
+}
+
+td,
+th {
+	padding: 0.5em;
+	text-align: left;
+}
+
+th {
+	text-align: center;
+}
+
+th,
+tr,
+td {
+	border: 1px solid #bbb;
+}
+
+/*--------------------------------------------------------------
+10.0 Links
+--------------------------------------------------------------*/
+
+a {
+	color: #4aa0d5;
+	text-decoration: none;
+	transition: 0.25s ease-in-out;
+	-webkit-transition: 0.25s ease-in-out;
+	-moz-transition: 0.25s ease-in-out;
+	-ms-transition: 0.25s ease-in-out;
+}
+
+a:hover {
+	color: #333;
+}
+
+/*--------------------------------------------------------------
+11.0 Layout
+--------------------------------------------------------------*/
+
+html {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+	/* Inherit box-sizing to make it easier to change the property for components that leverage other behavior; see http://css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice/ */
+	-webkit-box-sizing: inherit;
+	-moz-box-sizing: inherit;
+	box-sizing: inherit;
+}
+
+body {
+	background-color: #f4f5f6;
+}
+
+#page {
+	position: relative;
+	word-wrap: break-word;
+}
+
+.container {
+	margin: 0 auto;
+	width: 1100px;
+}
+
+/*--------------------------------------------------------------
+10.1 Header
+--------------------------------------------------------------*/
+
+#masthead {
+	position: relative;
+}
+
+.site-header {
+	background-color: #fff;
+	margin-bottom: 20px;
+}
+
+.inside-header {
+	background-color: #fff;
+	width: 100%;
+}
+
+/* Site branding */
+
+.site-branding {
+	padding: 20px;
+	float: left;
+}
+
+.custom-logo-link {
+	vertical-align: middle;
+	width: auto;
+}
+
+.custom-logo-link img {
+	width: auto;
+}
+
+.site-title {
+	font-size: 32px;
+	color: #333;
+	font-family: Georgia, serif;
+	font-weight: 700;
+	margin-bottom: 15px;
+	line-height: 1.1;
+}
+
+.site-title,
+.site-description {
+	margin: 0;
+}
+
+.site-title a {
+	color: #333;
+}
+
+.site-title a:hover {
+	color: #333;
+	text-decoration: none;
+}
+
+.site-description{
+	font-size: 15px;
+}
+
+/*--------------------------------------------------------------
+10.2 Menu
+--------------------------------------------------------------*/
+
+.main-navigation {
+	background-color: #222;
+	color: #fff;
+}
+
+.main-navigation a:hover {
+	background-color: #333;
+}
+
+.menu-toggle {
+	background-color: #222;
+	font-family: "FontAwesome";
+	border: 0;
+	border-radius: 0;
+	display: block;
+	margin: auto;
+	color: #fff;
+	padding: 20px 0;
+	box-shadow: none;
+	font-size: 17px;
+	cursor: pointer;
+	text-transform: uppercase;
+	outline: 0;
+	width: 100%;
+}
+
+.menu-toggle:hover {
+	background-color: #222;
+}
+
+.menu-toggle:before {
+	bottom: 0;
+	content: '\f0c9';
+	margin-right: 5px;
+	position: relative;
+}
+
+.toggled .menu-toggle:before {
+	content: '\f00d';
+}
+
+@media screen and (min-width: 800px) {
+	.main-navigation {
+		float: none;
+	}
+
+	.main-navigation li {
+		display: inline-block;
+		float: none;
+	}
+
+	.main-navigation ul ul {
+		background-color: #333;
+	}
+
+	.main-navigation ul ul li {
+		text-align: left;
+	}
+
+	.main-navigation .menu-item-has-children > a:after {
+		font-family: "FontAwesome";
+		content: '\f107';
+		margin-left: 10px;
+	}
+
+	.sub-menu .menu-item-has-children > a:after {
+		content: '\f105';
+		float: right;
+		margin-left: 10px;
+	}
+}
+
+@media screen and (min-width: 800px) and (max-width: 800px) {
+	.main-navigation .page_item_has_children:after,
+	.main-navigation .menu-item-has-children:after {
+		top: 2em;
+		right: 1.5em;
+	}
+}
+
+.main-navigation a {
+	padding: 15px;
+	color: #fff;
+}
+
+@media screen and (max-width: 800px) {
+	.main-navigation .children ul ul a,
+	.main-navigation .sub-menu ul ul a {
+		padding-left: 4em;
+	}
+}
+
+.main-navigation {
+	clear: both;
+	display: block;
+	width: 100%;
+}
+
+.main-navigation ul {
+	display: none;
+	list-style: none;
+	margin: 0;
+	padding-left: 0;
+}
+
+@media screen and (min-width: 800px) {
+	.main-navigation ul ul {
+		float: left;
+		position: absolute;
+		left: -999em;
+		z-index: 99999;
+	}
+
+	.main-navigation ul ul ul {
+		left: -999em;
+		top: 0;
+	}
+
+	.main-navigation ul ul li:hover > ul,
+	.main-navigation ul ul li.focus > ul {
+		left: 100%;
+	}
+
+	.main-navigation ul ul a {
+		padding: 10px 15px;
+		width: 230px;
+	}
+}
+
+.main-navigation ul li:hover > ul,
+.main-navigation ul li.focus > ul {
+	left: auto;
+}
+
+.main-navigation li {
+	position: relative;
+}
+
+.main-navigation a {
+	display: block;
+	text-decoration: none;
+}
+
+/* Small Menu */
+
+.main-navigation.toggled ul {
+	display: block;
+}
+
+@media screen and (min-width: 800px) {
+	.menu-toggle {
+		display: none;
+	}
+
+	.main-navigation ul {
+		display: block;
+	}
+}
+
+/* Accessibility Menu */
+
+.main-navigation ul.children.toggled-on,
+.main-navigation ul.sub-menu.toggled-on {
+	display: block;
+}
+
+.main-navigation .sub-menu a,
+.main-navigation .children a {
+	background-color: #333;
+}
+
+.main-navigation .sub-menu a:hover,
+.main-navigation .children a:hover {
+	background-color: #4f4f4f;
+}
+
+.main-navigation .sub-menu .page_item_has_children:after,
+.main-navigation .children .page_item_has_children:after,
+.main-navigation .menu-item-has-children:after {
+	right: 1em;
+}
+
+@media all and (max-width: 800px) {
+	.main-navigation {
+		background-color: #333;
+	}
+
+	.main-navigation ul.children,
+	.main-navigation ul.sub-menu {
+		display: none;
+	}
+
+	.main-navigation a {
+		padding: 12px 0;
+		padding-left: 4%;
+		padding-right: 4%;
+	}
+
+	.main-navigation ul ul {
+		box-shadow: 0 2px 2px rgba(0,0,0,.1);
+	}
+
+	.main-navigation a:hover,
+	.main-navigation .sub-menu a:hover,
+	.main-navigation .children a:hover {
+		background-color: #606060;
+	}
+
+	.main-navigation .sub-menu a,
+	.main-navigation .children a {
+		background-color: #4f4f4f;
+	}
+}
+
+.dropdown-toggle {
+	position: absolute;
+	right: 3%;
+	top: 6px;
+	background: transparent !important;
+}
+
+@media all and (min-width: 800px) {
+	.dropdown-toggle {
+		display: none;
+	}
+}
+
+.dropdown-toggle i {
+	transition: all ease 0.3s;
+}
+
+/*--------------------------------------------------------------
+10.3 Posts
+--------------------------------------------------------------*/
+
+.sticky .entry-title {
+	padding-left: 20px;
+	position: relative;
+}
+
+.sticky .entry-title:after {
+	content: '\f276';
+	display: inline-block;
+	font-family: "FontAwesome";
+	font-style: normal;
+	font-weight: normal;
+	width: 12px;
+	height: 12px;
+	position: relative;
+	left: 0;
+	top: 2px;
+}
+
+#primary {
+	float: left;
+	width: 740px;
+}
+
+.post-inner-content,
+.archive-area,
+.no-results,
+.not-found {
+	background-color: #fff;
+	padding: 25px 30px;
+	margin-bottom: 20px;
+}
+
+.read-more {
+	float: right;
+}
+
+.read-more:after {
+	content: '\f054';
+	font-family: "FontAwesome";
+	margin-left: 5px;
+}
+
+/* Header posts */
+
+.entry-title,
+.page-title,
+.pages-title {
+	font-size: 28px;
+	margin: 0 0 5px;
+}
+
+.entry-title a {
+	color: #333;
+}
+
+.entry-title a:hover {
+	color: #4aa0d5;
+}
+
+.entry-meta {
+	margin-bottom: 20px;
+}
+
+.page-title{
+	margin: 0;
+}
+
+.pages-title {
+	margin-bottom: 15px;
+}
+
+.taxonomy-description {
+	margin-top: 15px;
+}
+
+.taxonomy-description p {
+	margin: 0;
+}
+
+/* Post thumbnail */
+
+.post-thumbnail {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.post-thumbnail img {
+	display: block;
+}
+
+/* Navigation */
+
+.pagination {
+	margin-bottom: 20px;
+}
+
+.pagination .nav-links {
+	text-align: center;
+}
+
+.pagination .page-numbers {
+	display: inline-block;
+}
+
+.site-main .comment-navigation,
+.site-main .posts-navigation,
+.site-main .post-navigation {
+	margin-bottom: 20px;
+}
+
+.comment-navigation .nav-previous,
+.posts-navigation .nav-previous,
+.post-navigation .nav-previous,
+.next.page-numbers {
+	float: right;
+}
+
+.comment-navigation .nav-text,
+.posts-navigation .nav-next,
+.post-navigation .nav-text,
+.prev.page-numbers {
+	float: left;
+}
+
+.nav-previous,
+.nav-next,
+.page-numbers {
+	background-color: #4aa0d5;
+	border: none;
+	border-radius: 3px;
+	cursor: pointer;
+	color: #fff !important;
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 1;
+	padding: 10px 12px;
+	width: auto;
+}
+
+.nav-previous:hover,
+.nav-next:hover,
+.page-numbers:hover {
+	background-color: #333;
+}
+
+.page-numbers.dots {
+	background-color: #4aa0d5;
+}
+
+.nav-previous a,
+.nav-next a {
+	color: #fff;
+}
+
+.nav-previous a:after,
+.next.page-numbers:after {
+	content: '\f054';
+	font-family: "FontAwesome";
+ 	margin-left: 5px;
+}
+
+.nav-next a:before,
+.prev.page-numbers:before {
+	content: '\f053';
+	font-family: "FontAwesome";
+	margin-left: 0;
+	margin-right: 5px;
+}
+
+.pagination .page-numbers.current {
+	background-color: #333;
+}
+
+/* Entry footer */
+
+.entry-footer > span {
+	display: block;
+}
+
+.entry-footer > span:last-child {
+	margin-bottom: 0;
+}
+
+.cat-links span,
+.tags-links span {
+	display: block;
+	font-size: 11px;
+	font-size: 0.6875rem;
+	font-weight: 800;
+	letter-spacing: 0.1818em;
+	padding-left: 25px;
+	position: relative;
+	text-transform: uppercase;
+}
+
+.cat-links {
+	margin-bottom: 10px;
+}
+
+.mycategories,
+.mytags {
+	position: absolute;
+}
+
+/* Search forms */
+
+.search-form {
+	position: relative;
+}
+
+.search-form .search-submit {
+	bottom: 3px;
+	padding: 0.5em 1em;
+	position: absolute;
+	right: 3px;
+	top: 3px;
+}
+
+/*--------------------------------------------------------------
+10.4 Footer
+--------------------------------------------------------------*/
+
+.site-footer .site-info {
+	background-color: #222;
+	color: #fff;
+	padding: 25px 0;
+	margin-top: 25px;
+	letter-spacing: 0.05em;
+	text-align: center;
+}
+
+.site-footer .site-info a {
+	color: #fff;
+}
+
+.site-footer .site-info a:hover {
+	color: #666;
+}
+
+/*--------------------------------------------------------------
+11.0 Comments
+--------------------------------------------------------------*/
+
+.bypostauthor {
+	display: block;
+}
+
+.comments-area,
+.comment-respond {
+	background-color: #fff;
+	padding: 25px 30px;
+	margin-bottom: 20px;
+}
+
+.comments-area .comment-respond {
+	padding: 0;
+}
+
+.comment .comment-respond {
+	border: 1px solid #bbb;
+	border-top: none;
+	padding: 1.1rem;
+}
+
+#comments ol .children {
+    padding-left: 3rem;
+}
+
+.respond {
+	display: none;
+	padding-top: 10px;
+}
+
+.comments-title,
+.comment-relpy-title {
+	margin: 0;
+}
+
+.says {
+	display: none;
+}
+
+.comment {
+	margin-top: 20px;
+}
+
+.comment-body {
+    padding: 1.1rem;
+    border: 1px solid #bbb;
+}
+
+.comment-list li li li {
+	padding-bottom: 0;
+	padding-top: 0;
+}
+
+.comment-author .avatar {
+	position: absolute;
+}
+
+.comment-author .fn,
+.comment-metadata {
+	margin-left: 80px;
+	display: inline-block;
+}
+
+.comment-author.vcard {
+	font-family: Georgia, serif;
+}
+
+.comment-meta .avatar {
+	border: 1px solid #bbb;
+	padding: 2px;
+}
+
+.comment-metadata {
+	font-size: 13px;
+	margin-bottom: 10px;
+}
+
+.comment-content {
+	margin-top: 15px;
+}
+
+.comment-metadata a {
+	color: #5a5a5a;
+	text-transform: uppercase;
+}
+
+.comment-metadata a:hover {
+	color: #4aa0d5;
+}
+
+.comment-metadata .edit-link:before {
+	content: " / ";
+}
+
+cite.fn {
+	font-style: normal;
+}
+
+.reply {
+	font-family: Georgia, serif;
+	font-size: 14px;
+	font-weight: 700;
+	text-align: right;
+	text-transform: uppercase;
+}
+
+.reply a:before {
+	content: '\f112';
+	font-family: "FontAwesome";
+	margin-right: 3px;
+}
+
+.reply a {
+	color: #333;
+}
+
+.reply a:hover {
+	color: #4aa0d5;
+}
+
+.comment-awaiting-moderation {
+	font-style: italic;
+}
+
+#email,
+#author,
+#url {
+	display: block;
+	width: 50%;
+}
+
+.comment-reply-title {
+	display: none;
+}
+
+.form-submit {
+	margin-bottom: 0;
+}
+
+/*--------------------------------------------------------------
+12.0 Widgets
+--------------------------------------------------------------*/
+
+#secondary {
+	float: right;
+	width: 340px;
+}
+
+.widget {
+	background-color: #fff;
+	padding: 20px;
+	margin-bottom: 20px;
+}
+
+.widget-title {
+	font-size: 18px;
+	margin: 0 0 5px 0;
+	display: inline-block;
+}
+
+.widget ul li {
+	border-top: 1px solid #bbb;
+	display: block;
+	padding: 8px 0;
+}
+
+.widget ul li:first-child{
+    border-top: 0;
+}
+
+.widget ul li a {
+	color: #333;
+}
+
+.widget ul li a:hover {
+	color: #4aa0d5;
+}
+
+.widget_recent_comments ul a {
+	font-style: italic;
+}
+
+.widget-header {
+	float: right;
+	max-width: 728px;
+	width: 70%;
+	padding: 20px 0;
+	text-align: right;
+}
+
+/*--------------------------------------------------------------
+13.0 Media
+--------------------------------------------------------------*/
+
+img,
+video {
+	height: auto;
+	max-width: 100%;
+}
+
+img.alignleft,
+img.alignright {
+	float: none;
+	margin: 0;
+}
+
+.wp-caption {
+	border: 1px solid #bbb;
+	color: #666;
+	margin-bottom: 1.5em;
+	max-width: 100%;
+}
+
+.wp-caption img[class*="wp-image-"] {
+	display: block;
+	margin: 1.2% auto 0;
+	max-width: 98%;
+}
+
+.wp-cation-text {
+	text-align: center;
+}
+
+.wp-caption .wp-caption-text {
+	margin: 0.8075em 0;
+}
+
+/* Image featured */
+
+.post-thumbnail a img {
+	transition: opacity 0.3s linear;
+	-webkit-transition: opacity 0.3s linear;
+	-moz-transition: opacity 0.3s linear;
+	-ms-transition: opacity 0.3s linear;
+	display: block;
+	margin: auto;
+}
+
+.post-thumbnail a:hover img {
+	opacity: 0.8;
+}
+
+.page-content .wp-smiley,
+.entry-content .wp-smiley,
+.comment-content .wp-smiley {
+	border: none;
+	margin-bottom: 0;
+	margin-top: 0;
+	padding: 0;
+}
+
+/* Make sure embeds and iframes fit their containers. */
+
+embed,
+iframe,
+object {
+	max-width: 100%;
+}
+
+/* Captions */
+
+.wp-caption {
+	margin-bottom: 1,5em;
+	max-width: 100%;
+}
+
+.wp-caption img[class*="wp-image-"] {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.wp-caption .wp-caption-text {
+	margin: 0.5075em 0;
+}
+
+.wp-caption-text {
+	text-align: center;
+}
+
+/*--------------------------------------------------------------
+13.1 Galleries
+--------------------------------------------------------------*/
+
+.gallery {
+	margin-bottom: 1.5em;
+}
+
+.gallery-item {
+	display: inline-block;
+	text-align: center;
+	vertical-align: top;
+	width: 100%;
+}
+
+.gallery-columns-2 .gallery-item {
+	max-width: 50%;
+}
+
+.gallery-columns-3 .gallery-item {
+	max-width: 33.33%;
+}
+
+.gallery-columns-4 .gallery-item {
+	max-width: 25%;
+}
+
+.gallery-columns-5 .gallery-item {
+	max-width: 20%;
+}
+
+.gallery-columns-6 .gallery-item {
+	max-width: 16.66%;
+}
+
+.gallery-columns-7 .gallery-item {
+	max-width: 14.28%;
+}
+
+.gallery-columns-8 .gallery-item {
+	max-width: 12.5%;
+}
+
+.gallery-columns-9 .gallery-item {
+	max-width: 11.11%;
+}
+
+.gallery-caption {
+	display: block;
+}
+
+/*--------------------------------------------------------------
+14.0 Media Queries
+--------------------------------------------------------------*/
+
+@media screen and (max-width: 1200px) {
+	.container {
+		width: 960px;
+	}
+
+	#primary {
+		width: 640px;
+	}
+
+	#secondary {
+		width: 300px;
+	}
+}
+
+@media screen and (max-width: 960px) {
+	.container {
+		width: 90%;
+	}
+
+	#primary,
+	#secondary {
+		float: none;
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 800px) {
+	.container {
+		width: 100%;
+	}
+
+	.site-branding {
+		float: none;
+		padding: 20px;
+	}
+
+	.site-logo {
+		text-align: center;
+	}
+
+	.custom-logo-link {
+		float: none;
+		margin-right: 0;
+		padding: 0;
+	}
+
+	.title-area {
+		float: none;
+		text-align: center;
+	}
+
+	.post-inner-content,
+	.archive-area,
+	.no-results,
+	.not-found,
+	.widget,
+	.comments-area,
+	.comment-respond {
+		padding: 20px 25px;
+	}
+
+	.widget-header {
+		width: 100%;
+		max-width: 100%;
+		text-align: center;
+		float: none;
+		padding: 0 20px;
+		margin-bottom: 20px;
+	}
+
+	.comment-navigation .nav-previous,
+	.posts-navigation .nav-previous,
+	.post-navigation .nav-previous,
+	.next.page-numbers {
+		float: none;
+	}
+
+	.comment-navigation .nav-text,
+	.posts-navigation .nav-next,
+	.post-navigation .nav-text,
+	.prev.page-numbers {
+		float: none;
+	}
+
+	.site-footer .site-info {
+		padding: 20px 0;
+		margin-top: 20px;
+	}
+}
+
+@media screen and (max-width: 480px) {
+	.post-inner-content,
+	.archive-area,
+	.no-results,
+	.widget,
+	.not-found,
+	.comments-area,
+	.comment-respond {
+		padding: 15px 10px;
+	}
+
+	.widget-header {
+		padding: 0 15px;
+	}
+
+	.page-numbers {
+		margin-bottom: 15px;
+	}
+
+	.site-footer .site-info {
+		padding: 15px 0;
+		margin-top: 15px;
+	}
+}
