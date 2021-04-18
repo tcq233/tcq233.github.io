@@ -1,3 +1,11 @@
 <script language="javascript" type="text/javascript">
-window.location.href='https://feeday.github.io/page/';   // 直接跳转地址
+function goPAGE() {
+	if ((navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
+		window.location.href="https://feeday.github.io/m/";   // 移动端跳转地址
+}
+	else {
+		window.location.href="https://feeday.github.io/page/";   // 电脑端跳转地址
+		}
+}
+goPAGE();
 </script>
