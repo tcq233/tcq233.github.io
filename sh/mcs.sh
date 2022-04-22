@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Description: Minecraft Service Configuration
 # Service Download URL  https://www.minecraft.net/en-us/download/server/
-# Copyright (C) 2020 feeday <0xf197@gmail.com>
+# Copyright (C) 2022 TCQ233 <0xf197@gmail.com>
 
 #配置网络防火墙
 function ips(){
