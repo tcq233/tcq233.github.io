@@ -3,7 +3,7 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 # Description: Auto test download & I/O speed script
 # Edit Revision VPS.BEST Teddysun <i@teddysun.com>
-# Copyright (C) 2020 feeday <0xf197@gmail.com>
+# Copyright (C) 2022 TCQ233 <0xf197@gmail.com>
 
 RED='\033[0;31m' && GREEN='\033[0;32m' && YELLOW='\033[0;33m' && PLAIN='\033[0m'
 next() { printf "%-70s\n" "-" | sed 's/\s/-/g'; }
