@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Description: CentOS 7 Configure
 # System Download URL  https://mirrors.aliyun.com/centos/7.7.1908/isos/x86_64/CentOS-7-x86_64-Minimal-1908.iso
-# Copyright (C) 2020 feeday <0xf197@gmail.com>
+# Copyright (C) 2022 TCQ233 <0xf197@gmail.com>
 
 #配置网络防火墙
 function ips(){
@@ -115,7 +115,7 @@ echo "1) Install Software More" #安装常用软件
 echo "2) Test Serve Host" #测试服务器
 echo "3) iPtables Port" #配置网络防火墙
 echo "4) AppNode Web" ##安装服务器管理软件
-echo "5) Minecraft" ##安装服务器管理软件
+echo "5) Minecraft" ##安装我的世界服务器
 echo "6) Poweroff" #关机
 echo "q) Exit!"
 echo "------------------------------------------------------------"
@@ -151,7 +151,7 @@ case $cof in
            esac    
 	;;    
 	2)
-		curl -Lso- https://feeday.github.io/sh/host.sh | bash
+		curl -Lso- https://tcq233.github.io/sh/host.sh | bash
 	;;
 	3)
 		ips
@@ -160,7 +160,7 @@ case $cof in
 		INSTALL_AGENT=1 INIT_SWAPFILE=1 bash -c "$(curl -sS http://dl.appnode.com/install.sh)"
    	;;	 
 	5)
-		curl -Lso- https://feeday.github.io/sh/mcs.sh | bash
+		curl -Lso- https://tcq233.github.io/sh/mcs.sh | bash
 	;;
 	6)
 		poweroff
