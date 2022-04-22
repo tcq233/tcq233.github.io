@@ -20,25 +20,3 @@
 ## License
 
 遵循 MIT 许可证。有关详细,请参阅 [LICENSE](https://github.com/qiubaiying/qiubaiying.github.io/blob/master/LICENSE)。
-
-## Linux Bash
-
-```
-curl https://feeday.github.io/sh/feeday.sh -O
-bash feeday.sh  # CentOS-7 脚本
-```
-
-```
-curl https://feeday.github.io/sh/mcs.sh -O
-bash mcs.sh  # Minecraft 脚本
-```
-
-```
-curl https://feeday.github.io/sh/pptp.sh -O
-bash pptp.sh  # PPTP 脚本
-```
-
-```
-curl https://feeday.github.io/sh/host.sh -O
-bash host.sh  # HOST TEST 脚本
-```
