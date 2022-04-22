@@ -1,8 +1,8 @@
 # Site settings
-title: TCQ233
-SEOTitle: TCQ233
+title: Edits
+SEOTitle: Edits
 description: "Every failure is leading towards success."
-keyword: "TCQ233"
+keyword: "edits"
 url: "http://tcq233.github.io"          # your host, for absolute URL
 baseurl: ""      # for example, '/blog' if your blog hosted on 'host/blog'
 github_repo: "https://github.com/qiubaiying/qiubaiying.github.io.git" # you code repository
