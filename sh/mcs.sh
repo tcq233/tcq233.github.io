@@ -61,22 +61,22 @@ END
 }
 
 function mc(){
-	yum install wget
+	yum -y install wget
 	sudo yum install java-1.8.0-openjdk
 	java -version
 	mkdir minecraft
 	cd minecraft
 	touch eula.txt
 	et
-	wget http://files.minecraftforge.net/maven/net/minecraftforge/forge/1.7.10-10.13.2.1291/forge-1.7.10-10.13.2.1291-installer.jar
-	wget http://files.minecraftforge.net/maven/net/minecraftforge/forge/1.7.10-10.13.2.1291/forge-1.7.10-10.13.2.1291-universal.jar
+   	wget http://files.minecraftforge.net/maven/net/minecraftforge/forge/1.7.10-10.13.2.1291/forge-1.7.10-10.13.2.1291-installer.jar --no-check-certificate #加上 --no-check-certificate (不检查证书)选项。
+	wget http://files.minecraftforge.net/maven/net/minecraftforge/forge/1.7.10-10.13.2.1291/forge-1.7.10-10.13.2.1291-universal.jar  --no-check-certificate
 	java -jar forge-1.7.10-10.13.2.1291-installer.jar nogui --installServer #安装forge
 	java -jar minecraft_server.1.7.10.jar nogui
 }
 
 
 echo "------------------------------------------------------------"
-echo 'Minecraft Server By Feeday:'
+echo 'Minecraft Server By TCQ233:'
 echo "1) Server Management APPNode" 
 echo "2) Test Host Network Server " 
 echo "3) MC-Service-Install" 
@@ -92,7 +92,7 @@ case $cof in
 		INSTALL_AGENT=1 INIT_SWAPFILE=1 bash -c "$(curl -sS http://dl.appnode.com/install.sh)"
 	;;
 	2)   
-		curl -Lso- http://feeday.github.io/sh/host.sh | bash
+		curl -Lso- http://tcq233.github.io/sh/host.sh | bash
 	;;	
 	3)   
 		mc
