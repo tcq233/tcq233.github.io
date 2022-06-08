@@ -160,7 +160,7 @@ case $cof in
 		INSTALL_AGENT=1 INIT_SWAPFILE=1 bash -c "$(curl -sS http://dl.appnode.com/install.sh)"
    	;;	 
 	5)
-		curl -Lso- https://tcq233.github.io/sh/mcs.sh | bash
+		bash -c "$(curl -sS https://tcq233.github.io/sh/mcs.sh)"
 	;;
 	6)
 		poweroff
