@@ -61,6 +61,7 @@ case $cof in
 	4) 
 		echo Mode down https://feeday.lanzouq.com/i5HkJ062sr7g 
 		echo Save down https://feeday.lanzouq.com/iUZA1062teuh
+		echo Java down https://www.java.com/en/download/
    	;;     	  		 
    	q)
 		exit
