@@ -3,46 +3,6 @@
 # Service Download URL  https://www.minecraft.net/en-us/download/server/
 # Copyright (C) 2022 TCQ233 <0xf197@gmail.com>
 
-#配置网络防火墙
-function ips(){
-systemctl stop firewalld     #停止firewall防火墙
-systemctl disable firewalld  #禁止firewall开机启动
-systemctl mask firewalld     #禁用firewalld服务
-
-yum install  -y wget iptables nmap iptables-services   #安装iptables防火墙和 nmap
-systemctl start iptables         #启动防火墙
-
-#配置文件目录 /etc/sysconfig/iptables
-
-iptables -P INPUT ACCEPT   #先允许所有,不然有可能会杯具
-
-iptables -F      #清空所有的防火墙规则
-iptables -X      #清空所有自定义规则
-iptables -Z      #所有计数器归0
-
-iptables -A INPUT -p tcp --dport 22 -j ACCEPT   #开放22端口
-iptables -A INPUT -p tcp --dport 25565 -j ACCEPT   #开放25565端口(minecraft)
-iptables -A INPUT -p icmp --icmp-type 8 -j ACCEPT  #允许ping
-
-iptables -P INPUT DROP  #其他入站一律丢弃
-
-iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT #允许由服务器本身请求的数据通过
-iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
-
-iptables -P OUTPUT ACCEPT  #所有出站一律绿灯
-iptables -P FORWARD DROP   #所有转发一律丢弃
-
-service iptables save                #保存上述规则
-systemctl restart iptables.service   #重启服务
-systemctl enable iptables            #设置开机启动
-
-systemctl start iptables.service    #启动服务
-systemctl status iptables.service   #查看服务状态
-iptables -L -n #查看防火墙规则
-nmap localhost #查看开放的端口
-}
-
-
 #我的世界修复文件
 function et(){
 cat > eula.txt <<END
@@ -62,6 +22,7 @@ END
 
 function mc(){
 	yum -y install wget
+	yum install -y unzip zip
 	sudo yum install java-1.8.0-openjdk
 	java -version
 	mkdir minecraft
@@ -80,7 +41,7 @@ echo 'Minecraft Server By TCQ233:'
 echo "1) MC-Service-Install" 
 echo "2) MC-Service-Start" 
 echo "3) MC-Forge-Start" 
-echo "4) Port-Start " 
+echo "4) MC-More" 
 echo "q) Exit!"
 echo "------------------------------------------------------------"
 read -p ":" cof
@@ -98,8 +59,9 @@ case $cof in
 		java -jar forge-1.7.10-10.13.2.1291-universal.jar nogui 
    	;;
 	4) 
-		ips 
-   	;;   		 
+		echo Mode down https://feeday.lanzouq.com/i5HkJ062sr7g 
+		echo Save down https://feeday.lanzouq.com/iUZA1062teuh
+   	;;     	  		 
    	q)
 		exit
 	;;  
