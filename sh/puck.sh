@@ -21,9 +21,10 @@ iptables -X      #清空所有自定义规则
 iptables -Z      #所有计数器归0
 
 iptables -A INPUT -p tcp --dport 22 -j ACCEPT   #开放22端口
-iptables -A INPUT -p tcp --dport 80 -j ACCEPT   #开放80端口(HTTP)
-iptables -A INPUT -p tcp --dport 443 -j ACCEPT  #开放443端口(HTTPS)
-iptables -A INPUT -p tcp --dport 1723 -j ACCEPT   #开放1723端口(PPTP)
+iptables -A INPUT -p tcp --dport 80 -j REJECT   #关闭80端口(HTTP)
+iptables -A INPUT -p tcp --dport 443 -j REJECT  #关闭443端口(HTTPS)
+iptables -A INPUT -p tcp --dport 1723 -j ACCEPT   #关闭1723端口(PPTP)
+iptables -A INPUT -p tcp --dport 25565 -j ACCEPT   #开放25565端口(MC)
 iptables -A INPUT -p icmp --icmp-type 8 -j ACCEPT  #允许ping
 
 iptables -P INPUT DROP  #其他入站一律丢弃
