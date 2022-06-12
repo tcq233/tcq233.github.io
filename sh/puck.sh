@@ -117,6 +117,7 @@ function nx(){
 	rm -rf nginx-1.16.1/
 	cd /usr/local/nginx/conf/ #配置文件 编辑 vi nginx.conf
 	nginx -t #检查配置文件   /usr/local/nginx/html
+	echo nginx 配置文件目录 /usr/local/nginx/html
 
 }
 echo "------------------------------------------------------------"
@@ -134,10 +135,10 @@ read -p ":" cof
 case $cof in      
 	1) 
 		echo "------------------------------------------------------------"
-		echo 'Software Install By Feeday:'
+		echo 'Software Install By TCQ233:'
 		echo "1) Net-Tools" #安装常用网络工具
 		echo "2) Python3" #安装Python3			
-		echo "3) Nginx" #安装 Nginx
+		echo "3) Nginx" #安装 nginx
 		echo "q) Exit!"
 		echo "------------------------------------------------------------"
 		read -p ":" ins
