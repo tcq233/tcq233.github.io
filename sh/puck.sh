@@ -21,9 +21,8 @@ iptables -X      #清空所有自定义规则
 iptables -Z      #所有计数器归0
 
 iptables -A INPUT -p tcp --dport 22 -j ACCEPT   #开放22端口
-iptables -A INPUT -p tcp --dport 80 -j REJECT   #关闭80端口(HTTP)
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT  #开放80端口(HTTP)
 iptables -A INPUT -p tcp --dport 443 -j REJECT  #关闭443端口(HTTPS)
-iptables -A INPUT -p tcp --dport 1723 -j ACCEPT   #关闭1723端口(PPTP)
 iptables -A INPUT -p tcp --dport 25565 -j ACCEPT   #开放25565端口(MC)
 iptables -A INPUT -p icmp --icmp-type 8 -j ACCEPT  #允许ping
 
@@ -99,19 +98,23 @@ function py3(){
 #安装Nginx
 function nx(){
 	cd /usr/loacl/src
-	yum install wget
-	wget 'http://nginx.org/download/nginx-1.14.2.tar.gz'
-	tar -zxvf nginx-1.14.2.tar.gz
-	cd nginx-1.14.2
-	./configure --prefix=/usr/loacl/nginx  #编译
+	yum -y install wget unzip zip
+	wget http://nginx.org/download/nginx-1.16.1.tar.gz #下载软件包
+	tar -zxvf nginx-1.16.1.tar.gz #解压软件包
+	cd nginx-1.16.1
+	./configure --prefix=/usr/local/nginx #编译
 	make && make install          #安装
-	PATH=$PATH:/usr/local/nginx/sbin  #配置环境变量 vi /etc/profile 加入 "export PATH=$PATH:/usr/local/nginx/sbin"  source /etc/profile	
-	ngingx -t #检查配置文件
-
+	/usr/local/nginx/sbin/nginx #启动nginx 没有保持安装成功
+	/usr/local/nginx/sbin/nginx -s stop
+	/usr/local/nginx/sbin/nginx -s reload
+        /usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf
+        /usr/local/nginx/sbin/nginx -t #测试配置文件是否正常
+	ln -s /usr/local/nginx/sbin/nginx  /usr/bin/nginx #创建nginx的软连接
+	cd /usr/local/nginx/conf/ #配置文件 编辑 vi nginx.conf 
+	nginx -t #检查配置文件   
 }
-
 echo "------------------------------------------------------------"
-echo 'CentOS 7 Configure By Feeday:'
+echo 'CentOS 7 Configure By TCQ233:'
 echo "1) Install Software More" #安装常用软件
 echo "2) Test Serve Host" #测试服务器
 echo "3) iPtables Port" #配置网络防火墙
@@ -136,12 +139,12 @@ case $cof in
 			1)
 				nt
 			;;
-			1)
+			2)
 				py3
-			;;		
+			;;
 			3)
 				nx
-			;;												
+			;;															
 			q)
 				exit
 			;;  
