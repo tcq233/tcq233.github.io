@@ -81,6 +81,7 @@ function py3(){
 	cd /usr/bin/
 	mv python python.bak
 	ln -s /usr/local/python3/bin/python3 /usr/bin/python
+	ln -s /usr/local/python3/bin/pip3 /usr/bin/pip
 	
 	cd /home
 	curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
@@ -112,9 +113,10 @@ function nx(){
 	ln -s /usr/local/nginx/sbin/nginx  /usr/bin/nginx #创建nginx的软连接
 	cd /usr/local/nginx/conf/ #配置文件 编辑 vi nginx.conf 
 	nginx -t #检查配置文件   
+
 }
 echo "------------------------------------------------------------"
-echo 'CentOS 7 Configure By TCQ233:'
+echo 'CentOS 7 Configure By Feeday:'
 echo "1) Install Software More" #安装常用软件
 echo "2) Test Serve Host" #测试服务器
 echo "3) iPtables Port" #配置网络防火墙
