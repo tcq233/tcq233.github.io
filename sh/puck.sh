@@ -98,8 +98,10 @@ function py3(){
 
 #安装Nginx
 function nx(){
-	cd /usr/loacl/src
+	cd /home #cd /usr/local/src
 	yum -y install wget unzip zip
+	yum -y install gcc gcc-c++ autoconf automake make
+	yum -y install gcc openssl openssl-devel pcre-devel zlib zlib-devel
 	wget http://nginx.org/download/nginx-1.16.1.tar.gz #下载软件包
 	tar -zxvf nginx-1.16.1.tar.gz #解压软件包
 	cd nginx-1.16.1
@@ -108,15 +110,17 @@ function nx(){
 	/usr/local/nginx/sbin/nginx #启动nginx 没有保持安装成功
 	/usr/local/nginx/sbin/nginx -s stop
 	/usr/local/nginx/sbin/nginx -s reload
-        /usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf
-        /usr/local/nginx/sbin/nginx -t #测试配置文件是否正常
+     /usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf
+     /usr/local/nginx/sbin/nginx -t #测试配置文件是否正常
 	ln -s /usr/local/nginx/sbin/nginx  /usr/bin/nginx #创建nginx的软连接
-	cd /usr/local/nginx/conf/ #配置文件 编辑 vi nginx.conf 
-	nginx -t #检查配置文件   
+	cd /home
+	rm -rf nginx-1.16.1/
+	cd /usr/local/nginx/conf/ #配置文件 编辑 vi nginx.conf
+	nginx -t #检查配置文件   /usr/local/nginx/html
 
 }
 echo "------------------------------------------------------------"
-echo 'CentOS 7 Configure By Feeday:'
+echo 'CentOS 7 Configure By TCQ233:'
 echo "1) Install Software More" #安装常用软件
 echo "2) Test Serve Host" #测试服务器
 echo "3) iPtables Port" #配置网络防火墙
