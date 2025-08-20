@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head> 
+  <meta charset="utf-8" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, viewport-fit=cover" /> 
+  <title>─=≡Σ((( つ•̀ω•́)つ</title> 
+  <link rel="shortcut icon" href="https://github.githubassets.com/favicons/favicon.svg" /> 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" /> 
+  <style>
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+        .input-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        #filterInput {
+            padding: 8px;
+            width: 100%;
+            font-size: 16px;
+            border: none;
+            box-sizing: border-box;
+        }
+        .btn, .clear-btn {
+            padding: 8px 12px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: #f5f5f5;
+            transition: background-color 0.2s;
+        }
+        .btn:hover, .clear-btn:hover {
+            background-color: #e5e5e5;
+        }
+        .icon {
+            font-size: 16px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            cursor: pointer;
+        }
+        th:hover {
+            background-color: #f5f5f5;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .delete-btn {
+            background-color: #ff4d4d; /* Red background */
+            color: white; /* White text */
+            border: none; /* No border */
+            border-radius: 5px; /* Rounded corners */
+            padding: 5px 10px; /* Padding */
+            cursor: pointer; /* Pointer cursor */
+        }
+        .delete-btn:hover {
+            background-color: #ff1a1a; /* Darker red on hover */
+        }
+
+        /* Hide Hyperlink and Action columns on mobile */
+        @media screen and (max-width: 767px) {
+            #myTable th:nth-child(4), /* Hyperlink column */
+            #myTable td:nth-child(4),
+            #myTable th:nth-child(5), /* Action column */
+            #myTable td:nth-child(5) {
+                display: none;
+            }
+
+            /* Hide specific buttons */
+            .btn {
+                display: none;
+            }
+    
+        }
+
+        /* Hide specific buttons on mobile */
+/* 在手机上确保显示这两个按钮 */
+@media screen and (max-width: 767px) {
+    .add-xlsx-btn, .download-xlsx-btn {
+        display: inline-block; /* 确保按钮显示为内联块元素 */
+    }
+}
+/* 为表格单元格设置换行 */
+td {
+    word-wrap: break-word;  /* 允许单元格内容换行 */
+    overflow-wrap: break-word;  /* 兼容性增强 */
+}
+
+/* 针对手机屏幕缩小字体大小 */
+@media screen and (max-width: 767px) {
+    table {
+        font-size: 14px;  /* 当屏幕宽度小于767px时，缩小字体 */
+    }
+    td, th {
+        padding: 5px;  /* 调整单元格内边距以节省空间 */
+    }
+    #filterInput {
+        font-size: 14px; /* 搜索框字体大小调整 */
+    }
+    .btn, .clear-btn {
+        font-size: 14px;  /* 按钮字体调整 */
+    }
+}
+
+    </style> 
+  <script>
+        function sortDefault() {
+            sortTable(4);
+        }
+
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("myTable");
+            switching = true;
+            dir = "asc";
+            while (switching) {
+                switching = false;
+                rows = table.getElementsByTagName("TR");
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    var xContent = x.innerText || x.textContent;
+                    var yContent = y.innerText || y.textContent;
+
+                    var xNum = parseFloat(xContent.replace(/[^0-9.]/g, ''));
+                    var yNum = parseFloat(yContent.replace(/[^0-9.]/g, ''));
+
+                    if (dir == "asc") {
+                        if (!isNaN(xNum) && !isNaN(yNum)) {
+                            if (xNum > yNum) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        } else {
+                            if (xContent.toLowerCase() > yContent.toLowerCase()) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        }
+                    } else if (dir == "desc") {
+                        if (!isNaN(xNum) && !isNaN(yNum)) {
+                            if (xNum < yNum) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        } else {
+                            if (xContent.toLowerCase() < yContent.toLowerCase()) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                } else {
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+
+        function filterTable() {
+            var input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("filterInput");
+            filter = input.value.toLowerCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 1; i < tr.length; i++) {
+                tr[i].style.display = "none";
+                td = tr[i].getElementsByTagName("td");
+                for (j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        function startSpeechRecognition() {
+            var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'en-US';
+            recognition.onresult = function(event) {
+                var transcript = event.results[0][0].transcript;
+                transcript = transcript.replace(/[^a-zA-Z0-9\s]/g, '');
+                document.getElementById('filterInput').value = transcript;
+                filterTable();
+            }
+            recognition.start();
+        }
+
+        function clearInput() {
+            document.getElementById('filterInput').value = '';
+            filterTable();
+        }
+
+// Add a new row to the table
+function addRow() {
+    var table = document.getElementById("myTable");
+    var row = table.insertRow(-1); // Insert at the end of the table
+
+    var name = prompt("Enter Name:");
+    var year = prompt("Enter Year:");
+    var dataType = prompt("Enter Data Type:");
+    var capacity = prompt("Enter Domain (x.com):");
+    var hyperlink = prompt("Enter Hyperlink (https://x.com):");
+
+    // Ask if the user wants to add a hyperlink for the name
+    var addLink = confirm("Do you want to add a hyperlink for the name?");
+    var nameCell = addLink && hyperlink ? `<a target="_blank" href="${hyperlink}">${name}</a>` : name;
+
+    // For Hyperlink column: if there's a hyperlink, make the text a clickable link
+    var displayText = capacity || 'N/A'; // Default to 'N/A' if nothing is entered
+
+    // If hyperlink is provided, wrap the text in an <a> tag to make it clickable
+    var displayContent = hyperlink ? `<a target="_blank" href="${hyperlink}">${displayText}</a>` : displayText;
+
+    row.innerHTML = `
+        <td>${nameCell}</td>
+        <td>${year}</td>
+        <td>${dataType}</td>
+        <td contenteditable="true" onblur="updateLink(this.parentNode, 3)">
+            ${displayContent}
+        </td>
+        <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td>
+    `;
+
+    // Save the current table data to localStorage
+    saveTableToLocalStorage();
+}
+
+// Update the hyperlink in the table when the user edits the cell
+function updateLink(row, cellIndex) {
+    var cell = row.cells[cellIndex];
+    var url = cell.innerText.trim();
+
+    // Check if the content is a valid URL
+    if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+        cell.innerHTML = `<a target="_blank" href="${url}">${url}</a>`;
+    } else {
+        // If the text is not a valid URL, leave it as plain text or 'N/A'
+        cell.innerHTML = url || 'N/A';
+    }
+
+    // After updating the link, save the table to localStorage again
+    saveTableToLocalStorage();
+}
+
+// Delete a row
+function deleteRow(btn) {
+    var row = btn.parentNode.parentNode;
+    row.parentNode.removeChild(row);
+
+    // After deleting the row, save the updated table to localStorage
+    saveTableToLocalStorage();
+}
+
+// Save the current table data to localStorage
+function saveTableToLocalStorage() {
+    var table = document.getElementById("myTable");
+    var rows = table.getElementsByTagName("tr");
+    var tableData = [];
+
+    for (var i = 1; i < rows.length; i++) { // Skip the header row
+        var row = rows[i];
+        var rowData = [];
+
+        for (var j = 0; j < row.cells.length - 1; j++) { // Skip the last cell (Action)
+            var cell = row.cells[j];
+            rowData.push(cell.innerHTML);
+        }
+
+        tableData.push(rowData);
+    }
+
+    // Save table data to localStorage
+    localStorage.setItem('tableData', JSON.stringify(tableData));
+}
+
+// Load the table data from localStorage
+function loadTableFromLocalStorage() {
+    var tableData = localStorage.getItem('tableData');
+    if (tableData) {
+        tableData = JSON.parse(tableData);
+        var table = document.getElementById("myTable");
+
+        tableData.forEach(function(rowData) {
+            var row = table.insertRow(-1);
+            rowData.forEach(function(cellData) {
+                var cell = row.insertCell();
+                cell.innerHTML = cellData;
+            });
+            var deleteCell = row.insertCell();
+            deleteCell.innerHTML = `<button class="delete-btn" onclick="deleteRow(this)">Delete</button>`;
+        });
+    }
+}
+
+// Call this function when the page loads to restore table data
+window.onload = function() {
+    loadTableFromLocalStorage();
+};
+
+// Update the link if user modifies the hyperlink column
+function updateLink(row, cellIndex) {
+    var cell = row.cells[cellIndex];
+    var text = cell.innerText.trim();
+
+    // Check if the content is a valid URL and if so, update the cell to be a hyperlink
+    if (text && (text.startsWith('http://') || text.startsWith('https://'))) {
+        cell.innerHTML = `<a target="_blank" href="${text}">${text}</a>`;
+    } else {
+        cell.innerHTML = text || 'N/A';
+    }
+}
+
+
+
+
+
+        function updateLink(row, cellIndex) {
+            var cell = row.cells[cellIndex];
+            var url = cell.innerText.trim();
+
+            // Check if the content is a valid URL
+            if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+                cell.innerHTML = `<a target="_blank" href="${url}">${url}</a>`;
+            } else {
+                // If the text is not a valid URL, leave it as plain text or 'N/A'
+                cell.innerHTML = url || 'N/A';
+            }
+        }
+
+        function deleteRow(btn) {
+            var row = btn.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        }
+
+        function downloadPage() {
+            const link = document.createElement('a');
+            link.href = 'data:text/html;charset=utf-8,' + encodeURIComponent(document.documentElement.outerHTML);
+            link.download = 'data_page.html';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+      function downloadXLSX() {
+    var table = document.getElementById("myTable");
+    var workbook = XLSX.utils.book_new();
+    var wsData = [];
+
+    // Extract the header row
+    var headers = [];
+    var headerCells = table.getElementsByTagName("th");
+    for (var i = 0; i < headerCells.length; i++) {
+        headers.push(headerCells[i].innerText);
+    }
+    wsData.push(headers); // Add headers as the first row
+
+    // Extract the data rows
+    var rows = table.getElementsByTagName("tr");
+    for (var i = 1; i < rows.length; i++) { // Skip the first row (header)
+        var row = rows[i];
+        var rowData = [];
+        var cells = row.getElementsByTagName("td");
+
+        for (var j = 0; j < cells.length - 1; j++) { // Exclude the last cell (Action button)
+            var cell = cells[j];
+            // Check if the cell contains a link
+            if (cell.firstChild && cell.firstChild.tagName === 'A') {
+                // If it's a link, store the text content
+                rowData.push(cell.firstChild.innerText); // Use innerText of the link (not HTML)
+            } else {
+                rowData.push(cell.innerText || cell.textContent); // Regular text content
+            }
+        }
+
+        wsData.push(rowData); // Add the data row
+    }
+
+    // Create a worksheet from the data
+    var ws = XLSX.utils.aoa_to_sheet(wsData);
+
+    // Add the worksheet to the workbook
+    XLSX.utils.book_append_sheet(workbook, ws, "Sheet1");
+
+    // Write the XLSX file with the correct extension
+    XLSX.writeFile(workbook, "data.xlsx");
+}
+
+
+function handleFileUpload(event) {
+    var file = event.target.files[0];
+    if (file && file.name.endsWith('.xlsx')) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var data = new Uint8Array(e.target.result);
+            var workbook = XLSX.read(data, { type: 'array' });
+
+            // Get the first sheet
+            var sheetName = workbook.SheetNames[0];
+            var worksheet = workbook.Sheets[sheetName];
+            var jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+            // Add data to the table
+            jsonData.forEach(function(rowData) {
+                var name = rowData.Name || 'N/A';
+                var hyperlink = rowData.Hyperlink || 'N/A';
+                var year = rowData.Year || 'N/A';
+                var dataType = rowData['Data type'] || 'N/A';
+
+                // Check if the row is a duplicate
+                if (!isRowDuplicate(name, hyperlink, year, dataType)) {
+                    var table = document.getElementById("myTable");
+                    var row = table.insertRow(-1); // Insert at the end of the table
+
+                    var nameCell = `<a target="_blank" href="${hyperlink}">${name}</a>`;
+                    var displayContent = hyperlink ? `<a target="_blank" href="${hyperlink}">${hyperlink}</a>` : 'N/A';
+
+                    row.innerHTML = `
+                        <td>${nameCell}</td>
+                        <td>${year}</td>
+                        <td>${dataType}</td>
+                        <td contenteditable="true" onblur="updateLink(this.parentNode, 3)">
+                            ${displayContent}
+                        </td>
+                        <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td>
+                    `;
+                }
+            });
+        };
+        reader.readAsArrayBuffer(file);
+    } else {
+        alert('Please upload a valid XLSX file.');
+    }
+}
+
+// Check if the row already exists based on all columns (Name, Hyperlink, Year, Data type)
+function isRowDuplicate(name, hyperlink, year, dataType) {
+    var table = document.getElementById("myTable");
+    var rows = table.getElementsByTagName("tr");
+
+    for (var i = 1; i < rows.length; i++) { // Skip the header row
+        var cells = rows[i].getElementsByTagName("td");
+
+        // Compare each column (Name, Hyperlink, Year, Data type)
+        var existingName = cells[0].textContent.trim();
+        var existingHyperlink = cells[3].textContent.trim();
+        var existingYear = cells[1].textContent.trim();
+        var existingDataType = cells[2].textContent.trim();
+
+        // If any column differs, it's not a duplicate
+        if (existingName === name && existingHyperlink === hyperlink && existingYear === year && existingDataType === dataType) {
+            return true; // Row is a duplicate
+        }
+    }
+    return false; // Row is not a duplicate
+}
+
+
+
+    </script> 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script> 
+ </head> 
+ <body onload="sortDefault()"> 
+  <div class="container"> 
+   <div class="input-container"> 
+    <input type="text" id="filterInput" onkeyup="filterTable()" placeholder="Search for Data.." /> 
+    <button class="clear-btn" onclick="clearInput()">✕</button> 
+    <button class="btn" onclick="startSpeechRecognition()"><i class="fas fa-microphone icon"></i></button> 
+
+
+
+    <button class="btn add add-xlsx-btn" title="upload xlsx"  onclick="document.getElementById('file-input').click()">
+        <i class="fas fa-plus icon"></i> 
+    </button>
+    <input type="file" id="file-input" style="display: none;" accept=".xlsx" onchange="handleFileUpload(event)" />
+
+
+    <button class="btn download-xlsx-btn" title="download xlsx" onclick="downloadXLSX()">
+        <i class="fa fa-download"></i>
+      </button>
+
+    <button class="btn" title="download html"  onclick="downloadPage()"><i class="fab fa-chrome"></i></button>
+    <button class="btn" title="edit"onclick="window.open('https://github.com/ChatPuck/chatpuck.github.io/blob/main/static/xlsx.html')"><i class="fas fa-cog"></i></button> 
+
+<!--     
+        <button class="btn" title="add data"  onclick="addRow()"><i class="fas fa-plus icon"></i></button>
+    <button class="btn" title="add data"  onclick="addRow()"><i class="fas fa-plus icon"></i></button>
+        <button class="btn download-xlsx-btn" title="download xlsx"  onclick="downloadXLSX()"><i class="fa fa-download"></i></button> 
+<button class="btn" onclick="window.open('https://github.com/feeday/blog/blob/main/static/xlsx/index.html', '_blank')">
+  <i class="fas fa-file-excel icon"></i>
+</button>
+    -->
+
+   </div> 
+   <table id="myTable"> 
+    <tbody>
+     <tr> 
+      <th onclick="sortTable(0)">Name</th> 
+      <th onclick="sortTable(1)">Year</th> 
+      <th onclick="sortTable(2)">Data type</th> 
+      <th onclick="sortTable(3)">Hyperlink</th> 
+      <th>Action</th> 
+     </tr> 
+     <tr> 
+      <td><a target="_blank" href="https://github.com/deepseek-ai/DeepSeek-R1">DeepSeek-R1</a></td> 
+      <td>202501</td> 
+      <td>Code-LLM</td> 
+      <td><a target="_blank" href="https://github.com/deepseek-ai/DeepSeek-R1">https://github.com/deepseek-ai/DeepSeek-R1</a></td> 
+      <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
+     </tr> 
+      <tr> 
+      <td><a target="_blank" href="https://chat.scnet.cn">DeepSeek-R1</a></td> 
+      <td>202502</td> 
+      <td>Web-LLM</td> 
+      <td><a target="_blank" href="https://chat.scnet.cn">https://chat.scnet.cn</a></td> 
+      <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
+     </tr>
+           <tr> 
+      <td><a target="_blank" href="https://www.superclueai.com">SuperCLUE</a></td> 
+      <td>202502</td> 
+      <td>Ranking-AIGC</td> 
+      <td><a target="_blank" href="https://www.superclueai.com/">https://www.superclueai.com</a></td> 
+      <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
+     </tr>
+           <tr> 
+      <td><a target="_blank" href="https://livebench.ai">LiveBench</a></td> 
+      <td>202502</td> 
+      <td>Ranking-AIGC</td> 
+      <td><a target="_blank" href="https://livebench.ai">https://livebench.ai</a></td> 
+      <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
+     </tr>
+
+   
+           <tr> 
+      <td><a target="_blank" href="https://www.iresearch.com.cn/report.shtml">IResearch</a></td> 
+      <td>202502</td> 
+      <td>PDF-Report</td> 
+      <td><a target="_blank" href="https://www.iresearch.com.cn/report.shtml">https://www.iresearch.com.cn/report.shtml</a></td> 
+      <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
+     </tr>
+           <tr> 
+      <td><a target="_blank" href="https://www.tradingview.com/markets/?aff_id=149508">TradingView</a></td> 
+      <td>202502</td> 
+      <td>Deal-Price</td> 
+      <td><a target="_blank" href="https://www.tradingview.com/markets/?aff_id=149508">https://www.tradingview.com/markets</a></td> 
+      <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
+     </tr>
+    
+     <tr> 
+        <td><a target="_blank" href="https://www.w3schools.com/icons/icons_reference.asp">Font Awesome 5</a></td> 
+        <td>201707</td> 
+        <td>Web-Image</td> 
+        <td><a target="_blank" href="https://www.w3schools.com/icons/icons_reference.asp">https://www.w3schools.com/icons/icons_reference.asp</a></td> 
+        <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
+       </tr>
+      <tr> 
+      <td><a target="_blank" href="https://chatgpt.com/">ChatGPT</a></td> 
+      <td>202303</td> 
+      <td>Web-LLM</td> 
+      <td><a target="_blank" href="https://chatgpt.com/">https://chatgpt.com</a></td> 
+      <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
+     </tr> 
+
+      <tr> 
+      <td><a target="_blank" href="https://jimeng.jianying.com/ai-tool/home">Jimeng</a></td> 
+      <td>202502</td> 
+      <td>Web-AIGC</td> 
+      <td><a target="_blank" href="https://jimeng.jianying.com/ai-tool/home">https://jimeng.jianying.com/ai-tool/home</a></td> 
+      <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
+     </tr> 
+
+      <tr> 
+      <td><a target="_blank" href="https://www.midjourney.com/explore">Midjourney</a></td> 
+      <td>202502</td> 
+      <td>Web-AIGC</td> 
+      <td><a target="_blank" href="https://www.midjourney.com/explore">https://www.midjourney.com/explore</a></td> 
+      <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
+     </tr> 
+
+      <tr> 
+      <td><a target="_blank" href="https://ai-bot.cn/ai-tools/">AI-Bot</a></td> 
+      <td>202502</td> 
+      <td>Message-AIGC</td> 
+      <td><a target="_blank" href="https://ai-bot.cn/ai-tools/">https://ai-bot.cn/ai-tools</a></td> 
+      <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
+     </tr> 
+      <tr> 
+      <td><a target="_blank" href="https://huggingface.co/spaces/Sanster/Lama-Cleaner-lama">Lama-Cleaner</a></td> 
+      <td>202502</td> 
+      <td>Web-Image</td> 
+      <td><a target="_blank" href="https://huggingface.co/spaces/Sanster/Lama-Cleaner-lama">https://huggingface.co/spaces/Sanster/Lama-Cleaner-lama</a></td> 
+      <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
+     </tr> 
+     
+      <tr> 
+      <td><a target="_blank" href="https://chat18.aichatos18.com/">AIchatOS2</a></td> 
+      <td>202502</td> 
+      <td>Web-LLM</td> 
+      <td><a target="_blank" href="https://chat18.aichatos18.com/">https://chat18.aichatos18.com</a></td> 
+      <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
+     </tr>
+       <tr> 
+      <td><a target="_blank" href="https://wormhole.app/">Wormhole</a></td> 
+      <td>202502</td> 
+      <td>Files-Share</td> 
+      <td><a target="_blank" href="https://wormhole.app">https://wormhole.app</a></td> 
+      <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
+     </tr> 
+     <tr> 
+      <td><a target="_blank" href="https://www.seeprettyface.com/mydataset.html">StyleGAN</a></td> 
+      <td>202012</td> 
+      <td>Dataset-Image-Face</td> 
+      <td><a target="_blank" href="https://www.seeprettyface.com">https://www.seeprettyface.com</a></td> 
+      <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
+     </tr> 
+    </tbody>
+   </table> 
+  </div> 
+  <div style="text-align:center;height:10px;"> 
+  </div> 
+  <div style="display: flex; justify-content: center; align-items: center;"> 
+   <script>
+        window.addEventListener('load', function() {
+            // 计算页面加载完成时间
+            const loadTime = performance.now();
+            // 显示加载时间
+            document.getElementById('performance-result').textContent = `页面加载: ${loadTime.toFixed(2)} ms`;
+        });
+    </script> 
+   <span id="delay" style="box-sizing: border-box; margin: 0; padding: 5px 10px; font-size: 12px; line-height: 1.71428em; color: #999; display: inline-block; text-align: center; border: 1px solid #ccc; border-left: none;"><script id="LA-DATA-WIDGET" crossorigin="anonymous" charset="UTF-8" src="https://v6-widget.51.la/v6/JRHGRBPWC7lJIaXq/quote.js?theme=0&amp;f=12&amp;display=0,0,1,1,0,0,0,0"></script></span> 
+   <span id="performance-result" style="box-sizing: border-box; margin: 0; padding: 5px 10px; font-size: 12px; line-height: 1.71428em; color: #999; display: inline-block; text-align: center; border: 1px solid #ccc; border-right: none;">页面加载完成时间: -- ms</span> 
+  </div>   
+ </body>
+</html>

@@ -1,0 +1,74 @@
+<!-- saved from url=(0029)https://cznull.github.io/vsbm -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="https://github.githubassets.com/favicons/favicon.svg">
+    <meta name="viewport" content="user-scalable=no">
+    <title>在线显卡烤机测试</title>
+    <style>
+        body {
+            background: #131115;
+        }
+        #c1 {
+            background: #fbf7fe;
+        }
+        #btn {
+            position: fixed;
+            left: 0px;
+            top: 0px;
+        }
+        #c1 {
+            position: fixed;
+            left: 0px;
+            top: 0px;
+        }
+        #main {
+            transform-origin: 0px 0px;
+            position: fixed;
+            left: 0px;
+            top: 0px;
+        }
+        #config {
+            position: fixed;
+            left: 0px;
+            top: 30px;
+            display: none;
+        }
+    </style>
+<link rel="stylesheet" type="text/css" href="/page/gpu/main.css"/>
+<script src="/page/gpu/jquery-1.8.3.min.js"></script>
+<script src="/page/gpu/main.js"></script>
+</head>
+<body style="overflow-x:hidden;overflow-y:hidden">
+<script>$("#topnav_kaoji").addClass("pitchon");</script>
+<div class="topnav" style="z-index:999"><div class="block">显卡满载烤机测试</div></div>
+<div class="fpsnav" style="z-index:999"><div class="block">当前FPS：<span id="fps"></span> 总帧率：<span id="score">0</span> 时间：<span id="alltime">0</span>秒</div></div>
+<div style="position: relative;z-index:999;float:right;margin-top:10%;height:auto;margin-right:10%;display: inline-block;
+    font-weight: 600;
+    font-size: 18px;padding: 16px;
+    width: 300px; background-image: linear-gradient(0deg, #fff 0%, #999 100%);
+    opacity: 0.5;    text-shadow: 2px 2px 2px #fff;color: #000;    border-radius: 15px;border: 1px solid #999;">
+    注意【GPU温度】避免设备烧坏<br><br>
+    <div style="text-align:center;margin-top:20px;"><a href="http://cpu.jy6d.com/" target=_blank style="padding:12px 22px;background:#0675e8;text-decoration:none;font-size:26px;
+    border-radius: 5px;color:#fff;">英大师CPU测试</a>
+<br><br><br>
+提示：该页面会使显卡100%满负载运转，用于测试显卡满载稳定性。本页面完全以显卡默认频率满载运行，不具备超频能力，也不会对显卡进行超频，对于显卡出现的任何现象本站概不负责。
+</div>
+    </div>
+<div id="main" style="width: 1024px; height: 1024px; transform: scale(0.924805, 0.924805);">
+    <canvas id="c1" width="1024" height="1024">
+        <span>不支持canvas浏览器，请下载chrome浏览器或其他支持的浏览器重试。</span>
+    </canvas>
+</div>
+    <button id="btn" >CONFIG</button>
+    <div id="config">
+        <textarea name="" id="kernel" cols="30" rows="10"></textarea>
+        <br>
+        <button id="apply">APPLY</button>
+        <button id="cancle">CANCLE</button>
+    </div>
+<input type="hidden" id="mj">
+<script language="javascript" id="mjs"></script>
+<script>
+try {eval("var func = async function(){};");document.getElementById('mj').value="t.js?v=1";}catch (e){document.getElementById('mj').value="t2.js?v=1";}
+var jv = document.getElementById('mj').value;var mjs= document.getElementById('mjs');var script= document.createElement('script');script.type= 'text/javascript';script.src= jv;mjs.appendChild(script);
+</script>
+</body></html>

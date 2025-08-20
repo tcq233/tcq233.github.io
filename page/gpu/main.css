@@ -1,0 +1,10 @@
+.topnav{position:absolute;width:100%;text-align:center;top:-6px;}
+.topnav .block{display:inline-block;font-weight:600;font-size:18px;
+width:300px;background-color: #fff;background-image: linear-gradient(0deg, #fff 0%, #999 100%);opacity:0.5;
+border:1px solid #999;border-bottom-left-radius:5px;;border-bottom-right-radius:5px;text-align:center;padding:8px;
+transform: perspective(0.5em) rotateX(-0.5deg);transform-origin:top;color:#000;text-shadow:2px 2px 2px #fff}
+.fpsnav{position:absolute;width:100%;text-align:center;bottom:-1px;color:#000;}
+.fpsnav .block{display:inline-block;background-color: rgba(255,255,255,0.5);background-image: linear-gradient(180deg, #fff 0%, #999 100%);opacity:0.5;
+width:300px;border:1px solid #000;border-top-left-radius:5px;;border-top-right-radius:5px;
+text-align:center;padding:8px;transform: perspective(0.5em) rotateX(0.5deg);transform-origin:bottom;}
+.fpsnav .block span{font-weight:600}

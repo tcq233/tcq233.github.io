@@ -1,0 +1,512 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>─=≡Σ((( つ•̀ω•́)つ</title>
+  <style>
+    /* 基础样式 */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+      color: #333;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      background: #fff;
+      padding: 20px;
+      width: 100%;
+      height: 100%;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      text-align: center;
+      overflow-y: auto;
+    }
+    h1 {
+      color: #4CAF50;
+      margin-bottom: 20px;
+    }
+    textarea {
+      width: 100%;
+      height: 80px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 10px;
+      font-size: 14px;
+      resize: vertical;
+    }
+    /* 统一按钮样式 */
+    .button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 7px 12px;
+      margin: 5px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      white-space: nowrap;
+      font-size: 12px;
+    }
+    .button:hover {
+      background-color: #45a049;
+    }
+    /* 按钮组：一排显示不换行，超出部分自动滚动 */
+    .button-group, .input-group, .button-container {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: space-around;
+      overflow-x: auto;
+      margin-bottom: 20px;
+    }
+    /* 文件、数字和文本输入框 */
+    input[type="file"], input[type="number"], input[type="text"] {
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      width: 100%;
+    }
+    /* 输出媒体样式 */
+    .output img, .output audio, .output video, #displayedImage {
+      max-width: 100%;
+      max-height: 400px;
+      margin-top: 10px;
+    }
+    /* 图片显示容器 */
+    #imageDisplayContainer {
+      display: none;
+      margin-bottom: 10px;
+    }
+    .image-time {
+      margin-top: 5px;
+      font-size: 0.8em;
+      color: #666;
+    }
+    /* 编辑按钮 */
+    .edit-buttons {
+      display: none;
+      margin-top: 20px;
+    }
+    .edit-buttons .button {
+      margin: 5px;
+    }
+    #stats {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      font-size: 10px;
+      color: #333;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      padding: 10px;
+      background-color: #eee;
+      border-radius: 5px;
+    }
+    #stats div {
+      margin: 0 5px;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 文件和帧率输入 -->
+    <input type="file" id="fileInput" accept="image/*,audio/*,video/*" />
+    <input type="number" id="intervalInput" value="" min="1" placeholder="1秒查看几帧：帧率 (仅视频)" />
+
+    <!-- 功能按钮 -->
+    <div class="button-group">
+      <button class="button" onclick="convertToBase64()">文件转码</button>
+      <button class="button" onclick="convertFromBase64()">码转文件</button>
+      <button class="button" onclick="extractFrames()">视频帧</button>
+      <button class="button" onclick="clearOutput()">清空文件</button>
+    </div>
+
+    <!-- 文本编辑区 -->
+    <textarea id="textarea" placeholder="输入文本或粘贴 Base64 数据。"></textarea>
+    
+    <!-- 文本相关功能按钮（添加唯一 id textGroup）-->
+    <div class="input-group" id="textGroup">
+      <button class="button" id="copy-btn">复制文本</button>
+      <button class="button" id="remove-duplicates-btn">去重复行</button>
+      <!-- 修改【文本】按钮绑定的功能为调用 DeepSeek Chat 接口 -->
+      <button class="button" id="openkey-btn" data-api-url="https://api.deepseek.com/v1/chat/completions">测试文本</button>
+      <button class="button" id="clear-btn">清空文本</button>
+    </div>
+    
+    <!-- API响应展示区域 -->
+    <div style="display:none;" id="response">等待请求...</div>
+    
+    <!-- 文本统计信息 -->
+    <div id="stats">
+      <div id="total">总数：0</div>
+      <div id="chinese">汉字：0</div>
+      <div id="punctuation">标点：0</div>
+      <div id="alphabet">字母：0</div>
+      <div id="numbers">数字：0</div>
+      <div id="duplicate">重复：0</div>
+    </div>
+
+    <!-- 媒体及视频帧展示区 -->
+    <div style="text-align:center; margin-top:1px; padding: 0 2px;">
+      <!-- 视频帧或图片预览区域 -->
+      <div id="imageDisplayContainer">
+        <img id="displayedImage" src="" alt="Extracted Frame" />
+        <div id="imageTimeLabel" class="image-time"></div>
+        <div class="button-container">
+          <button class="button" id="prevButton" onclick="showPreviousImage()">上帧</button>
+          <button class="button" onclick="downloadFrame()">下载</button>
+          <button class="button" id="nextButton" onclick="showNextImage()">下帧</button>
+        </div>
+      </div>
+      <div class="edit-buttons" id="editButtons">
+        <button class="button" onclick="invertColors()">反色</button>
+        <button class="button" onclick="desaturateImage()">去色</button>
+        <button class="button" onclick="restoreImage()">还原</button>
+        <button class="button" onclick="downloadImage()">下载</button>
+      </div>
+    </div>
+
+    <!-- 底部信息 -->
+    <div style="text-align:center; margin-top:1px; padding: 0 2px;">
+      <a href="/wx/">
+        <img class="img" src="https://tool.lu/netcard/" width="100%" height="150" title="关注微信吐槽墙：上墙+留言" alt="" />
+      </a>
+    </div>
+
+    <!-- 隐藏的 API Key 输入框 -->
+    <div class="input-group" style="display: flex; overflow: hidden; width: 95%; padding: 5px; margin: 0 auto;">
+      <input type="text" id="api_key" name="api_key" placeholder="sk-5eced12451404c8cad98ecac14447b03" style="display:none;">
+    </div>
+
+    <!-- 文本统计及其它文本操作脚本 -->
+    <script>
+      const textarea = document.getElementById("textarea");
+      const clearBtn = document.getElementById("clear-btn");
+      const totalEl = document.getElementById("total");
+      const chineseEl = document.getElementById("chinese");
+      const punctuationEl = document.getElementById("punctuation");
+      const alphabetEl = document.getElementById("alphabet");
+      const numbersEl = document.getElementById("numbers");
+      const duplicateEl = document.getElementById("duplicate");
+      const copyBtn = document.getElementById("copy-btn");
+      const removeDuplicatesBtn = document.getElementById("remove-duplicates-btn");
+      const openkeyBtn = document.getElementById("openkey-btn");
+      const responseEl = document.getElementById("response");
+
+      textarea.addEventListener("input", updateStats);
+      clearBtn.addEventListener("click", clearTextarea);
+      openkeyBtn.addEventListener("click", testAPI);
+      removeDuplicatesBtn.addEventListener("click", removeDuplicates);
+
+      function updateStats() {
+        const text = textarea.value;
+        const total = text.length;
+        const chinese = (text.match(/[\u4e00-\u9fa5]/g) || []).length;
+        const punctuation = (text.match(/[^\u4e00-\u9fa5\w\s]/g) || []).length;
+        const alphabet = (text.match(/[a-zA-Z]/g) || []).length;
+        const numbers = (text.match(/\d/g) || []).length;
+        const duplicates = getDuplicateCount(text);
+
+        totalEl.textContent = `总数：${total}`;
+        chineseEl.textContent = `汉字：${chinese}`;
+        punctuationEl.textContent = `标点：${punctuation}`;
+        alphabetEl.textContent = `字母：${alphabet}`;
+        numbersEl.textContent = `数字：${numbers}`;
+        duplicateEl.textContent = `重复：${duplicates}`;
+      }
+
+      function clearTextarea() {
+        textarea.value = "";
+        updateStats();
+      }
+
+      function getDuplicateCount(text) {
+        const lines = text.split('\n');
+        const lineCounts = lines.reduce((counts, line) => {
+          counts[line] = (counts[line] || 0) + 1;
+          return counts;
+        }, {});
+        let duplicates = 0;
+        for (const count of Object.values(lineCounts)) {
+          if (count > 1) duplicates += count - 1;
+        }
+        return duplicates;
+      }
+
+      copyBtn.addEventListener("click", function() {
+        const textToCopy = textarea.value === "" ? textarea.getAttribute("placeholder") : textarea.value;
+        navigator.clipboard.writeText(textToCopy)
+          .then(() => alert("文本已复制到剪贴板!"))
+          .catch(err => alert('复制失败：' + err));
+      });
+
+      async function testAPI() {
+        const apiUrl = openkeyBtn.getAttribute("data-api-url");
+        const apiKey = document.getElementById('api_key').placeholder;
+        const originalInput = textarea.value.trim();
+
+        if (!originalInput) {
+          alert("请输入一些文本...");
+          return;
+        }
+
+        textarea.value = "处理中...";
+        responseEl.textContent = "请求中...";
+
+        const data = {
+          model: "deepseek-chat",
+          messages: [
+            { role: "system", content: "简要回复，字符不超500个。" },
+            { role: "user", content: originalInput }
+          ],
+          temperature: 0.7,
+          max_tokens: 1000
+        };
+
+        try {
+          const res = await fetch(apiUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${apiKey}`
+            },
+            body: JSON.stringify(data)
+          });
+          if (!res.ok) {
+            throw new Error(`HTTP错误! 状态码: ${res.status}`);
+          }
+          const result = await res.json();
+          responseEl.textContent = JSON.stringify(result, null, 2);
+          if(result.choices && result.choices[0] && result.choices[0].message) {
+            textarea.value = result.choices[0].message.content;
+          }
+          updateStats();
+        } catch (error) {
+          responseEl.textContent = `请求失败: ${error.message}\n请检查API密钥和网络连接。`;
+          console.error("API请求错误:", error);
+          updateStats();
+        }
+      }
+      
+      function removeDuplicates() {
+        const lines = textarea.value.split('\n');
+        const uniqueLines = [...new Set(lines)];
+        textarea.value = uniqueLines.join('\n');
+        updateStats();
+      }
+      
+      // 新增函数：隐藏统计信息和文本相关功能区域
+      function hideStatsAndTextGroup() {
+        document.getElementById('stats').style.display = 'none';
+        document.getElementById('textGroup').style.display = 'none';
+      }
+    </script>
+
+    <!-- 视频、图片及 Base64 转换相关脚本 -->
+    <script>
+      let video;
+      let images = [];
+      let currentImageIndex = -1;
+      let currentImage;
+      let currentFilter = "";
+
+      function downloadImage() {
+        if (!currentImage) {
+          alert('请先查看一张图片以下载。');
+          return;
+        }
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = currentImage.naturalWidth;
+        canvas.height = currentImage.naturalHeight;
+        ctx.filter = currentFilter;
+        ctx.drawImage(currentImage, 0, 0);
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL('image/png');
+        link.download = 'processed-image.png';
+        link.click();
+      }
+
+      function downloadFrame() {
+        if (currentImageIndex === -1 || images.length === 0) {
+          alert('请先查看一张图片以下载。');
+          return;
+        }
+        const frameData = images[currentImageIndex];
+        const link = document.createElement('a');
+        link.href = frameData.url;
+        link.download = `frame-${currentImageIndex + 1}.png`;
+        link.click();
+      }
+
+      function convertToBase64() {
+        // 隐藏统计信息和文本相关功能区域
+        hideStatsAndTextGroup();
+        const file = document.getElementById('fileInput').files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            textarea.value = event.target.result;
+            updateStats();
+          };
+          reader.readAsDataURL(file);
+          textarea.style.display = 'block';
+          document.getElementById('imageDisplayContainer').style.display = 'none';
+          document.getElementById('editButtons').style.display = 'none';
+        } else {
+          alert('请选择一个文件。');
+        }
+      }
+
+      function convertFromBase64() {
+        // 隐藏统计信息和文本相关功能区域
+        hideStatsAndTextGroup();
+        const base64Input = textarea.value.trim();
+        if (base64Input) {
+          const parts = base64Input.split(',');
+          if (parts.length < 2) {
+            alert('无效的 Base64 数据 URI');
+            return;
+          }
+          const header = parts[0];
+          const mimeTypeMatch = header.match(/data:(.*?);base64/);
+          if (!mimeTypeMatch) {
+            alert('无法解析 MIME 类型');
+            return;
+          }
+          const mimeType = mimeTypeMatch[1];
+          if (mimeType.startsWith('image/')) {
+            const displayedImage = document.getElementById('displayedImage');
+            displayedImage.src = base64Input;
+            currentImage = displayedImage;
+            document.getElementById('imageDisplayContainer').style.display = 'block';
+            document.getElementById('editButtons').style.display = 'block';
+            textarea.style.display = 'none';
+          } else if (mimeType.startsWith('audio/')) {
+            alert("音频预览请在新窗口中打开或另行处理。");
+          } else if (mimeType.startsWith('video/')) {
+            alert("视频预览请在新窗口中打开或另行处理。");
+          } else {
+            alert("该 Base64 内容不属于常见媒体类型，将保留在文本框内。");
+          }
+        } else {
+          alert('请输入 Base64 字符串。');
+        }
+      }
+
+      function extractFrames() {
+        // 隐藏统计信息和文本相关功能区域
+        hideStatsAndTextGroup();
+        const file = document.getElementById('fileInput').files[0];
+        const fps = parseInt(document.getElementById('intervalInput').value, 10);
+        if (!file || !file.type.startsWith('video/')) {
+          alert('请选择一个视频文件。');
+          return;
+        }
+        if (isNaN(fps) || fps <= 0) {
+          alert('请输入有效的帧率。');
+          return;
+        }
+        const objectURL = URL.createObjectURL(file);
+        video = document.createElement('video');
+        video.src = objectURL;
+        video.onloadedmetadata = function() {
+          captureFrames(video, fps);
+        };
+        textarea.style.display = 'none';
+      }
+
+      function captureFrames(video, fps) {
+        images = [];
+        currentImageIndex = -1;
+        const frameDuration = 1 / fps;
+        let currentTime = 0;
+        function captureFrame() {
+          if (currentTime >= video.duration) {
+            if (images.length > 0) {
+              currentImageIndex = 0;
+              displayFrame();
+            } else {
+              alert('未能从视频中提取到任何帧。');
+            }
+            return;
+          }
+          video.currentTime = currentTime;
+          video.onseeked = function() {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            images.push({ url: canvas.toDataURL(), time: currentTime });
+            currentTime += frameDuration;
+            setTimeout(captureFrame, 1);
+          };
+        }
+        captureFrame();
+        document.getElementById('imageDisplayContainer').style.display = 'block';
+      }
+
+      function displayFrame() {
+        const displayedImage = document.getElementById('displayedImage');
+        const imageTimeLabel = document.getElementById('imageTimeLabel');
+        const frameData = images[currentImageIndex];
+        displayedImage.src = frameData.url;
+        imageTimeLabel.textContent = `时长: ${frameData.time.toFixed(2)} 秒`;
+      }
+
+      function showPreviousImage() {
+        if (currentImageIndex > 0) {
+          currentImageIndex--;
+          displayFrame();
+        }
+      }
+      function showNextImage() {
+        if (currentImageIndex < images.length - 1) {
+          currentImageIndex++;
+          displayFrame();
+        }
+      }
+      function invertColors() {
+        currentFilter += ' invert(1)';
+        if (currentImage) currentImage.style.filter = currentFilter;
+      }
+      function desaturateImage() {
+        currentFilter += ' grayscale(1)';
+        if (currentImage) currentImage.style.filter = currentFilter;
+      }
+      function restoreImage() {
+        currentFilter = '';
+        if (currentImage) currentImage.style.filter = currentFilter;
+      }
+      function clearOutput() {
+        textarea.value = "";
+        updateStats();
+        document.getElementById('imageDisplayContainer').style.display = 'none';
+        document.getElementById('editButtons').style.display = 'none';
+        images = [];
+        currentImageIndex = -1;
+        textarea.style.display = 'block';
+      }
+    </script>
+
+    <!-- 第三方统计脚本 -->
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+    <script>
+      LA.init({id:"JRHGRBPWC7lJIaXq", ck:"JRHGRBPWC7lJIaXq"});
+    </script>
+  </div>
+</body>
+</html>

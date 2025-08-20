@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>超逼真的HTML5 Canvas仿Windows画图工具</title>
+
+<link href="styles/normalize.css" rel="stylesheet" type="text/css">
+<link href="styles/layout.css" rel="stylesheet" type="text/css">
+<link href="styles/print.css" rel="stylesheet" type="text/css" media="print">
+<script type="text/javascript" src="//js.users.51.la/21477531.js"></script>
+<script>LA.init({id: "JRHGRBPWC7lJIaXq",ck: "JRHGRBPWC7lJIaXq"})</script>
+<script>
+	(function(){
+		var default_theme = "classic.css";
+		var theme_storage_key = "jspaint theme";
+
+		var href_for = function(theme){
+			return "styles/themes/" + theme;
+		};
+		try{
+			var current_theme = localStorage[theme_storage_key];
+		}catch(e){}
+
+		current_theme = current_theme || default_theme;
+		document.write('<link rel="stylesheet" type="text/css" href="' + href_for(current_theme) + '" id="theme-link" />');
+
+		var theme_link = document.getElementById("theme-link");
+		var theme_style = document.createElement("style");
+
+		self.set_theme = function(theme){
+			current_theme = theme;
+			var can_probably_refresh_to_switch = true;
+			try{
+				localStorage[theme_storage_key] = theme;
+			}catch(e){
+				can_probably_refresh_to_switch = false;
+			}
+			fetch(href_for(theme))
+			.catch(function(err){
+				show_error_message(
+					"Failed to load theme." +
+					(can_probably_refresh_to_switch ? " You can probably reload the app to finish switching themes." : ""),
+					err
+				);
+			})
+			// I'm gonna tell a funny joke, just wait..
+			.then(function(response) {
+				// Q: Why is this a separate step?
+				// A: Because response.text() returns a Promise!
+				// XD: 馃槀馃槀馃槀 WHO DID THIS 馃槀馃槀馃槀馃槀 XD
+				return response.text();
+			})
+			.then(function(css) {
+				if(theme_link){
+					theme_link.parentElement.removeChild(theme_link);
+					theme_link = null;
+				}
+				theme_style.textContent = css;
+				document.head.appendChild(theme_style);
+				$(window).triggerHandler("theme-load");
+			});
+		};
+		self.get_theme = function(){
+			return current_theme;
+		};
+	})();
+</script>
+
+<link rel="icon" href="images/icons/16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="images/icons/32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="images/icons/48.png" sizes="48x48" type="image/png">
+<link rel="icon" href="images/icons/128.png" sizes="128x128" type="image/png">
+<link rel="icon" href="images/icons/windows.ico" sizes="16x16,32x32,48x48" type="image/icon">
+<meta name="viewport" content="width=device-width, user-scalable=no">
+</head>
+<body>
+<script src="lib/jquery.min.js"></script>
+<script src="lib/pep.js"></script>
+<script src="lib/canvas.toBlob.js"></script>
+<script src="lib/gif.js/gif.js"></script>
+<script src="lib/palette.js"></script>
+<script src="lib/FileSaver.js"></script>
+<script src="lib/font-detective.js"></script>
+<script src="src/helpers.js"></script>
+<script src="src/storage.js"></script>
+<script src="src/$Component.js"></script>
+<script src="src/$Window.js"></script>
+<script src="src/$MenuBar.js"></script>
+<script src="src/$ToolBox.js"></script>
+<script src="src/$ColorBox.js"></script>
+<script src="src/$FontBox.js"></script>
+<script src="src/$Handles.js"></script>
+<script src="src/OnCanvasObject.js"></script>
+<script src="src/Selection.js"></script>
+<script src="src/TextBox.js"></script>
+<script src="src/image-manipulation.js"></script>
+<script src="src/tool-options.js"></script>
+<script src="src/tools.js"></script>
+<script src="src/functions.js"></script>
+<script src="src/manage-storage.js"></script>
+<script src="src/imgur.js"></script>
+<script src="src/help.js"></script>
+<script src="src/app.js"></script>
+<script src="src/menus.js"></script>
+<script src="src/canvas-change.js"></script>
+<script src="src/sessions.js"></script>
+</body>
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>─=≡Σ((( つ•̀ω•́)つ</title>
+<style>
+body {
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 0;
+background-color: #f4f4f9;
+color: #333;
+height: 100vh;
+display: flex;
+justify-content: center;
+align-items: center;
+box-sizing: border-box;
+}
+.container {
+background: #fff;
+padding: 20px;
+width: 100%;
+height: 100%;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+border-radius: 8px;
+text-align: center;
+box-sizing: border-box;
+overflow-y: auto; /* 允许垂直滚动 */
+}
+h1 {
+color: #4CAF50;
+margin-bottom: 20px;
+}
+textarea {
+width: 100%;
+height: 80px;
+margin-bottom: 20px;
+border: 1px solid #ccc;
+border-radius: 4px;
+padding: 10px;
+box-sizing: border-box;
+}
+.button-group {
+display: flex;
+justify-content: space-around;
+margin-bottom: 20px;
+}
+.button-group button {
+background-color: #4CAF50;
+color: white;
+border: none;
+padding: 10px 20px;
+margin: 5px;
+border-radius: 4px;
+cursor: pointer;
+flex: 1;
+}
+.button-group button:hover {
+background-color: #45a049;
+}
+input[type="file"], input[type="number"] {
+padding: 10px;
+margin-bottom: 20px;
+border-radius: 4px;
+border: 1px solid #ccc;
+width: 100%;
+box-sizing: border-box;
+}
+.output img, .output audio, .output video, #displayedImage {
+max-width: 100%;
+max-height: 400px;
+margin-top: 10px;
+}
+#imageDisplayContainer {
+display: none;
+margin-bottom: 10px;
+}
+.image-time {
+margin-top: 5px;
+font-size: 0.8em;
+color: #666;
+}
+.button-container {
+display: flex;
+justify-content: space-around;
+margin-top: 10px;
+}
+.edit-buttons {
+display: none;
+margin-top: 20px;
+}
+.edit-buttons button {
+margin: 5px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<input type="file" id="fileInput" accept="image/*,audio/*,video/*">
+<input type="number" id="intervalInput" value="1" min="1" placeholder="帧率 (仅视频)">
+<div class="button-group">
+<button onclick="convertToBase64()">转码</button>
+<button onclick="convertFromBase64()">转文</button>
+<button onclick="extractFrames()">提帧</button>
+<button onclick="clearOutput()">清空</button>
+</div>
+<textarea id="base64Input" placeholder="Paste Base64 data URI here..."></textarea>
+<div style="text-align:center; margin-top:1px; padding-left:2px; padding-right:2px; ">
+
+
+<div class="output" id="output"></div>
+
+<div id="imageDisplayContainer">
+<img id="displayedImage" src="" alt="Extracted Frame">
+<div id="imageTimeLabel" class="image-time"></div>
+<div class="button-container">
+<button id="prevButton" onclick="showPreviousImage()" class="button">上帧</button>
+<button onclick="downloadFrame()" class="button">下载</button>
+<button id="nextButton" onclick="showNextImage()" class="button">下帧</button>
+</div>
+</div>
+
+<div class="edit-buttons" id="editButtons">
+<button onclick="invertColors()">反色</button>
+<button onclick="desaturateImage()">去色</button>
+<button onclick="restoreImage()">还原</button>
+<button onclick="downloadImage()">下载</button> <!-- New download button -->
+</div>
+</div>
+
+
+<script>
+let video;
+let images = [];
+let currentImageIndex = -1;
+let currentImage;
+let currentFilter = "";  // To keep track of applied filters
+
+// Function to download the processed image (with filters applied)
+function downloadImage() {
+if (!currentImage) {
+alert('请先查看一张图片以下载。');
+return;
+}
+
+// Create a temporary canvas to apply the current filter before downloading
+const canvas = document.createElement('canvas');
+const ctx = canvas.getContext('2d');
+
+// Set canvas size to match the image
+canvas.width = currentImage.naturalWidth;
+canvas.height = currentImage.naturalHeight;
+
+// Draw the image on the canvas with any applied filters
+ctx.filter = currentFilter;  // Apply the filters (e.g., invert, grayscale)
+ctx.drawImage(currentImage, 0, 0);
+
+// Create a download link for the processed image
+const link = document.createElement('a');
+link.href = canvas.toDataURL('image/png'); // Use the canvas to generate a downloadable data URL
+link.download = 'processed-image.png'; // Set default file name
+link.click();
+}
+
+
+// Function to download the current displayed frame
+function downloadFrame() {
+if (currentImageIndex === -1 || images.length === 0) {
+alert('请先查看一张图片以下载。');
+return;
+}
+
+const frameData = images[currentImageIndex];
+const link = document.createElement('a');
+link.href = frameData.url; // Use the data URL of the frame
+link.download = `frame-${currentImageIndex + 1}.png`; // Name the file based on the frame index
+link.click();
+}
+
+
+
+// Convert file to Base64
+function convertToBase64() {
+const file = document.getElementById('fileInput').files[0];
+if (file) {
+const reader = new FileReader();
+reader.onload = function(event) {
+document.getElementById('base64Input').value = event.target.result;
+};
+reader.readAsDataURL(file);
+document.getElementById('base64Input').style.display = 'block';
+document.getElementById('output').style.display = 'block';
+document.getElementById('imageDisplayContainer').style.display = 'none';
+} else {
+alert('请选择一个文件。');
+}
+}
+
+// Convert Base64 to file
+function convertFromBase64() {
+const base64Input = document.getElementById('base64Input').value.trim();
+const output = document.getElementById('output');
+
+if (base64Input) {
+output.innerHTML = '';
+const [header, base64String] = base64Input.split(',');
+if (!header || !base64String) {
+alert('Invalid Base64 data URI');
+return;
+}
+
+const mimeType = header.match(/data:(.*?);base64/)[1];
+
+if (mimeType.startsWith('image/')) {
+const img = document.createElement('img');
+img.src = base64Input;
+output.appendChild(img);
+currentImage = img; // Save the image element for manipulation
+document.getElementById('editButtons').style.display = 'block'; // Show editing buttons
+} else if (mimeType.startsWith('audio/')) {
+const audio = document.createElement('audio');
+audio.controls = true;
+audio.src = base64Input;
+output.appendChild(audio);
+} else if (mimeType.startsWith('video/')) {
+const video = document.createElement('video');
+video.controls = true;
+video.src = base64Input;
+output.appendChild(video);
+} else {
+output.textContent = 'Unsupported MIME type';
+}
+} else {
+alert('请输入 Base64 字符串。');
+}
+}
+
+// Extract frames from video
+function extractFrames() {
+const file = document.getElementById('fileInput').files[0];
+const fps = parseInt(document.getElementById('intervalInput').value, 10);
+
+if (!file || !file.type.startsWith('video/')) {
+alert('请选择一个视频文件。');
+return;
+}
+
+if (isNaN(fps) || fps <= 0) {
+alert('请输入有效的帧率。');
+return;
+}
+
+const objectURL = URL.createObjectURL(file);
+video = document.createElement('video');
+video.src = objectURL;
+
+video.onloadedmetadata = function() {
+captureFrames(video, fps);
+};
+}
+
+// Capture frames from the video
+function captureFrames(video, fps) {
+images = [];
+currentImageIndex = -1;
+const frameDuration = 1 / fps;
+let currentTime = 0;
+
+function captureFrame() {
+if (currentTime >= video.duration) {
+if (images.length > 0) {
+currentImageIndex = 0;
+displayFrame();
+} else {
+alert('未能从视频中提取任何帧。');
+}
+return;
+}
+
+video.currentTime = currentTime;
+video.onseeked = function() {
+const canvas = document.createElement('canvas');
+canvas.width = video.videoWidth;
+canvas.height = video.videoHeight;
+const ctx = canvas.getContext('2d');
+ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+images.push({ url: canvas.toDataURL(), time: currentTime });
+currentTime += frameDuration;
+setTimeout(captureFrame, 1);
+};
+}
+
+captureFrame();
+document.getElementById('base64Input').style.display = 'none';
+document.getElementById('output').style.display = 'none';
+document.getElementById('imageDisplayContainer').style.display = 'block';
+}
+
+// Display the extracted frame
+function displayFrame() {
+const displayedImage = document.getElementById('displayedImage');
+const imageTimeLabel = document.getElementById('imageTimeLabel');
+const frameData = images[currentImageIndex];
+displayedImage.src = frameData.url;
+imageTimeLabel.textContent = `时长: ${frameData.time.toFixed(2)} 秒`;
+}
+
+// Show the previous frame
+function showPreviousImage() {
+if (currentImageIndex > 0) {
+currentImageIndex--;
+displayFrame();
+}
+}
+
+// Show the next frame
+function showNextImage() {
+if (currentImageIndex < images.length - 1) {
+currentImageIndex++;
+displayFrame();
+}
+}
+
+// Invert colors of the image
+function invertColors() {
+currentFilter += ' invert(1)';
+if (currentImage) {
+currentImage.style.filter = currentFilter;
+}
+}
+
+// Desaturate the image
+function desaturateImage() {
+currentFilter += ' grayscale(1)';
+if (currentImage) {
+currentImage.style.filter = currentFilter;
+}
+}
+
+// Restore original image state
+function restoreImage() {
+currentFilter = ''; // Reset all applied filters
+if (currentImage) {
+currentImage.style.filter = currentFilter;
+}
+}
+
+// Clear all outputs
+function clearOutput() {
+document.getElementById('output').innerHTML = '';
+document.getElementById('base64Input').value = '';
+document.getElementById('imageDisplayContainer').style.display = 'none';
+document.getElementById('editButtons').style.display = 'none'; // Hide edit buttons
+images = [];
+currentImageIndex = -1;
+}
+</script>
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"JRHGRBPWC7lJIaXq",ck:"JRHGRBPWC7lJIaXq"})</script>
+</body>
+</html>

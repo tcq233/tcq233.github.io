@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custom Timer</title>
+<style>
+:root {
+--countdown-color: #ff4b1f; /* Red */
+--timer-color: #32cd32; /* Green */
+--pause-color: #ffcc00; /* Yellow */
+--stop-color: #ffffff; /* White */
+}
+
+body, html {
+margin: 0;
+padding: 0;
+height: 100%;
+display: flex;
+justify-content: center;
+align-items: center;
+font-family: Arial, sans-serif;
+transition: background 0.5s, color 0.5s;
+box-sizing: border-box;
+}
+
+.container {
+text-align: center;
+background: #ffffff;
+padding: 15px;
+border-radius: 10px;
+width: 100%;
+max-width: 422px; /* 宽度设为422px */
+height: auto; /* 自适应高度 */
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+}
+
+.input-row, .button-row, .iframe-row {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin: 5px 0;
+}
+
+.input-row input, .button-row button, .iframe-row iframe {
+flex: 1;
+margin: 3px;
+color: black;
+border-radius: 5px;
+border: 1px solid #ccc;
+}
+
+input {
+padding: 10px;
+border: none;
+border-radius: 5px;
+text-align: center;
+font-size: 1em;
+}
+
+#timeDisplay {
+font-size: 2.5em; /* 调整字号以适应较小宽度 */
+color: #32cd32; /* Default lime green color */
+width: 100%;
+display: flex;
+justify-content: center;
+align-items: center;
+font-family: 'Courier New', Courier, monospace;
+letter-spacing: 2px;
+background: #f4f4f4;
+border-radius: 5px;
+margin: 10px 0;
+transition: color 0.5s;
+}
+
+button {
+padding: 8px;
+border: none;
+border-radius: 5px;
+color: white;
+cursor: pointer;
+font-size: 0.9em;
+transition: background-color 0.3s;
+}
+
+.button-row button:disabled {
+background-color: grey;
+cursor: not-allowed;
+}
+
+#startCountdownButton {
+background-color: var(--countdown-color);
+}
+
+#startTimerButton {
+background-color: var(--timer-color);
+}
+
+#pauseButton {
+background-color: var(--pause-color);
+}
+
+#stopButton {
+background-color: var(--stop-color);
+color: black;
+}
+
+.iframe-row iframe {
+width: 100%;
+height: 110px;
+border: none;
+}
+</style>
+</head>
+<body>
+<audio id="alertSound">
+<source src="/page/wav/ear0.wav" type="audio/mpeg">
+</audio>
+<div class="container">
+<div class="iframe-row">
+<a href="https://feeday.cn/tag.html" ><img class="img" src="https://tool.lu/netcard/" width="320"  height="120"  alt=""/></a>
+</div>
+<div class="input-row">
+<input type="number" id="hours" placeholder="HH" min="0" max="23">
+<input type="number" id="minutes" placeholder="MM" min="0" max="59" value="15">
+<input type="number" id="seconds" placeholder="SS" min="0" max="59">
+</div>
+<div class="button-row">
+<button id="startCountdownButton" onclick="startCountdown()">倒计时</button>
+<button id="startTimerButton" onclick="startTimer()">计时器</button>
+<button id="pauseButton" onclick="pauseTimer()" disabled>暂停</button>
+<button id="stopButton" onclick="stopTimer()" disabled>停止</button>
+
+</div>
+<div id="timeDisplay">00:00:00:00</div>
+
+
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=320 height=110 src="//music.163.com/outchain/player?type=0&id=12658009656&auto=1&height=90"></iframe>
+
+<!--
+<iframe id="iframe" src="/page/page/xztpc.html" frameborder="0" scrolling="no" style="width: 318px; height: 200px; margin-left: -10px; margin-top: -98px;"></iframe>
+<div style="width: 300px; height: 95px; overflow: hidden; white-space: nowrap;">
+<div style="display: inline-block; width: 300px; height: 100%; background-color: lightblue;">
+
+<iframe id="iframe" scrolling="no" src="/page/xztpc.html" frameborder="0" style="margin-top: -98px;"></iframe>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1964437526797765"
+crossorigin="anonymous"></script>
+
+<ins class="adsbygoogle"
+style="display:inline-block;width:300px;height:95px"
+data-ad-client="ca-pub-1964437526797765"
+data-ad-slot="5255543137"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<a target="_blank" href="https://cloud.tencent.com/act/cps/redirect?redirect=30206&cps_key=615609c54e8bcced8b02c202a43b5570" ><img class="img" src="/img/tt1.png" width="300px"  height="95px" title="腾讯云轻量服务器" alt=""/></a>
+</div>
+
+
+
+
+
+<div style="display: inline-block; width: 300px; height: 100%; background-color: lightgreen;">
+<a target="_blank" href="https://www.v5kf.com/public/wx_wall/index.html?mine=1&sid=95495&uid=o0rT0s6owNw-7rNp44JEbQI2WjhY" ><img class="img" src="/page/img/wx2.png" width="100%"  height="95" title="关注吐槽墙：上墙+留言" alt=""/></a>
+
+</div>
+
+
+-->
+
+
+
+<script>
+let timer;
+let endTime;
+let startTime;
+let remainingTime;
+let isCountdown = false;
+let isPaused = false;
+
+const timeDisplay = document.getElementById('timeDisplay');
+const alertSound = document.getElementById('alertSound');
+
+document.addEventListener('DOMContentLoaded', () => {
+startTimer();
+});
+
+function startCountdown() {
+if (timer) {
+clearInterval(timer);
+}
+const hours = parseInt(document.getElementById('hours').value) || 0;
+const minutes = parseInt(document.getElementById('minutes').value) || 0;
+const seconds = parseInt(document.getElementById('seconds').value) || 0;
+
+if (hours === 0 && minutes === 0 && seconds === 0) {
+alert('Please set a valid time for countdown.');
+return;
+}
+
+document.body.className = 'countdown';
+timeDisplay.style.color = 'var(--countdown-color)'; // Red color
+const totalMilliseconds = (hours * 3600 + minutes * 60 + seconds) * 1000;
+
+if (totalMilliseconds > 0) {
+isCountdown = true;
+endTime = Date.now() + totalMilliseconds;
+timer = setInterval(updateTime, 10);
+document.getElementById('startCountdownButton').disabled = true;
+document.getElementById('startTimerButton').disabled = false;
+document.getElementById('pauseButton').disabled = false;
+document.getElementById('stopButton').disabled = false;
+}
+}
+
+function startTimer() {
+if (timer) {
+clearInterval(timer);
+}
+document.body.className = 'timer';
+timeDisplay.style.color = 'var(--timer-color)'; // Green color
+startTime = Date.now();
+isPaused = false;
+isCountdown = false;
+timer = setInterval(updateTime, 10);
+document.getElementById('startCountdownButton').disabled = false;
+document.getElementById('startTimerButton').disabled = true;
+document.getElementById('pauseButton').disabled = false;
+document.getElementById('stopButton').disabled = false;
+}
+
+function pauseTimer() {
+document.body.className = 'pause';
+timeDisplay.style.color = 'var(--pause-color)'; // Yellow color
+clearInterval(timer);
+if (isCountdown) {
+remainingTime = endTime - Date.now();
+} else {
+remainingTime = Date.now() - startTime;
+}
+isPaused = true;
+document.getElementById('pauseButton').innerText = "继续"; // "继续" for Resume
+document.getElementById('pauseButton').onclick = resumeTimer;
+}
+
+function resumeTimer() {
+document.body.className = isCountdown ? 'countdown' : 'timer';
+timeDisplay.style.color = isCountdown ? 'var(--countdown-color)' : 'var(--timer-color)';
+if (isCountdown) {
+endTime = Date.now() + remainingTime;
+} else {
+startTime = Date.now() - remainingTime;
+}
+isPaused = false;
+timer = setInterval(updateTime, 10);
+document.getElementById('pauseButton').innerText = "暂停"; // "暂停" for Pause
+document.getElementById('pauseButton').onclick = pauseTimer;
+}
+
+
+function stopTimer() {
+document.body.className = 'stop';
+timeDisplay.style.color = 'var(--stop-color)';
+clearInterval(timer);
+timeDisplay.innerHTML = '00:00:00:00';
+resetButtons();
+}
+
+function updateTime() {
+const currentTime = Date.now();
+let remaining;
+if (isCountdown) {
+remaining = endTime - currentTime;
+if (remaining <= 0) {
+clearInterval(timer);
+alertSound.play();
+resetButtons();
+timeDisplay.innerHTML = '00:00:00:00';
+return;
+}
+} else {
+remaining = currentTime - startTime;
+}
+
+const milliseconds = remaining % 1000;
+const totalSeconds = Math.floor(remaining / 1000);
+const seconds = totalSeconds % 60;
+const totalMinutes = Math.floor(totalSeconds / 60);
+const minutes = totalMinutes % 60;
+const hours = Math.floor(totalMinutes / 60);
+
+timeDisplay.innerHTML = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}:${pad(Math.floor(milliseconds / 100), 2)}`;
+}
+
+function pad(number, length = 2) {
+return number.toString().padStart(length, '0');
+}
+
+
+
+function resetButtons() {
+document.getElementById('startCountdownButton').disabled = false;
+document.getElementById('startTimerButton').disabled = false;
+document.getElementById('pauseButton').disabled = true;
+document.getElementById('stopButton').disabled = true;
+
+// Ensure the "Pause" button stays in Chinese even after stopping the timer
+document.getElementById('pauseButton').innerText = "暂停"; // "暂停" for Pause
+document.getElementById('pauseButton').onclick = pauseTimer;
+
+document.body.className = '';
+isPaused = false;
+remainingTime = 0;
+timer = null;
+}
+
+</script>
+</body>
+</html>

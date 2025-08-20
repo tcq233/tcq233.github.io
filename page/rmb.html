@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>─=≡Σ((( つ•̀ω•́)つ</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            margin-top: 5px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+            width: 98%;
+            margin: auto;
+            padding: 5px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .input-with-background, .input-with-background2 {
+            position: relative;
+            flex: 1;
+            min-width: 100px; /* 设置最小宽度以确保输入框不会过小 */
+        }
+
+        .input-with-background input, .input-with-background2 input {
+            width: 100%; /* 输入框宽度 */
+            height: 20px; /* 输入框高度 */
+            font-size: 12px; /* 字体缩小 */
+            padding-right: 40px; /* 留出空间给背景文字 */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            padding-left: 10px; /* 左边内边距 */
+        }
+
+        .input-with-background::after, .input-with-background2::after {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            color: #888;
+            pointer-events: none;
+            white-space: nowrap;
+            font-size: 12px; /* 背景文字字体缩小 */
+        }
+
+        .input-with-background::after {
+            content: '% (年利率)'; /* 年利率背景文字 */
+        }
+
+        .input-with-background2::after {
+            content: '元'; /* 金额背景文字 */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="input-with-background2">
+<input type="number" id="principal" value="50000" step="10000" placeholder="请输入金额">
+</div>
+<div class="input-with-background">
+<input type="number" id="rate" placeholder="请输入年利率" value="1"  required>
+</div>
+<div class="input-with-background2">
+<input id="totalAmount" value="收益: 0" readonly>
+</div>
+<div class="input-with-background2">
+<input id="perHourEarnings" placeholder="每小时" readonly>
+</div>
+<div class="input-with-background2">
+<input id="perDayEarnings" placeholder="每天" readonly>
+</div>
+<div class="input-with-background2">
+<input id="perMonthEarnings" placeholder="每月" readonly>
+</div>
+<div class="input-with-background2">
+<input id="perYearEarnings" placeholder="每年" readonly>
+</div>
+</div>  
+    <audio id="coinSound" src="/page/wav/rmb.wav"></audio>
+    <audio id="bigWinSound" src="/page/wav/rmb2.wav"></audio>
+
+    <script>
+        let intervalId = null;
+        let lastAmountForSound = 0; // 用于追踪何时播放音效的金额标记
+        let totalAmount = 0; // 初始化总收益
+
+        function startCalculation() {
+            clearInterval(intervalId); // 无需检查null，直接清除即可
+            const principal = parseFloat(document.getElementById("principal").value);
+            const rate = parseFloat(document.getElementById("rate").value);
+            totalAmount = principal;
+            lastAmountForSound = totalAmount; // 重置，确保从当前本金开始计算增加额度
+            const perSecondInterest = (principal * (rate / 100) / 365 / 24 / 60 / 60);
+
+            intervalId = setInterval(() => {
+                totalAmount += perSecondInterest;
+                document.getElementById("totalAmount").value = ` ${totalAmount.toFixed(6)}`;
+                updateEarnings(perSecondInterest);
+
+                let increaseAmount = totalAmount - lastAmountForSound;
+                // 根据增加额度决定播放哪个音效
+                if (increaseAmount >= 10) { // 优先检查大额度增加
+                    playSound("bigWinSound");
+                    lastAmountForSound = totalAmount;
+                } else if (increaseAmount >= 1) {
+                    playSound("coinSound");
+                    lastAmountForSound = totalAmount;
+                }
+            }, 1000);
+        }
+
+        function updateEarnings(perSecondInterest) {
+            const perMinute = perSecondInterest * 60;
+            const perHour = perMinute * 60;
+            const perDay = perHour * 24;
+            const perMonth = perDay * 30;
+            const perYear = perDay * 365;
+
+            document.getElementById("perHourEarnings").value = `每小时: ${perHour.toFixed(2)}`;
+            document.getElementById("perDayEarnings").value = `每天: ${perDay.toFixed(2)}`;
+            document.getElementById("perMonthEarnings").value = `每月: ${perMonth.toFixed(2)}`;
+            document.getElementById("perYearEarnings").value = `每年: ${perYear.toFixed(2)}`;
+        }
+
+        function playSound(soundId) {
+            const sound = document.getElementById(soundId);
+            if (sound) {
+                sound.pause(); // 停止当前播放
+                sound.currentTime = 0; // 重置音频文件到开始
+                sound.play().catch(error => console.error("Audio play failed", error));
+            }
+        }
+
+        function stopCalculation() {
+            clearInterval(intervalId); // 清除计时器
+            intervalId = null; // 显式地将intervalId设置为null
+        }
+
+        document.getElementById("principal").addEventListener("input", () => {
+            stopCalculation();
+            startCalculation();
+        });
+
+        document.getElementById("rate").addEventListener("input", () => {
+            stopCalculation();
+            startCalculation();
+        });
+
+        window.onload = startCalculation;
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const monthsInput = document.getElementById('months');
+            const rateInput = document.getElementById('rate');
+            monthsInput.addEventListener('change', function () {
+                const selectedMonths = monthsInput.value;
+                const selectedRate = monthsToRate[selectedMonths];
+                if (selectedRate) {
+                    rateInput.value = selectedRate;
+                }
+            });
+        });
+    </script>
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+    <script>LA.init({ id: "JRHGRBPWC7lJIaXq", ck: "JRHGRBPWC7lJIaXq" })</script>
+</body>
+</html>

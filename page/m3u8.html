@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            width: 100%;
+            margin: 0 auto;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 0px; /* 间距设置为0px */
+        }
+        video {
+            width: 70%; /* 根据页面需要调整宽度 */
+            height: 435px;
+            background: black;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        iframe {
+            width: 30%; /* 根据页面需要调整宽度 */
+            height: 440px;
+            border: none;
+        }
+        .control-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .control-container input {
+            padding: 8px;
+            width: 50%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .control-container button {
+            padding: 8px 16px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .control-container button:hover {
+            background-color: #45a049;
+        }
+        .control-container button:active {
+            background-color: #2C6F33;
+        }
+        .flashing {
+            background-color: red !important; /* 录制状态闪烁样式 */
+        }
+    </style>
+</head>
+<body>
+    <div class="control-container">
+        <input type="text" id="videoUrl" style="width: 800px" placeholder="Enter video URL" value="https://cn-sdqd-cu-01-19.bilivideo.com/live-bvc/681493/live_18200769_73809732/index.m3u8?expires=1742628833&len=0&oi=0x240882072463a0d0711566ed1e98277e&pt=web&qn=10000&trid=100714254ea634a55b603e35b2629b67de59&sigparams=cdn,expires,len,oi,pt,qn,trid&cdn=cn-gotcha01&sign=90fba980adc1f5f48af2bc98b5aaa00f&site=0285fb729986422f272841bef3deeab8&free_type=0&mid=10055177&sche=ban&bvchls=1&sid=cn-sdqd-cu-01-19&chash=1&bmt=1&sg=lr&trace=41&isp=cu&rg=North&pv=Beijing&info_source=origin&sk=2838788edf86108c945c76c1f4ff231a&p2p_type=1&score=1&deploy_env=prod&hot_cdn=0&suffix=origin&source=puv3_onetier&pp=rtmp&sl=1&flvsk=d72c2fc79035cad0f65ee3b59d8bbef0&origin_bitrate=476800&vd=nc&zoneid_l=151339010&sid_l=stream_name_cold&src=puv3&order=1">
+        <button type="button" onclick="playVideo()">Play</button>
+        <button type="button" id="recordButton" onclick="startRecording()">Rec</button>
+        <button type="button" onclick="stopRecording()">Save</button>
+        <button type="button" onclick="window.open('https://www.yangshipin.cn/tv/home?pid=600001811', '_blank')">CCTV</button>
+    </div>
+    <div class="container">
+        <video id="video" controls></video>
+        <iframe id="iframe" scrolling="no" frameborder="0" src="/page/base64.html"></iframe>
+    </div>
+
+    <!-- 引入 HLS.js -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+    <script>
+        let mediaRecorder;
+        let recordedChunks = [];
+        let flashInterval;
+
+        function playVideo() {
+            const url = document.getElementById('videoUrl').value;
+            const video = document.getElementById('video');
+
+            // 检查 Hls.js 是否被支持
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(url);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                    video.play();
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = url;
+                video.addEventListener('loadedmetadata', function () {
+                    video.play();
+                });
+            }
+        }
+
+        function startRecording() {
+            const video = document.getElementById('video');
+            const recordButton = document.getElementById('recordButton');
+
+            // 创建视频流
+            const stream = video.captureStream();
+            mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm; codecs=vp9' });
+
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'recorded-video.webm';
+                a.click();
+
+                // 重置录制数据
+                recordedChunks = [];
+            };
+
+            // 开始录制
+            mediaRecorder.start();
+            console.log('Recording started...');
+
+            // 添加闪烁效果
+            flashInterval = setInterval(() => {
+                recordButton.classList.toggle('flashing');
+            }, 500); // 每 500 毫秒切换一次颜色
+        }
+
+        function stopRecording() {
+            const recordButton = document.getElementById('recordButton');
+
+            if (mediaRecorder) {
+                mediaRecorder.stop();
+                console.log('Recording stopped.');
+            }
+
+            // 停止闪烁效果
+            clearInterval(flashInterval);
+            recordButton.classList.remove('flashing');
+        }
+    </script>
+
+
+
+
+</div>
+</div>
+
+
+
+</div>
+
+</div>
+
+</body>
+</html>
