@@ -71,7 +71,11 @@ conda remove -n python38 --all # 删除虚拟环境
 conda create -n python38 --clone old_python38 # 克隆虚拟环境
 conda list # 列出已安装的包
 conda env list # 列出所有虚拟环境
-	
+
+cd /f/d
+export HF_ENDPOINT=https://hf-mirror.com
+./hfd.sh datxy/file --dataset --local-dir ./dataset
+
 Get-ChildItem -Recurse -File | Select-String -Pattern # 双引号 Windows 搜索
 	
 tracert	baidu.cn
