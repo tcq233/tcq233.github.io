@@ -25,7 +25,7 @@ textarea{
 .button:hover{background:#45a049}
 .button[disabled]{opacity:.6;cursor:not-allowed}
 .button-group,.input-group,.button-container{
-  display:flex;flex-wrap:nowrap;justify-content:flex-start; /* 靠左排列 */
+  display:flex;flex-wrap:nowrap;justify-content:flex-start;
   overflow-x:auto;margin-bottom:12px;gap:6px;
 }
 /* 文本按钮组可换行，确保可见 */
@@ -64,12 +64,14 @@ input[type="file"],input[type="number"],input[type="text"]{
 #respBar{display:flex;gap:8px;align-items:center;margin-bottom:6px}
 #respStatus{font-size:12px;color:#666}
 .footer{margin-top:10px}
+.hidden{display:none !important;}
 </style>
 </head>
 <body>
 <div class="container">
 
   <input type="file" id="fileInput" accept="image/*,audio/*,video/*" />
+  <div id="dropZone">将文件拖到这里（图片/音频/视频），或使用上方选择框。</div>
   <input type="number" id="intervalInput" min="1" placeholder="1秒查看几帧：帧率 (仅视频)" />
 
   <div class="button-group">
@@ -110,11 +112,14 @@ input[type="file"],input[type="number"],input[type="text"]{
     <div id="imageDisplayContainer">
       <img id="displayedImage" src="" alt="Extracted Frame" />
       <div id="imageTimeLabel" class="image-time"></div>
-      <div class="button-container">
+
+      <!-- 帧控件（仅视频抽帧模式显示） -->
+      <div class="button-container" id="frameControls" style="display:none;">
         <button class="button" id="prevButton">上帧 (←)</button>
+        <button class="button" id="btnDownloadFrame">下载当前帧</button>
         <button class="button" id="nextButton">下帧 (→)</button>
       </div>
-      <div class="image-time" id="framePager">0 / 0</div>
+      <div class="image-time" id="framePager" style="display:none;">0 / 0</div>
     </div>
 
     <div id="mediaPreviewContainer">
@@ -193,6 +198,7 @@ const btnDownloadMedia = document.getElementById('btnDownloadMedia');
 const btnCloseMedia = document.getElementById('btnCloseMedia');
 
 const textGroup = document.getElementById('textGroup');
+const frameControls = document.getElementById('frameControls');
 
 /* ===== 状态 ===== */
 let video = null;
@@ -201,6 +207,7 @@ let currentImageIndex = -1;
 let currentImage = null;
 let currentFilter = "";
 let currentMediaDataURL = "";
+let isFrameMode = false; // 仅“视频帧”时为 true
 
 /* ===== 工具 ===== */
 function showResponse(show=true){ responseWrap.style.display = show ? 'block' : 'none'; }
@@ -227,7 +234,7 @@ function setView(mode){
   if(mode === 'text'){
     textarea.style.display = 'block';
     statsEl.style.display = 'flex';
-    showTextButtons();                 // 默认：文本视图显示按钮
+    showTextButtons();
     imageDisplayContainer.style.display = 'none';
     editButtons.style.display = 'none';
     mediaPreviewContainer.style.display = 'none';
@@ -247,6 +254,18 @@ function setView(mode){
     imageDisplayContainer.style.display = 'none';
     editButtons.style.display = 'none';
     mediaPreviewContainer.style.display = 'block';
+  }
+}
+
+/* 根据 isFrameMode 控制帧控件显隐 */
+function updateFrameControls(){
+  if(isFrameMode){
+    frameControls.style.display = 'flex';
+    framePager.style.display = 'block';
+  }else{
+    frameControls.style.display = 'none';
+    framePager.style.display = 'none';
+    imageTimeLabel.textContent = ''; // 非帧模式不显示时间轴
   }
 }
 
@@ -325,15 +344,15 @@ function createVideoElement(dataURL){ const v=document.createElement('video'); v
 function convertToBase64(){
   const file = fileInput.files?.[0];
   if(!file){ alert('请选择一个文件。'); return; }
-  setBusy(btnToB64,true,'转码中…');       // 忙碌态
+  setBusy(btnToB64,true,'转码中…');
 
   const reader = new FileReader();
   reader.onload = e => {
     textarea.value = e.target.result;
-    setView('text');                     // 显示文本与统计
-    hideTextButtons();                   // 需求：隐藏四个按钮
+    setView('text');
+    hideTextButtons();        // 需求：隐藏四个按钮
     updateStats();
-    setBusy(btnToB64,false);             // 恢复
+    setBusy(btnToB64,false);
   };
   reader.onerror = () => { alert("文件读取失败"); setBusy(btnToB64,false); };
   reader.readAsDataURL(file);
@@ -344,7 +363,7 @@ function convertFromBase64(){
   if(!s){ alert('请输入 Base64 字符串。'); return; }
   if(!s.startsWith('data:')){ alert('无效的 Base64 数据 URI（需形如 data:...;base64,...）'); return; }
 
-  setBusy(btnFromB64,true,'解析中…');     // 忙碌态
+  setBusy(btnFromB64,true,'解析中…');
 
   const mime = parseMimeFromDataURI(s);
   if(!mime){ alert('无法解析 MIME 类型'); setBusy(btnFromB64,false); return; }
@@ -353,11 +372,14 @@ function convertFromBase64(){
   currentFilter = '';
   images = []; currentImageIndex = -1; currentImage = null;
   mediaPreview.innerHTML = ""; currentMediaDataURL = "";
+  isFrameMode = false; // 码转文件 → 如果是图片，仅普通图片模式
+  updateFrameControls();
 
   try{
     if(mime.startsWith('image/')){
       displayedImage.src = s; currentImage = displayedImage; displayedImage.style.filter = currentFilter;
       setView('image');
+      updateFrameControls(); // 非帧模式隐藏帧控件
       setTimeout(()=>imageDisplayContainer.scrollIntoView({behavior:'smooth', block:'center'}), 50);
     }else if(mime.startsWith('audio/')){
       mediaPreview.appendChild(createAudioElement(s)); currentMediaDataURL = s;
@@ -389,13 +411,16 @@ async function extractFrames(){
   video.preload='metadata'; video.src=objectURL;
 
   video.onloadedmetadata = ()=> {
+    isFrameMode = true;       // 进入帧模式
+    updateFrameControls();
     captureFrames(video, fps).finally(()=>{ setBusy(btnFrames,false); });
   };
 }
 
 function seekTo(video, t){
   return new Promise(resolve=>{
-    const handler = ()=>{ video.removeEventListener('seeked', handler); resolve(); };
+    const handler = ()=>{ video.removeEventListener('seeked', handler); resolve();
+    };
     video.addEventListener('seeked', handler, { once:true });
     video.currentTime = Math.min(t, Math.max(0, video.duration - 0.001));
   });
@@ -403,7 +428,8 @@ function seekTo(video, t){
 
 async function captureFrames(video, fps){
   images=[]; currentImageIndex=-1; currentFilter='';
-  setView('image'); // 只显示帧区
+  setView('image'); // 仅显示图片区
+  updateFrameControls();      // 帧控件可见
 
   const frameDuration = 1 / fps;
   const total = Math.floor(video.duration * fps) + 1;
@@ -433,14 +459,15 @@ function displayFrame(){
   if(currentImageIndex<0 || currentImageIndex>=images.length) return;
   const f = images[currentImageIndex];
   displayedImage.src = f.url; currentImage = displayedImage; displayedImage.style.filter = currentFilter;
-  imageTimeLabel.textContent = `时长: ${f.time.toFixed(2)} 秒`;
-  framePager.textContent = `${currentImageIndex+1} / ${images.length}`;
+  imageTimeLabel.textContent = isFrameMode ? `时长: ${f.time.toFixed(2)} 秒` : '';
+  framePager.textContent = isFrameMode ? `${currentImageIndex+1} / ${images.length}` : '';
 }
 
 function showPreviousImage(){ if(currentImageIndex>0){ currentImageIndex--; displayFrame(); } }
 function showNextImage(){ if(currentImageIndex<images.length-1){ currentImageIndex++; displayFrame(); } }
 
 function downloadFrame(){
+  if(!isFrameMode){ alert('当前不在视频帧模式'); return; }
   if(currentImageIndex<0 || images.length===0){ alert('请先查看一张图片以下载。'); return; }
   const f = images[currentImageIndex]; const a=document.createElement('a');
   a.href=f.url; a.download=`frame-${String(currentImageIndex+1).padStart(4,'0')}.png`; a.click();
@@ -472,13 +499,14 @@ function clearOutput(){
   textarea.value = ""; updateStats();
   images=[]; currentImageIndex=-1; currentImage=null; currentFilter='';
   currentMediaDataURL=""; mediaPreview.innerHTML="";
+  isFrameMode = false; updateFrameControls();
   setView('text');
 }
 
 /* ===== 事件绑定 ===== */
 document.getElementById("btnToB64").addEventListener('click', ()=>{
   convertToBase64();
-  textGroup.scrollLeft = 0;  // 保证按钮组回到最左（虽然此时被隐藏）
+  textGroup.scrollLeft = 0;
 });
 document.getElementById("btnFromB64").addEventListener('click', convertFromBase64);
 document.getElementById("btnFrames").addEventListener('click', extractFrames);
@@ -486,33 +514,41 @@ document.getElementById("btnClearOutput").addEventListener('click', clearOutput)
 
 prevButton.addEventListener('click', showPreviousImage);
 nextButton.addEventListener('click', showNextImage);
-btnDownloadFrame.addEventListener('click', downloadFrame);
+if (btnDownloadFrame) {
+  btnDownloadFrame.addEventListener('click', downloadFrame);
+}
 
 btnInvert.addEventListener('click', invertColors);
 btnGray.addEventListener('click', desaturateImage);
 btnRestore.addEventListener('click', restoreImage);
 btnDownloadImage.addEventListener('click', downloadImage);
 
-/* 键盘切帧（仅在图片视图时响应） */
+/* 键盘切帧（仅在图片视图且为帧模式时响应） */
 window.addEventListener('keydown', e=>{
-  if(imageDisplayContainer.style.display !== 'block') return;
+  if(imageDisplayContainer.style.display !== 'block' || !isFrameMode) return;
   if(e.key === 'ArrowLeft') showPreviousImage();
   else if(e.key === 'ArrowRight') showNextImage();
 });
 
-/* 拖拽上传 */
-['dragenter','dragover','dragleave','drop'].forEach(evt=>{
-  dropZone.addEventListener(evt, e=>{ e.preventDefault(); e.stopPropagation(); });
-});
-['dragenter','dragover'].forEach(evt=>{ dropZone.addEventListener(evt, ()=>dropZone.classList.add('dragover')); });
-['dragleave','drop'].forEach(evt=>{ dropZone.addEventListener(evt, ()=>dropZone.classList.remove('dragover')); });
-dropZone.addEventListener('drop', e=>{
-  const files = e.dataTransfer.files;
-  if(files && files.length){ fileInput.files = files; }
-});
+/* 拖拽上传（有元素则启用） */
+if (dropZone){
+  ['dragenter','dragover','dragleave','drop'].forEach(evt=>{
+    dropZone.addEventListener(evt, e=>{ e.preventDefault(); e.stopPropagation(); });
+  });
+  ['dragenter','dragover'].forEach(evt=>{
+    dropZone.addEventListener(evt, ()=>dropZone.classList.add('dragover'));
+  });
+  ['dragleave','drop'].forEach(evt=>{
+    dropZone.addEventListener(evt, ()=>dropZone.classList.remove('dragover'));
+  });
+  dropZone.addEventListener('drop', e=>{
+    const files = e.dataTransfer.files;
+    if(files && files.length){ fileInput.files = files; }
+  });
+}
 
 /* 初始化 */
-setView('text'); updateStats();
+setView('text'); updateStats(); updateFrameControls();
 </script>
 
 <!-- 第三方统计（原样保留） -->
