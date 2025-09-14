@@ -76,14 +76,6 @@ background:#0b1020;color:#cbe4ff;border-radius:6px;padding:10px;font-size:12px;m
 
 <textarea id="textarea" placeholder="输入文本或粘贴 Base64 数据。"></textarea>
 
-<div id="responseWrap">
-<div id="respBar">
-<span id="respStatus">准备就绪</span>
-<button class="button" id="btnCopyResp">复制响应</button>
-<button class="button" id="btnHideResp">收起</button>
-</div>
-<div id="response">等待请求...</div>
-</div>
 
 <div style="text-align:center; margin-top:1px; padding:0 2px;">
 <div id="imageDisplayContainer">
@@ -91,7 +83,7 @@ background:#0b1020;color:#cbe4ff;border-radius:6px;padding:10px;font-size:12px;m
 <div id="imageTimeLabel" class="image-time"></div>
 
 <!-- 帧控件（仅视频抽帧模式显示） -->
-<div class="button-container" id="frameControls">
+<div class="button-container" id="frameControls" style="text-align:center;">
 <button class="button" id="prevButton">上帧 (←)</button>
 <button class="button" id="btnDownloadFrame">下载当前帧</button>
 <button class="button" id="nextButton">下帧 (→)</button>
@@ -101,7 +93,7 @@ background:#0b1020;color:#cbe4ff;border-radius:6px;padding:10px;font-size:12px;m
 
 <div id="mediaPreviewContainer">
 <div id="mediaPreview" style="display:flex;justify-content:center;align-items:center;flex-direction:column;gap:8px;"></div>
-<div class="button-container">
+<div class="button-container" style="text-align:center;">
 <button class="button" id="btnDownloadMedia">下载媒体</button>
 <button class="button" id="btnCloseMedia">关闭预览</button>
 </div>
