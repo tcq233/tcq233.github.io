@@ -22,7 +22,7 @@ h1 { color: #4CAF50; margin-bottom: 20px; }
 
 /* 输入与按钮 */
 textarea {
-  width: 100%; min-height: 180px; margin-bottom: 10px;
+  width: 100%; min-height: 110px; margin-bottom: 10px;
   border: 1px solid #ccc; border-radius: 4px; padding: 10px;
   font-size: 14px; resize: vertical;
 }
@@ -57,6 +57,8 @@ input[type="file"], input[type="number"], input[type="text"]{
 .image-time { margin-top: 5px; font-size: 0.85em; color: #666; }
 .edit-buttons { display: none; margin-top: 12px; }
 .edit-buttons .button { margin: 5px; }
+#mediaPreviewContainer { display:none; margin-top:8px; }
+#mediaPreviewContainer video, #mediaPreviewContainer audio { max-width:100%; max-height:420px; }
 
 /* 统计栏 */
 #stats {
@@ -137,6 +139,18 @@ input[type="file"], input[type="number"], input[type="text"]{
       </div>
       <div class="image-time" id="framePager">0 / 0</div>
     </div>
+
+    <!-- 媒体（音频/视频）预览容器 -->
+    <div id="mediaPreviewContainer">
+      <div id="mediaPreview" style="display:flex; justify-content:center; align-items:center; flex-direction:column; gap:8px;">
+        <!-- JS 会把 <audio> 或 <video> 插到这里 -->
+      </div>
+      <div class="button-container">
+        <button class="button" id="btnDownloadMedia">下载媒体</button>
+        <button class="button" id="btnCloseMedia">关闭预览</button>
+      </div>
+    </div>
+
     <div class="edit-buttons" id="editButtons">
       <button class="button" id="btnInvert">反色</button>
       <button class="button" id="btnGray">去色</button>
@@ -201,12 +215,19 @@ const btnDownloadImage = document.getElementById("btnDownloadImage");
 
 const dropZone = document.getElementById("dropZone");
 
+/* 新增：媒体预览容器 */
+const mediaPreviewContainer = document.getElementById('mediaPreviewContainer');
+const mediaPreview = document.getElementById('mediaPreview');
+const btnDownloadMedia = document.getElementById('btnDownloadMedia');
+const btnCloseMedia = document.getElementById('btnCloseMedia');
+
 /* ========= 状态变量 ========= */
 let video = null;
 let images = [];
 let currentImageIndex = -1;
 let currentImage = null;
 let currentFilter = "";
+let currentMediaDataURL = "";
 
 /* ========= 工具函数 ========= */
 function showResponse(show=true){ responseWrap.style.display = show ? 'block' : 'none'; }
@@ -218,8 +239,7 @@ function setBusy(btn, busy=true){
   btn.textContent = busy ? '处理中…' : btn.dataset._text;
 }
 function debounce(fn, delay=200){
-  let t=null;
-  return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), delay); };
+  let t=null; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), delay); };
 }
 
 /* ========= 文本统计 ========= */
@@ -277,7 +297,6 @@ async function copyToClipboard(text){
     await navigator.clipboard.writeText(text);
     alert("已复制到剪贴板");
   }catch(e){
-    // 回退
     const ta = document.createElement('textarea');
     ta.value = text; document.body.appendChild(ta);
     ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
@@ -354,27 +373,77 @@ async function testAPI(){
 }
 openkeyBtn.addEventListener("click", testAPI);
 
+/* ========= Base64/MIME 工具 ========= */
+function parseMimeFromDataURI(dataURI){
+  const m = /^data:([^;,]+)[^,]*,/.exec(dataURI);
+  return m ? m[1].trim() : '';
+}
+
 /* ========= 文件/媒体/Base64 ========= */
 function convertToBase64(){
   hideStatsAndTextGroup();
   const file = fileInput.files?.[0];
   if(!file){ alert('请选择一个文件。'); return; }
 
+  // 收起其他容器
+  imageDisplayContainer.style.display = 'none';
+  editButtons.style.display = 'none';
+  mediaPreviewContainer.style.display = 'none';
+  mediaPreview.innerHTML = "";
+  currentMediaDataURL = "";
+
   const reader = new FileReader();
   reader.onload = e => {
     textarea.value = e.target.result;
-    showTextStats(); // 文本结果，显示文本区与统计
+    showTextStats(); // 文本结果
     updateStats();
-    imageDisplayContainer.style.display = 'none';
-    editButtons.style.display = 'none';
   };
   reader.readAsDataURL(file);
 }
 
-function parseMimeFromDataURI(dataURI){
-  // data:[<mime>][;charset=<charset>][;base64],<encoded-data>
-  const m = /^data:([^;,]+)[^,]*,/.exec(dataURI);
-  return m ? m[1].trim() : '';
+function createAudioElement(dataURL){
+  const audio = document.createElement('audio');
+  audio.controls = true; audio.src = dataURL; audio.preload = 'metadata';
+  return audio;
+}
+
+function createVideoElement(dataURL){
+  const videoEl = document.createElement('video');
+  videoEl.controls = true; videoEl.src = dataURL; videoEl.preload = 'metadata';
+  // 如需静音自动播：videoEl.muted = true; videoEl.autoplay = true;
+  return videoEl;
+}
+
+function showMediaPreview(el, dataURL, filenameHint = 'media'){
+  mediaPreview.innerHTML = "";
+  mediaPreview.appendChild(el);
+  currentMediaDataURL = dataURL;
+
+  mediaPreviewContainer.style.display = 'block';
+  imageDisplayContainer.style.display = 'none';
+  editButtons.style.display = 'none';
+  textarea.style.display = 'none';
+
+  setTimeout(()=>mediaPreviewContainer.scrollIntoView({behavior:'smooth', block:'center'}), 50);
+
+  btnDownloadMedia.onclick = ()=>{
+    const a = document.createElement('a');
+    a.href = dataURL;
+    const mime = parseMimeFromDataURI(dataURL);
+    const ext = mime.includes('audio/') ? (mime.split('/')[1] || 'audio')
+               : mime.includes('video/') ? (mime.split('/')[1] || 'video')
+               : 'bin';
+    a.download = `${filenameHint}.${ext.replace(/[^a-z0-9]/gi,'')}`;
+    a.click();
+  };
+
+  btnCloseMedia.onclick = ()=>{
+    mediaPreviewContainer.style.display = 'none';
+    mediaPreview.innerHTML = "";
+    currentMediaDataURL = "";
+    textarea.style.display = 'block';
+    showTextStats();
+  };
 }
 
 function convertFromBase64(){
@@ -382,11 +451,18 @@ function convertFromBase64(){
   const s = (textarea.value || '').trim();
   if(!s){ alert('请输入 Base64 字符串。'); return; }
   if(!s.startsWith('data:')){
-    alert('无效的 Base64 数据 URI（需形如 data:...;base64,...）'); return;
+    alert('无效的 Base64 数据 URI（需形如 data:...;base64,...）'); 
+    return;
   }
-
   const mime = parseMimeFromDataURI(s);
   if(!mime){ alert('无法解析 MIME 类型'); return; }
+
+  // 收起其它区
+  imageDisplayContainer.style.display = 'none';
+  editButtons.style.display = 'none';
+  mediaPreviewContainer.style.display = 'none';
+  mediaPreview.innerHTML = "";
+  currentMediaDataURL = "";
 
   if(mime.startsWith('image/')){
     displayedImage.src = s;
@@ -397,12 +473,15 @@ function convertFromBase64(){
     imageDisplayContainer.style.display = 'block';
     editButtons.style.display = 'block';
     textarea.style.display = 'none';
-    setTimeout(()=>displayedImage.scrollIntoView({behavior:'smooth', block:'center'}),50);
-  }else if(mime.startsWith('audio/')){
-    alert("音频预览请在新窗口中打开或另行处理。");
-  }else if(mime.startsWith('video/')){
-    alert("视频预览请在新窗口中打开或另行处理。");
-  }else{
+
+    setTimeout(()=>displayedImage.scrollIntoView({behavior:'smooth', block:'center'}), 50);
+  } else if (mime.startsWith('audio/')){
+    const audio = createAudioElement(s);
+    showMediaPreview(audio, s, 'audio');
+  } else if (mime.startsWith('video/')){
+    const videoEl = createVideoElement(s);
+    showMediaPreview(videoEl, s, 'video');
+  } else {
     alert("该 Base64 内容不属于常见媒体类型，将保留在文本框内。");
     showTextStats();
   }
@@ -450,6 +529,9 @@ async function captureFrames(video, fps){
   imageDisplayContainer.style.display = 'block';
   editButtons.style.display = 'block';
   textarea.style.display = 'none';
+  mediaPreviewContainer.style.display = 'none';
+  mediaPreview.innerHTML = "";
+  currentMediaDataURL = "";
 
   for(let i=0; i<total; i++){
     await seekTo(video, currentTime);
@@ -461,7 +543,6 @@ async function captureFrames(video, fps){
     framePager.textContent = `${i+1} / ${total}`;
     imageTimeLabel.textContent = `进度: ${(currentTime).toFixed(2)}s / ${(video.duration).toFixed(2)}s`;
     currentTime += frameDuration;
-    // 让UI有机会刷新
     await new Promise(r=>setTimeout(r, 0));
   }
 
@@ -478,8 +559,8 @@ function displayFrame(){
   if(currentImageIndex<0 || currentImageIndex>=images.length) return;
   const f = images[currentImageIndex];
   displayedImage.src = f.url;
-  currentImage = displayedImage;         // 确保编辑按钮作用于当前帧
-  displayedImage.style.filter = currentFilter; // 保持滤镜状态
+  currentImage = displayedImage;
+  displayedImage.style.filter = currentFilter;
   imageTimeLabel.textContent = `时长: ${f.time.toFixed(2)} 秒`;
   framePager.textContent = `${currentImageIndex+1} / ${images.length}`;
 }
@@ -504,7 +585,6 @@ function downloadImage(){
   if(!currentImage){ alert('请先查看一张图片以下载。'); return; }
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
-  // 尽可能拿 natural 尺寸；若为空退回显示尺寸
   const w = currentImage.naturalWidth || currentImage.width;
   const h = currentImage.naturalHeight || currentImage.height;
   canvas.width = w; canvas.height = h;
@@ -523,19 +603,25 @@ function restoreImage(){ currentFilter = ''; if(currentImage) currentImage.style
 function clearOutput(){
   textarea.value = "";
   updateStats();
+
   imageDisplayContainer.style.display = 'none';
   editButtons.style.display = 'none';
   images = []; currentImageIndex = -1;
   currentImage = null; currentFilter = '';
+
+  mediaPreviewContainer.style.display = 'none';
+  mediaPreview.innerHTML = "";
+  currentMediaDataURL = "";
+
   textarea.style.display = 'block';
   showTextStats();
 }
 
 /* ========= 事件绑定 ========= */
-btnToB64.addEventListener('click', convertToBase64);
-btnFromB64.addEventListener('click', convertFromBase64);
-btnFrames.addEventListener('click', extractFrames);
-btnClearOutput.addEventListener('click', clearOutput);
+document.getElementById("btnToB64").addEventListener('click', convertToBase64);
+document.getElementById("btnFromB64").addEventListener('click', convertFromBase64);
+document.getElementById("btnFrames").addEventListener('click', extractFrames);
+document.getElementById("btnClearOutput").addEventListener('click', clearOutput);
 
 prevButton.addEventListener('click', showPreviousImage);
 nextButton.addEventListener('click', showNextImage);
@@ -572,5 +658,9 @@ dropZone.addEventListener('drop', e=>{
 updateStats();
 showTextStats();
 </script>
+
+<!-- 第三方统计脚本（保持不变） -->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script> LA.init({id:"JRHGRBPWC7lJIaXq", ck:"JRHGRBPWC7lJIaXq"}); </script>
 </body>
 </html>
