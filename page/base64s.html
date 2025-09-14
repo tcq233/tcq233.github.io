@@ -64,14 +64,13 @@ background:#0b1020;color:#cbe4ff;border-radius:6px;padding:10px;font-size:12px;m
 <div class="container">
 
 <input type="file" id="fileInput" accept="image/*,audio/*,video/*" />
-<div id="dropZone">将文件拖到这里（图片/音频/视频），或使用上方选择框。</div>
 <input type="number" id="intervalInput" min="1" placeholder="1秒查看几帧：帧率 (仅视频)" />
 
 <div class="button-group">
-<button class="button" id="btnToB64">文件转码</button>
-<button class="button" id="btnFromB64">码转文件</button>
-<button class="button" id="btnFrames">视频帧</button>
-<button class="button" id="btnClearOutput">清空文件</button>
+<button class="button" id="btnToB64">转码</button>
+<button class="button" id="btnFromB64">转文</button>
+<button class="button" id="btnFrames">提帧</button>
+<button class="button" id="btnClearOutput">清空</button>
 </div>
 
 <textarea id="textarea" placeholder="输入文本或粘贴 Base64 数据。"></textarea>
@@ -107,11 +106,6 @@ background:#0b1020;color:#cbe4ff;border-radius:6px;padding:10px;font-size:12px;m
 </div>
 </div>
 
-<div class="footer">
-<a href="/wx/">
-<img class="img" src="https://tool.lu/netcard/" width="100%" height="150" title="关注微信吐槽墙：上墙+留言" alt="" />
-</a>
-</div>
 
 <!-- 隐藏的 key 占位（保留，不参与逻辑） -->
 <div class="input-group" style="display:flex;overflow:hidden;width:95%;padding:5px;margin:0 auto;">
