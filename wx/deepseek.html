@@ -25,10 +25,10 @@ textarea{
 .button:hover{background:#45a049}
 .button[disabled]{opacity:.6;cursor:not-allowed}
 .button-group,.input-group,.button-container{
-  display:flex;flex-wrap:nowrap;justify-content:flex-start; /* 改：靠左排列 */
+  display:flex;flex-wrap:nowrap;justify-content:flex-start; /* 靠左排列 */
   overflow-x:auto;margin-bottom:12px;gap:6px;
 }
-/* 让文本按钮组可换行、永远可见 */
+/* 文本按钮组可换行，确保可见 */
 #textGroup{
   flex-wrap:wrap;justify-content:flex-start;gap:6px;overflow-x:visible;
 }
@@ -205,25 +205,29 @@ let currentMediaDataURL = "";
 /* ===== 工具 ===== */
 function showResponse(show=true){ responseWrap.style.display = show ? 'block' : 'none'; }
 function setRespStatus(text){ respStatus.textContent = text; }
-function setBusy(btn, busy=true){
+/* 支持自定义忙碌文案 */
+function setBusy(btn, busy=true, busyLabel='处理中…'){
   if(!btn) return;
   btn.disabled = !!busy;
-  btn.dataset._text = btn.dataset._text || btn.textContent;
-  btn.textContent = busy ? '处理中…' : btn.dataset._text;
+  if(!btn.dataset._text) btn.dataset._text = btn.textContent;
+  btn.textContent = busy ? busyLabel : btn.dataset._text;
 }
 function debounce(fn, delay=200){ let t=null; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), delay); }; }
 function parseMimeFromDataURI(dataURI){ const m = /^data:([^;,]+)[^,]*,/.exec(dataURI); return m ? m[1].trim() : ''; }
+
+/* ===== 文本按钮显隐 ===== */
+function hideTextButtons(){ textGroup.style.display = 'none'; }
+function showTextButtons(){ textGroup.style.display = 'flex'; }
 
 /* ===== 统一视图切换 ===== */
 // mode: 'text' | 'image' | 'media'
 function setView(mode){
   const statsEl = document.getElementById('stats');
-  const textGroupEl = document.getElementById('textGroup');
 
   if(mode === 'text'){
     textarea.style.display = 'block';
     statsEl.style.display = 'flex';
-    textGroupEl.style.display = 'flex';
+    showTextButtons();                 // 默认：文本视图显示按钮
     imageDisplayContainer.style.display = 'none';
     editButtons.style.display = 'none';
     mediaPreviewContainer.style.display = 'none';
@@ -231,7 +235,7 @@ function setView(mode){
   }else if(mode === 'image'){
     textarea.style.display = 'none';
     statsEl.style.display = 'none';
-    textGroupEl.style.display = 'none';
+    hideTextButtons();
     imageDisplayContainer.style.display = 'block';
     editButtons.style.display = 'block';
     mediaPreviewContainer.style.display = 'none';
@@ -239,7 +243,7 @@ function setView(mode){
   }else if(mode === 'media'){
     textarea.style.display = 'none';
     statsEl.style.display = 'none';
-    textGroupEl.style.display = 'none';
+    hideTextButtons();
     imageDisplayContainer.style.display = 'none';
     editButtons.style.display = 'none';
     mediaPreviewContainer.style.display = 'block';
@@ -295,7 +299,7 @@ async function testAPI(){
   const apiKey = document.getElementById('api_key').value.trim() || document.getElementById('api_key').placeholder;
   const originalInput = (textarea.value || "").trim();
   if(!originalInput){ alert("请输入一些文本..."); return; }
-  setBusy(openkeyBtn,true); showResponse(true); setRespStatus("请求中…"); response.textContent="请求中…";
+  setBusy(openkeyBtn,true,'请求中…'); showResponse(true); setRespStatus("请求中…"); response.textContent="请求中…";
   const data = {
     model: "deepseek-chat:free",
     messages: [{role:"system",content:"简要回复，字符不超500个。"}, {role:"user",content:originalInput}],
@@ -321,13 +325,17 @@ function createVideoElement(dataURL){ const v=document.createElement('video'); v
 function convertToBase64(){
   const file = fileInput.files?.[0];
   if(!file){ alert('请选择一个文件。'); return; }
+  setBusy(btnToB64,true,'转码中…');       // 忙碌态
+
   const reader = new FileReader();
   reader.onload = e => {
     textarea.value = e.target.result;
-    setView('text');                 // 转成文本并显示文本工具条
+    setView('text');                     // 显示文本与统计
+    hideTextButtons();                   // 需求：隐藏四个按钮
     updateStats();
-    textGroup.scrollLeft = 0;        // 保证按钮组回到最左侧
+    setBusy(btnToB64,false);             // 恢复
   };
+  reader.onerror = () => { alert("文件读取失败"); setBusy(btnToB64,false); };
   reader.readAsDataURL(file);
 }
 
@@ -336,29 +344,35 @@ function convertFromBase64(){
   if(!s){ alert('请输入 Base64 字符串。'); return; }
   if(!s.startsWith('data:')){ alert('无效的 Base64 数据 URI（需形如 data:...;base64,...）'); return; }
 
-  const mime = parseMimeFromDataURI(s);
-  if(!mime){ alert('无法解析 MIME 类型'); return; }
+  setBusy(btnFromB64,true,'解析中…');     // 忙碌态
 
-  // 清理旧状态
+  const mime = parseMimeFromDataURI(s);
+  if(!mime){ alert('无法解析 MIME 类型'); setBusy(btnFromB64,false); return; }
+
+  // 清理状态
   currentFilter = '';
   images = []; currentImageIndex = -1; currentImage = null;
   mediaPreview.innerHTML = ""; currentMediaDataURL = "";
 
-  if(mime.startsWith('image/')){
-    displayedImage.src = s; currentImage = displayedImage; displayedImage.style.filter = currentFilter;
-    setView('image');
-    setTimeout(()=>imageDisplayContainer.scrollIntoView({behavior:'smooth', block:'center'}), 50);
-  }else if(mime.startsWith('audio/')){
-    mediaPreview.appendChild(createAudioElement(s)); currentMediaDataURL = s;
-    setView('media');
-    setTimeout(()=>mediaPreviewContainer.scrollIntoView({behavior:'smooth', block:'center'}), 50);
-  }else if(mime.startsWith('video/')){
-    mediaPreview.appendChild(createVideoElement(s)); currentMediaDataURL = s;
-    setView('media');
-    setTimeout(()=>mediaPreviewContainer.scrollIntoView({behavior:'smooth', block:'center'}), 50);
-  }else{
-    alert("该 Base64 内容不属于常见媒体类型，将保留在文本框内。");
-    setView('text');
+  try{
+    if(mime.startsWith('image/')){
+      displayedImage.src = s; currentImage = displayedImage; displayedImage.style.filter = currentFilter;
+      setView('image');
+      setTimeout(()=>imageDisplayContainer.scrollIntoView({behavior:'smooth', block:'center'}), 50);
+    }else if(mime.startsWith('audio/')){
+      mediaPreview.appendChild(createAudioElement(s)); currentMediaDataURL = s;
+      setView('media');
+      setTimeout(()=>mediaPreviewContainer.scrollIntoView({behavior:'smooth', block:'center'}), 50);
+    }else if(mime.startsWith('video/')){
+      mediaPreview.appendChild(createVideoElement(s)); currentMediaDataURL = s;
+      setView('media');
+      setTimeout(()=>mediaPreviewContainer.scrollIntoView({behavior:'smooth', block:'center'}), 50);
+    }else{
+      alert("该 Base64 内容不属于常见媒体类型，将保留在文本框内。");
+      setView('text');
+    }
+  } finally {
+    setBusy(btnFromB64,false);
   }
 }
 
@@ -368,14 +382,14 @@ async function extractFrames(){
   if(!file || !file.type.startsWith('video/')){ alert('请选择一个视频文件。'); return; }
   if(isNaN(fps) || fps<=0){ alert('请输入有效的帧率。'); return; }
 
-  btnFrames.disabled=true; btnFrames.textContent='抽帧中…';
+  setBusy(btnFrames,true,'抽帧中…');
 
   const objectURL = URL.createObjectURL(file);
   video = document.createElement('video');
   video.preload='metadata'; video.src=objectURL;
 
   video.onloadedmetadata = ()=> {
-    captureFrames(video, fps).finally(()=>{ btnFrames.disabled=false; btnFrames.textContent='视频帧'; });
+    captureFrames(video, fps).finally(()=>{ setBusy(btnFrames,false); });
   };
 }
 
@@ -389,7 +403,7 @@ function seekTo(video, t){
 
 async function captureFrames(video, fps){
   images=[]; currentImageIndex=-1; currentFilter='';
-  setView('image'); // 进入抽帧模式只显示帧区
+  setView('image'); // 只显示帧区
 
   const frameDuration = 1 / fps;
   const total = Math.floor(video.duration * fps) + 1;
@@ -464,7 +478,7 @@ function clearOutput(){
 /* ===== 事件绑定 ===== */
 document.getElementById("btnToB64").addEventListener('click', ()=>{
   convertToBase64();
-  textGroup.scrollLeft = 0;  // “文件转码”后按钮组回到最左，避免只看到两端
+  textGroup.scrollLeft = 0;  // 保证按钮组回到最左（虽然此时被隐藏）
 });
 document.getElementById("btnFromB64").addEventListener('click', convertFromBase64);
 document.getElementById("btnFrames").addEventListener('click', extractFrames);
