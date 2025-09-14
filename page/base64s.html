@@ -7,38 +7,34 @@
 <style>
 *{box-sizing:border-box}
 body{
-  font-family:Arial, sans-serif;margin:0;padding:0;background:#f4f4f9;color:#333;
-  min-height:100vh;display:flex;justify-content:center;align-items:center;
+font-family:Arial, sans-serif;margin:0;padding:0;background:#f4f4f9;color:#333;
+min-height:100vh;display:flex;justify-content:center;align-items:center;
 }
 .container{
-  background:#fff;padding:20px;width:100%;height:100%;max-width:980px;
-  box-shadow:0 0 10px rgba(0,0,0,.1);border-radius:8px;text-align:center;overflow-y:auto;
+background:#fff;padding:20px;width:100%;height:100%;max-width:980px;
+box-shadow:0 0 10px rgba(0,0,0,.1);border-radius:8px;text-align:center;overflow-y:auto;
 }
 textarea{
-  width:100%;min-height:110px;margin-bottom:10px;border:1px solid #ccc;border-radius:4px;
-  padding:10px;font-size:14px;resize:vertical;
+width:100%;min-height:110px;margin-bottom:10px;border:1px solid #ccc;border-radius:4px;
+padding:10px;font-size:14px;resize:vertical;
 }
 .button{
-  background:#4CAF50;color:#fff;border:none;padding:7px 12px;margin:5px;border-radius:4px;
-  cursor:pointer;transition:.3s;white-space:nowrap;font-size:12px;
+background:#4CAF50;color:#fff;border:none;padding:7px 12px;margin:5px;border-radius:4px;
+cursor:pointer;transition:.3s;white-space:nowrap;font-size:12px;
 }
 .button:hover{background:#45a049}
 .button[disabled]{opacity:.6;cursor:not-allowed}
 .button-group,.input-group,.button-container{
-  display:flex;flex-wrap:nowrap;justify-content:flex-start;
-  overflow-x:auto;margin-bottom:12px;gap:6px;
-}
-/* 文本按钮组可换行，确保可见 */
-#textGroup{
-  flex-wrap:wrap;justify-content:flex-start;gap:6px;overflow-x:visible;
+display:flex;flex-wrap:nowrap;justify-content:flex-start;
+overflow-x:auto;margin-bottom:12px;gap:6px;
 }
 
 input[type="file"],input[type="number"],input[type="text"]{
-  padding:10px;margin-bottom:12px;border-radius:4px;border:1px solid #ccc;width:100%;
+padding:10px;margin-bottom:12px;border-radius:4px;border:1px solid #ccc;width:100%;
 }
 
 #dropZone{
-  border:1px dashed #bbb;border-radius:6px;padding:10px;margin-bottom:12px;color:#666;font-size:12px;
+border:1px dashed #bbb;border-radius:6px;padding:10px;margin-bottom:12px;color:#666;font-size:12px;
 }
 #dropZone.dragover{border-color:#4CAF50;color:#4CAF50;background:#f6fff6}
 
@@ -50,142 +46,129 @@ input[type="file"],input[type="number"],input[type="text"]{
 #mediaPreviewContainer{display:none;margin-top:8px}
 #mediaPreviewContainer video,#mediaPreviewContainer audio{max-width:100%;max-height:420px}
 
-#stats{
-  display:flex;justify-content:space-around;align-items:center;font-size:10px;color:#333;margin:12px 0;
-  padding:10px;background:#eee;border-radius:5px;
-}
-#stats div{margin:0 5px;white-space:nowrap}
-
+/* 响应面板 */
 #responseWrap{display:none;text-align:left}
 #response{
-  white-space:pre-wrap;text-align:left;font-family:ui-monospace,Menlo,Consolas,monospace;
-  background:#0b1020;color:#cbe4ff;border-radius:6px;padding:10px;font-size:12px;max-height:280px;overflow:auto;
+white-space:pre-wrap;text-align:left;font-family:ui-monospace,Menlo,Consolas,monospace;
+background:#0b1020;color:#cbe4ff;border-radius:6px;padding:10px;font-size:12px;max-height:280px;overflow:auto;
 }
 #respBar{display:flex;gap:8px;align-items:center;margin-bottom:6px}
 #respStatus{font-size:12px;color:#666}
-.footer{margin-top:10px}
-.hidden{display:none !important;}
+
+/* 帧控件默认隐藏，仅“视频帧”模式显示 */
+#frameControls{display:none}
+#framePager{display:none}
 </style>
 </head>
 <body>
 <div class="container">
 
-  <input type="file" id="fileInput" accept="image/*,audio/*,video/*" />
-  <div id="dropZone">将文件拖到这里（图片/音频/视频），或使用上方选择框。</div>
-  <input type="number" id="intervalInput" min="1" placeholder="1秒查看几帧：帧率 (仅视频)" />
+<input type="file" id="fileInput" accept="image/*,audio/*,video/*" />
+<div id="dropZone">将文件拖到这里（图片/音频/视频），或使用上方选择框。</div>
+<input type="number" id="intervalInput" min="1" placeholder="1秒查看几帧：帧率 (仅视频)" />
 
-  <div class="button-group">
-    <button class="button" id="btnToB64">文件转码</button>
-    <button class="button" id="btnFromB64">码转文件</button>
-    <button class="button" id="btnFrames">视频帧</button>
-    <button class="button" id="btnClearOutput">清空文件</button>
-  </div>
+<div class="button-group">
+<button class="button" id="btnToB64">文件转码</button>
+<button class="button" id="btnFromB64">码转文件</button>
+<button class="button" id="btnFrames">视频帧</button>
+<button class="button" id="btnClearOutput">清空文件</button>
+</div>
 
-  <textarea id="textarea" placeholder="输入文本或粘贴 Base64 数据。"></textarea>
+<textarea id="textarea" placeholder="输入文本或粘贴 Base64 数据。"></textarea>
 
+<div id="responseWrap">
+<div id="respBar">
+<span id="respStatus">准备就绪</span>
+<button class="button" id="btnCopyResp">复制响应</button>
+<button class="button" id="btnHideResp">收起</button>
+</div>
+<div id="response">等待请求...</div>
+</div>
 
+<div style="text-align:center; margin-top:1px; padding:0 2px;">
+<div id="imageDisplayContainer">
+<img id="displayedImage" src="" alt="Extracted Frame" />
+<div id="imageTimeLabel" class="image-time"></div>
 
-  <div id="responseWrap">
-    <div id="respBar">
-      <span id="respStatus">准备就绪</span>
-      <button class="button" id="btnCopyResp">复制响应</button>
-      <button class="button" id="btnHideResp">收起</button>
-    </div>
-    <div id="response">等待请求...</div>
-  </div>
+<!-- 帧控件（仅视频抽帧模式显示） -->
+<div class="button-container" id="frameControls">
+<button class="button" id="prevButton">上帧 (←)</button>
+<button class="button" id="btnDownloadFrame">下载当前帧</button>
+<button class="button" id="nextButton">下帧 (→)</button>
+</div>
+<div class="image-time" id="framePager">0 / 0</div>
+</div>
 
+<div id="mediaPreviewContainer">
+<div id="mediaPreview" style="display:flex;justify-content:center;align-items:center;flex-direction:column;gap:8px;"></div>
+<div class="button-container">
+<button class="button" id="btnDownloadMedia">下载媒体</button>
+<button class="button" id="btnCloseMedia">关闭预览</button>
+</div>
+</div>
 
-  <div style="text-align:center; margin-top:1px; padding:0 2px;">
-    <div id="imageDisplayContainer">
-      <img id="displayedImage" src="" alt="Extracted Frame" />
-      <div id="imageTimeLabel" class="image-time"></div>
+<div class="edit-buttons" id="editButtons">
+<button class="button" id="btnInvert">反色</button>
+<button class="button" id="btnGray">去色</button>
+<button class="button" id="btnRestore">还原</button>
+<button class="button" id="btnDownloadImage">下载图片</button>
+</div>
+</div>
 
-      <!-- 帧控件（仅视频抽帧模式显示） -->
-      <div class="button-container" id="frameControls" style="display:none;">
-        <button class="button" id="prevButton">上帧 (←)</button>
-        <button class="button" id="btnDownloadFrame">下载当前帧</button>
-        <button class="button" id="nextButton">下帧 (→)</button>
-      </div>
-      <div class="image-time" id="framePager" style="display:none;">0 / 0</div>
-    </div>
+<div class="footer">
+<a href="/wx/">
+<img class="img" src="https://tool.lu/netcard/" width="100%" height="150" title="关注微信吐槽墙：上墙+留言" alt="" />
+</a>
+</div>
 
-    <div id="mediaPreviewContainer">
-      <div id="mediaPreview" style="display:flex;justify-content:center;align-items:center;flex-direction:column;gap:8px;"></div>
-      <div class="button-container">
-        <button class="button" id="btnDownloadMedia">下载媒体</button>
-        <button class="button" id="btnCloseMedia">关闭预览</button>
-      </div>
-    </div>
-
-    <div class="edit-buttons" id="editButtons">
-      <button class="button" id="btnInvert">反色</button>
-      <button class="button" id="btnGray">去色</button>
-      <button class="button" id="btnRestore">还原</button>
-      <button class="button" id="btnDownloadImage">下载图片</button>
-    </div>
-  </div>
-
-  <div class="footer">
-    <a href="/wx/">
-      <img class="img" src="https://tool.lu/netcard/" width="100%" height="150" title="关注微信吐槽墙：上墙+留言" alt="" />
-    </a>
-  </div>
-
-  <div class="input-group" style="display:flex;overflow:hidden;width:95%;padding:5px;margin:0 auto;">
-    <input type="text" id="api_key" name="api_key" placeholder="sk-jLgZkKSjwN20PfeHA2eiHAG5HQ0lX8COKCM0UUW7EUSJQ8wN" style="display:none;">
-  </div>
+<!-- 隐藏的 key 占位（保留，不参与逻辑） -->
+<div class="input-group" style="display:flex;overflow:hidden;width:95%;padding:5px;margin:0 auto;">
+<input type="text" id="api_key" name="api_key" placeholder="sk-xxxx" style="display:none;">
+</div>
 </div>
 
 <script>
+/* ===== 简易选择器（空值保护） ===== */
+const $ = id => document.getElementById(id);
+const on = (el, evt, fn) => el && el.addEventListener(evt, fn);
+
 /* ===== DOM ===== */
-const textarea = document.getElementById("textarea");
-const clearBtn = document.getElementById("clear-btn");
-const copyBtn = document.getElementById("copy-btn");
-const removeDuplicatesBtn = document.getElementById("remove-duplicates-btn");
-const openkeyBtn = document.getElementById("openkey-btn");
-const response = document.getElementById("response");
-const responseWrap = document.getElementById("responseWrap");
-const respStatus = document.getElementById("respStatus");
-const btnCopyResp = document.getElementById("btnCopyResp");
-const btnHideResp = document.getElementById("btnHideResp");
+const textarea = $("textarea");
+const response = $("response");
+const responseWrap = $("responseWrap");
+const respStatus = $("respStatus");
+const btnCopyResp = $("btnCopyResp");
+const btnHideResp = $("btnHideResp");
 
-const totalEl = document.getElementById("total");
-const chineseEl = document.getElementById("chinese");
-const punctuationEl = document.getElementById("punctuation");
-const alphabetEl = document.getElementById("alphabet");
-const numbersEl = document.getElementById("numbers");
-const duplicateEl = document.getElementById("duplicate");
+const fileInput = $("fileInput");
+const intervalInput = $("intervalInput");
+const btnToB64 = $("btnToB64");
+const btnFromB64 = $("btnFromB64");
+const btnFrames = $("btnFrames");
+const btnClearOutput = $("btnClearOutput");
 
-const fileInput = document.getElementById("fileInput");
-const intervalInput = document.getElementById("intervalInput");
-const btnToB64 = document.getElementById("btnToB64");
-const btnFromB64 = document.getElementById("btnFromB64");
-const btnFrames = document.getElementById("btnFrames");
-const btnClearOutput = document.getElementById("btnClearOutput");
+const imageDisplayContainer = $("imageDisplayContainer");
+const displayedImage = $("displayedImage");
+const imageTimeLabel = $("imageTimeLabel");
+const framePager = $("framePager");
+const prevButton = $("prevButton");
+const nextButton = $("nextButton");
+const btnDownloadFrame = $("btnDownloadFrame");
 
-const imageDisplayContainer = document.getElementById("imageDisplayContainer");
-const displayedImage = document.getElementById("displayedImage");
-const imageTimeLabel = document.getElementById("imageTimeLabel");
-const framePager = document.getElementById("framePager");
-const prevButton = document.getElementById("prevButton");
-const nextButton = document.getElementById("nextButton");
-const btnDownloadFrame = document.getElementById("btnDownloadFrame");
+const editButtons = $("editButtons");
+const btnInvert = $("btnInvert");
+const btnGray = $("btnGray");
+const btnRestore = $("btnRestore");
+const btnDownloadImage = $("btnDownloadImage");
 
-const editButtons = document.getElementById("editButtons");
-const btnInvert = document.getElementById("btnInvert");
-const btnGray = document.getElementById("btnGray");
-const btnRestore = document.getElementById("btnRestore");
-const btnDownloadImage = document.getElementById("btnDownloadImage");
+const dropZone = $("dropZone");
 
-const dropZone = document.getElementById("dropZone");
+const mediaPreviewContainer = $("mediaPreviewContainer");
+const mediaPreview = $("mediaPreview");
+const btnDownloadMedia = $("btnDownloadMedia");
+const btnCloseMedia = $("btnCloseMedia");
 
-const mediaPreviewContainer = document.getElementById('mediaPreviewContainer');
-const mediaPreview = document.getElementById('mediaPreview');
-const btnDownloadMedia = document.getElementById('btnDownloadMedia');
-const btnCloseMedia = document.getElementById('btnCloseMedia');
-
-const textGroup = document.getElementById('textGroup');
-const frameControls = document.getElementById('frameControls');
+const frameControls = $("frameControls");
 
 /* ===== 状态 ===== */
 let video = null;
@@ -197,345 +180,269 @@ let currentMediaDataURL = "";
 let isFrameMode = false; // 仅“视频帧”时为 true
 
 /* ===== 工具 ===== */
-function showResponse(show=true){ responseWrap.style.display = show ? 'block' : 'none'; }
-function setRespStatus(text){ respStatus.textContent = text; }
-/* 支持自定义忙碌文案 */
+function showResponse(show=true){ if(responseWrap) responseWrap.style.display = show ? 'block' : 'none'; }
+function setRespStatus(text){ if(respStatus) respStatus.textContent = text; }
 function setBusy(btn, busy=true, busyLabel='处理中…'){
-  if(!btn) return;
-  btn.disabled = !!busy;
-  if(!btn.dataset._text) btn.dataset._text = btn.textContent;
-  btn.textContent = busy ? busyLabel : btn.dataset._text;
+if(!btn) return;
+btn.disabled = !!busy;
+if(!btn.dataset._text) btn.dataset._text = btn.textContent;
+btn.textContent = busy ? busyLabel : btn.dataset._text;
 }
-function debounce(fn, delay=200){ let t=null; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), delay); }; }
-function parseMimeFromDataURI(dataURI){ const m = /^data:([^;,]+)[^,]*,/.exec(dataURI); return m ? m[1].trim() : ''; }
-
-/* ===== 文本按钮显隐 ===== */
-function hideTextButtons(){ textGroup.style.display = 'none'; }
-function showTextButtons(){ textGroup.style.display = 'flex'; }
+function parseMimeFromDataURI(dataURI){
+const m = /^data:([^;,]+)[^,]*,/.exec(dataURI);
+return m ? m[1].trim() : '';
+}
 
 /* ===== 统一视图切换 ===== */
 // mode: 'text' | 'image' | 'media'
 function setView(mode){
-  const statsEl = document.getElementById('stats');
-
-  if(mode === 'text'){
-    textarea.style.display = 'block';
-    statsEl.style.display = 'flex';
-    showTextButtons();
-    imageDisplayContainer.style.display = 'none';
-    editButtons.style.display = 'none';
-    mediaPreviewContainer.style.display = 'none';
-    mediaPreview.innerHTML = "";
-  }else if(mode === 'image'){
-    textarea.style.display = 'none';
-    statsEl.style.display = 'none';
-    hideTextButtons();
-    imageDisplayContainer.style.display = 'block';
-    editButtons.style.display = 'block';
-    mediaPreviewContainer.style.display = 'none';
-    mediaPreview.innerHTML = "";
-  }else if(mode === 'media'){
-    textarea.style.display = 'none';
-    statsEl.style.display = 'none';
-    hideTextButtons();
-    imageDisplayContainer.style.display = 'none';
-    editButtons.style.display = 'none';
-    mediaPreviewContainer.style.display = 'block';
-  }
+if(mode === 'text'){
+textarea.style.display = 'block';
+imageDisplayContainer.style.display = 'none';
+editButtons.style.display = 'none';
+mediaPreviewContainer.style.display = 'none';
+mediaPreview.innerHTML = "";
+}else if(mode === 'image'){
+textarea.style.display = 'none';
+imageDisplayContainer.style.display = 'block';
+editButtons.style.display = 'block';
+mediaPreviewContainer.style.display = 'none';
+mediaPreview.innerHTML = "";
+}else if(mode === 'media'){
+textarea.style.display = 'none';
+imageDisplayContainer.style.display = 'none';
+editButtons.style.display = 'none';
+mediaPreviewContainer.style.display = 'block';
+}
 }
 
-/* 根据 isFrameMode 控制帧控件显隐 */
+/* 帧控件显隐（只在帧模式显示） */
 function updateFrameControls(){
-  if(isFrameMode){
-    frameControls.style.display = 'flex';
-    framePager.style.display = 'block';
-  }else{
-    frameControls.style.display = 'none';
-    framePager.style.display = 'none';
-    imageTimeLabel.textContent = ''; // 非帧模式不显示时间轴
-  }
+if(!frameControls || !framePager) return;
+if(isFrameMode){
+frameControls.style.display = 'flex';
+framePager.style.display = 'block';
+}else{
+frameControls.style.display = 'none';
+framePager.style.display = 'none';
+imageTimeLabel.textContent = '';
 }
-
-/* ===== 文本统计 ===== */
-function updateStats(){
-  const text = textarea.value || "";
-  const total = text.length;
-  const chinese = (text.match(/[\u4e00-\u9fa5]/g) || []).length;
-  const punctuation = (text.match(/[^\u4e00-\u9fa5\w\s]/g) || []).length;
-  const alphabet = (text.match(/[a-zA-Z]/g) || []).length;
-  const numbers = (text.match(/\d/g) || []).length;
-  const duplicates = getDuplicateCount(text);
-  totalEl.textContent = `总数：${total}`;
-  chineseEl.textContent = `汉字：${chinese}`;
-  punctuationEl.textContent = `标点：${punctuation}`;
-  alphabetEl.textContent = `字母：${alphabet}`;
-  numbersEl.textContent = `数字：${numbers}`;
-  duplicateEl.textContent = `重复：${duplicates}`;
 }
-const updateStatsDebounced = debounce(updateStats, 120);
-function getDuplicateCount(text){
-  if(!text) return 0;
-  const lines = text.split('\n'); const map = new Map(); let dup=0;
-  for(const line of lines){ map.set(line,(map.get(line)||0)+1); }
-  for(const cnt of map.values()){ if(cnt>1) dup += (cnt-1); }
-  return dup;
-}
-function clearTextarea(){ textarea.value = ""; setView('text'); updateStats(); }
-function removeDuplicates(){
-  const lines = textarea.value.split('\n'); const seen = new Set(); const result=[];
-  for(const line of lines){ if(!seen.has(line)){ seen.add(line); result.push(line); } }
-  textarea.value = result.join('\n'); updateStats();
-}
-async function copyToClipboard(text){
-  try{ await navigator.clipboard.writeText(text); alert("已复制到剪贴板"); }
-  catch(e){ const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta);
-    ta.select(); document.execCommand('copy'); document.body.removeChild(ta); alert("已复制到剪贴板"); }
-}
-
-copyBtn.addEventListener("click", ()=>copyToClipboard(textarea.value || textarea.getAttribute("placeholder") || ""));
-btnCopyResp.addEventListener("click", ()=>copyToClipboard(response.textContent || ""));
-btnHideResp.addEventListener("click", ()=>showResponse(false));
-textarea.addEventListener("input", ()=>{ if(textarea.style.display!=='none') setView('text'); updateStatsDebounced(); });
-clearBtn.addEventListener("click", clearTextarea);
-removeDuplicatesBtn.addEventListener("click", removeDuplicates);
-
-/* ===== API 测试 ===== */
-async function testAPI(){
-  const apiUrl = openkeyBtn.getAttribute("data-api-url");
-  const apiKey = document.getElementById('api_key').value.trim() || document.getElementById('api_key').placeholder;
-  const originalInput = (textarea.value || "").trim();
-  if(!originalInput){ alert("请输入一些文本..."); return; }
-  setBusy(openkeyBtn,true,'请求中…'); showResponse(true); setRespStatus("请求中…"); response.textContent="请求中…";
-  const data = {
-    model: "deepseek-chat:free",
-    messages: [{role:"system",content:"简要回复，字符不超500个。"}, {role:"user",content:originalInput}],
-    temperature: 0.7, max_tokens: 1000
-  };
-  try{
-    const res = await fetch(apiUrl,{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${apiKey}`},body:JSON.stringify(data)});
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    const result = await res.json();
-    response.textContent = JSON.stringify(result,null,2);
-    if(result?.choices?.[0]?.message?.content){ textarea.value = result.choices[0].message.content; setView('text'); updateStats(); }
-    setRespStatus("完成");
-  }catch(err){
-    response.textContent = `请求失败: ${err.message}\n请检查API密钥和网络连接。`; setRespStatus("失败"); console.error(err);
-  }finally{ setBusy(openkeyBtn,false); }
-}
-openkeyBtn.addEventListener("click", testAPI);
 
 /* ===== Base64/媒体 ===== */
 function createAudioElement(dataURL){ const a=document.createElement('audio'); a.controls=true;a.src=dataURL;a.preload='metadata'; return a; }
 function createVideoElement(dataURL){ const v=document.createElement('video'); v.controls=true;v.src=dataURL;v.preload='metadata'; return v; }
 
 function convertToBase64(){
-  const file = fileInput.files?.[0];
-  if(!file){ alert('请选择一个文件。'); return; }
-  setBusy(btnToB64,true,'转码中…');
+const file = fileInput.files?.[0];
+if(!file){ alert('请选择一个文件。'); return; }
+setBusy(btnToB64,true,'转码中…');
 
-  const reader = new FileReader();
-  reader.onload = e => {
-    textarea.value = e.target.result;
-    setView('text');
-    hideTextButtons();        // 需求：隐藏四个按钮
-    updateStats();
-    setBusy(btnToB64,false);
-  };
-  reader.onerror = () => { alert("文件读取失败"); setBusy(btnToB64,false); };
-  reader.readAsDataURL(file);
+const reader = new FileReader();
+reader.onload = e => {
+textarea.value = e.target.result;
+setView('text');
+setBusy(btnToB64,false);
+showResponse(true);
+setRespStatus('完成');
+response.textContent = '已转为 Data URL（Base64）。';
+};
+reader.onerror = () => { alert("文件读取失败"); setBusy(btnToB64,false); };
+reader.readAsDataURL(file);
 }
 
 function convertFromBase64(){
-  const s = (textarea.value || '').trim();
-  if(!s){ alert('请输入 Base64 字符串。'); return; }
-  if(!s.startsWith('data:')){ alert('无效的 Base64 数据 URI（需形如 data:...;base64,...）'); return; }
+const s = (textarea.value || '').trim();
+if(!s){ alert('请输入 Base64 字符串。'); return; }
+if(!s.startsWith('data:')){ alert('无效的 Base64 数据 URI（需形如 data:...;base64,...）'); return; }
 
-  setBusy(btnFromB64,true,'解析中…');
+setBusy(btnFromB64,true,'解析中…');
 
-  const mime = parseMimeFromDataURI(s);
-  if(!mime){ alert('无法解析 MIME 类型'); setBusy(btnFromB64,false); return; }
+const mime = parseMimeFromDataURI(s);
+if(!mime){ alert('无法解析 MIME 类型'); setBusy(btnFromB64,false); return; }
 
-  // 清理状态
-  currentFilter = '';
-  images = []; currentImageIndex = -1; currentImage = null;
-  mediaPreview.innerHTML = ""; currentMediaDataURL = "";
-  isFrameMode = false; // 码转文件 → 如果是图片，仅普通图片模式
-  updateFrameControls();
+// 清理状态（重要：确保退出帧模式 → 隐藏帧控件）
+currentFilter = '';
+images = []; currentImageIndex = -1; currentImage = null;
+mediaPreview.innerHTML = ""; currentMediaDataURL = "";
+isFrameMode = false;
+updateFrameControls();
 
-  try{
-    if(mime.startsWith('image/')){
-      displayedImage.src = s; currentImage = displayedImage; displayedImage.style.filter = currentFilter;
-      setView('image');
-      updateFrameControls(); // 非帧模式隐藏帧控件
-      setTimeout(()=>imageDisplayContainer.scrollIntoView({behavior:'smooth', block:'center'}), 50);
-    }else if(mime.startsWith('audio/')){
-      mediaPreview.appendChild(createAudioElement(s)); currentMediaDataURL = s;
-      setView('media');
-      setTimeout(()=>mediaPreviewContainer.scrollIntoView({behavior:'smooth', block:'center'}), 50);
-    }else if(mime.startsWith('video/')){
-      mediaPreview.appendChild(createVideoElement(s)); currentMediaDataURL = s;
-      setView('media');
-      setTimeout(()=>mediaPreviewContainer.scrollIntoView({behavior:'smooth', block:'center'}), 50);
-    }else{
-      alert("该 Base64 内容不属于常见媒体类型，将保留在文本框内。");
-      setView('text');
-    }
-  } finally {
-    setBusy(btnFromB64,false);
-  }
+try{
+if(mime.startsWith('image/')){
+displayedImage.src = s; currentImage = displayedImage; displayedImage.style.filter = currentFilter;
+setView('image');
+updateFrameControls(); // 非帧模式隐藏帧控件（解决“码转文件出现上/下帧按钮”）
+setTimeout(()=>imageDisplayContainer.scrollIntoView({behavior:'smooth', block:'center'}), 50);
+}else if(mime.startsWith('audio/')){
+mediaPreview.appendChild(createAudioElement(s)); currentMediaDataURL = s;
+setView('media');
+setTimeout(()=>mediaPreviewContainer.scrollIntoView({behavior:'smooth', block:'center'}), 50);
+}else if(mime.startsWith('video/')){
+mediaPreview.appendChild(createVideoElement(s)); currentMediaDataURL = s;
+setView('media');
+setTimeout(()=>mediaPreviewContainer.scrollIntoView({behavior:'smooth', block:'center'}), 50);
+}else{
+alert("该 Base64 内容不属于常见媒体类型，将保留在文本框内。");
+setView('text');
+}
+} finally {
+setBusy(btnFromB64,false);
+}
 }
 
 async function extractFrames(){
-  const file = fileInput.files?.[0];
-  const fps = parseInt(intervalInput.value,10);
-  if(!file || !file.type.startsWith('video/')){ alert('请选择一个视频文件。'); return; }
-  if(isNaN(fps) || fps<=0){ alert('请输入有效的帧率。'); return; }
+const file = fileInput.files?.[0];
+const fps = parseInt(intervalInput.value,10);
+if(!file || !file.type.startsWith('video/')){ alert('请选择一个视频文件。'); return; }
+if(isNaN(fps) || fps<=0){ alert('请输入有效的帧率。'); return; }
 
-  setBusy(btnFrames,true,'抽帧中…');
+setBusy(btnFrames,true,'抽帧中…');
 
-  const objectURL = URL.createObjectURL(file);
-  video = document.createElement('video');
-  video.preload='metadata'; video.src=objectURL;
+const objectURL = URL.createObjectURL(file);
+video = document.createElement('video');
+video.preload='metadata'; video.src=objectURL;
 
-  video.onloadedmetadata = ()=> {
-    isFrameMode = true;       // 进入帧模式
-    updateFrameControls();
-    captureFrames(video, fps).finally(()=>{ setBusy(btnFrames,false); });
-  };
+video.onloadedmetadata = ()=> {
+isFrameMode = true;       // 进入帧模式（只在这里开启）
+updateFrameControls();
+captureFrames(video, fps).finally(()=>{ setBusy(btnFrames,false); });
+};
 }
 
 function seekTo(video, t){
-  return new Promise(resolve=>{
-    const handler = ()=>{ video.removeEventListener('seeked', handler); resolve();
-    };
-    video.addEventListener('seeked', handler, { once:true });
-    video.currentTime = Math.min(t, Math.max(0, video.duration - 0.001));
-  });
+return new Promise(resolve=>{
+const handler = ()=>{ video.removeEventListener('seeked', handler); resolve(); };
+video.addEventListener('seeked', handler, { once:true });
+video.currentTime = Math.min(t, Math.max(0, video.duration - 0.001));
+});
 }
 
 async function captureFrames(video, fps){
-  images=[]; currentImageIndex=-1; currentFilter='';
-  setView('image'); // 仅显示图片区
-  updateFrameControls();      // 帧控件可见
+images=[]; currentImageIndex=-1; currentFilter='';
+setView('image'); // 仅显示图片区
+updateFrameControls();      // 帧控件可见
 
-  const frameDuration = 1 / fps;
-  const total = Math.floor(video.duration * fps) + 1;
-  let currentTime = 0;
+const frameDuration = 1 / fps;
+const total = Math.floor(video.duration * fps) + 1;
+let currentTime = 0;
 
-  for(let i=0;i<total;i++){
-    await seekTo(video, currentTime);
-    const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-    const ctx = canvas.getContext('2d'); ctx.drawImage(video,0,0,canvas.width,canvas.height);
-    images.push({ url: canvas.toDataURL('image/png'), time: currentTime });
-    framePager.textContent = `${i+1} / ${total}`;
-    imageTimeLabel.textContent = `进度: ${currentTime.toFixed(2)}s / ${video.duration.toFixed(2)}s`;
-    currentTime += frameDuration;
-    await new Promise(r=>setTimeout(r,0));
-  }
+for(let i=0;i<total;i++){
+await seekTo(video, currentTime);
+const canvas = document.createElement('canvas');
+canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+const ctx = canvas.getContext('2d'); ctx.drawImage(video,0,0,canvas.width,canvas.height);
+images.push({ url: canvas.toDataURL('image/png'), time: currentTime });
+framePager.textContent = `${i+1} / ${total}`;
+imageTimeLabel.textContent = `进度: ${currentTime.toFixed(2)}s / ${video.duration.toFixed(2)}s`;
+currentTime += frameDuration;
+await new Promise(r=>setTimeout(r,0));
+}
 
-  if(images.length>0){
-    currentImageIndex=0; displayFrame();
-    setTimeout(()=>imageDisplayContainer.scrollIntoView({behavior:'smooth', block:'center'}),50);
-  }else{
-    alert('未能从视频中提取到任何帧。'); setView('text');
-  }
+if(images.length>0){
+currentImageIndex=0; displayFrame();
+setTimeout(()=>imageDisplayContainer.scrollIntoView({behavior:'smooth', block:'center'}),50);
+}else{
+alert('未能从视频中提取到任何帧。'); setView('text');
+isFrameMode = false; updateFrameControls();
+}
 }
 
 function displayFrame(){
-  if(currentImageIndex<0 || currentImageIndex>=images.length) return;
-  const f = images[currentImageIndex];
-  displayedImage.src = f.url; currentImage = displayedImage; displayedImage.style.filter = currentFilter;
-  imageTimeLabel.textContent = isFrameMode ? `时长: ${f.time.toFixed(2)} 秒` : '';
-  framePager.textContent = isFrameMode ? `${currentImageIndex+1} / ${images.length}` : '';
+if(currentImageIndex<0 || currentImageIndex>=images.length) return;
+const f = images[currentImageIndex];
+displayedImage.src = f.url; currentImage = displayedImage; displayedImage.style.filter = currentFilter;
+imageTimeLabel.textContent = isFrameMode ? `时长: ${f.time.toFixed(2)} 秒` : '';
+framePager.textContent = isFrameMode ? `${currentImageIndex+1} / ${images.length}` : '';
 }
 
 function showPreviousImage(){ if(currentImageIndex>0){ currentImageIndex--; displayFrame(); } }
 function showNextImage(){ if(currentImageIndex<images.length-1){ currentImageIndex++; displayFrame(); } }
 
 function downloadFrame(){
-  if(!isFrameMode){ alert('当前不在视频帧模式'); return; }
-  if(currentImageIndex<0 || images.length===0){ alert('请先查看一张图片以下载。'); return; }
-  const f = images[currentImageIndex]; const a=document.createElement('a');
-  a.href=f.url; a.download=`frame-${String(currentImageIndex+1).padStart(4,'0')}.png`; a.click();
+if(!isFrameMode){ alert('当前不在视频帧模式'); return; }
+if(currentImageIndex<0 || images.length===0){ alert('请先查看一张图片以下载。'); return; }
+const f = images[currentImageIndex]; const a=document.createElement('a');
+a.href=f.url; a.download=`frame-${String(currentImageIndex+1).padStart(4,'0')}.png`; a.click();
 }
 
 function downloadImage(){
-  if(!currentImage){ alert('请先查看一张图片以下载。'); return; }
-  const canvas=document.createElement('canvas'); const ctx=canvas.getContext('2d');
-  const w=currentImage.naturalWidth||currentImage.width; const h=currentImage.naturalHeight||currentImage.height;
-  canvas.width=w; canvas.height=h; ctx.filter=currentFilter||'none'; ctx.drawImage(currentImage,0,0,w,h);
-  const a=document.createElement('a'); a.href=canvas.toDataURL('image/png'); a.download='processed-image.png'; a.click();
+if(!currentImage){ alert('请先查看一张图片以下载。'); return; }
+const canvas=document.createElement('canvas'); const ctx=canvas.getContext('2d');
+const w=currentImage.naturalWidth||currentImage.width; const h=currentImage.naturalHeight||currentImage.height;
+canvas.width=w; canvas.height=h; ctx.filter=currentFilter||'none'; ctx.drawImage(currentImage,0,0,w,h);
+const a=document.createElement('a'); a.href=canvas.toDataURL('image/png'); a.download='processed-image.png'; a.click();
 }
 
-btnDownloadMedia.onclick = ()=>{
-  if(!currentMediaDataURL) return;
-  const mime = parseMimeFromDataURI(currentMediaDataURL);
-  const ext = mime.includes('audio/') ? (mime.split('/')[1]||'audio')
-            : mime.includes('video/') ? (mime.split('/')[1]||'video') : 'bin';
-  const a=document.createElement('a');
-  a.href=currentMediaDataURL; a.download=`media.${ext.replace(/[^a-z0-9]/gi,'')}`; a.click();
-};
-btnCloseMedia.onclick = ()=>{ currentMediaDataURL=""; mediaPreview.innerHTML=""; setView('text'); };
+on(btnDownloadMedia,'click', ()=>{
+if(!currentMediaDataURL) return;
+const mime = parseMimeFromDataURI(currentMediaDataURL);
+let ext = 'bin';
+if(mime.startsWith('audio/')) ext = mime.split('/')[1]||'audio';
+else if(mime.startsWith('video/')) ext = mime.split('/')[1]||'video';
+const a=document.createElement('a');
+a.href=currentMediaDataURL; a.download=`media.${ext.replace(/[^a-z0-9]/gi,'')}`; a.click();
+});
+on(btnCloseMedia,'click', ()=>{ currentMediaDataURL=""; mediaPreview.innerHTML=""; setView('text'); });
 
 function invertColors(){ currentFilter=(currentFilter+' invert(1)').trim(); if(currentImage) currentImage.style.filter = currentFilter; }
 function desaturateImage(){ currentFilter=(currentFilter+' grayscale(1)').trim(); if(currentImage) currentImage.style.filter = currentFilter; }
 function restoreImage(){ currentFilter=''; if(currentImage) currentImage.style.filter = currentFilter; }
 
 function clearOutput(){
-  textarea.value = ""; updateStats();
-  images=[]; currentImageIndex=-1; currentImage=null; currentFilter='';
-  currentMediaDataURL=""; mediaPreview.innerHTML="";
-  isFrameMode = false; updateFrameControls();
-  setView('text');
+textarea.value = "";
+images=[]; currentImageIndex=-1; currentImage=null; currentFilter='';
+currentMediaDataURL=""; mediaPreview.innerHTML="";
+isFrameMode = false; updateFrameControls();
+setView('text');
 }
 
 /* ===== 事件绑定 ===== */
-document.getElementById("btnToB64").addEventListener('click', ()=>{
-  convertToBase64();
-  textGroup.scrollLeft = 0;
+on(btnToB64,'click', ()=>{
+convertToBase64();
 });
-document.getElementById("btnFromB64").addEventListener('click', convertFromBase64);
-document.getElementById("btnFrames").addEventListener('click', extractFrames);
-document.getElementById("btnClearOutput").addEventListener('click', clearOutput);
+on(btnFromB64,'click', convertFromBase64);
+on(btnFrames,'click', extractFrames);
+on(btnClearOutput,'click', clearOutput);
 
-prevButton.addEventListener('click', showPreviousImage);
-nextButton.addEventListener('click', showNextImage);
-if (btnDownloadFrame) {
-  btnDownloadFrame.addEventListener('click', downloadFrame);
-}
+on(prevButton,'click', showPreviousImage);
+on(nextButton,'click', showNextImage);
+on(btnDownloadFrame,'click', downloadFrame);
 
-btnInvert.addEventListener('click', invertColors);
-btnGray.addEventListener('click', desaturateImage);
-btnRestore.addEventListener('click', restoreImage);
-btnDownloadImage.addEventListener('click', downloadImage);
+on(btnInvert,'click', invertColors);
+on(btnGray,'click', desaturateImage);
+on(btnRestore,'click', restoreImage);
+on(btnDownloadImage,'click', downloadImage);
+
+on(btnCopyResp,'click', ()=>{ navigator.clipboard.writeText(response.textContent||""); });
+on(btnHideResp,'click', ()=>showResponse(false));
 
 /* 键盘切帧（仅在图片视图且为帧模式时响应） */
 window.addEventListener('keydown', e=>{
-  if(imageDisplayContainer.style.display !== 'block' || !isFrameMode) return;
-  if(e.key === 'ArrowLeft') showPreviousImage();
-  else if(e.key === 'ArrowRight') showNextImage();
+if(imageDisplayContainer.style.display !== 'block' || !isFrameMode) return;
+if(e.key === 'ArrowLeft') showPreviousImage();
+else if(e.key === 'ArrowRight') showNextImage();
 });
 
-/* 拖拽上传（有元素则启用） */
+/* 拖拽上传 */
 if (dropZone){
-  ['dragenter','dragover','dragleave','drop'].forEach(evt=>{
-    dropZone.addEventListener(evt, e=>{ e.preventDefault(); e.stopPropagation(); });
-  });
-  ['dragenter','dragover'].forEach(evt=>{
-    dropZone.addEventListener(evt, ()=>dropZone.classList.add('dragover'));
-  });
-  ['dragleave','drop'].forEach(evt=>{
-    dropZone.addEventListener(evt, ()=>dropZone.classList.remove('dragover'));
-  });
-  dropZone.addEventListener('drop', e=>{
-    const files = e.dataTransfer.files;
-    if(files && files.length){ fileInput.files = files; }
-  });
+['dragenter','dragover','dragleave','drop'].forEach(evt=>{
+dropZone.addEventListener(evt, e=>{ e.preventDefault(); e.stopPropagation(); });
+});
+['dragenter','dragover'].forEach(evt=>{
+dropZone.addEventListener(evt, ()=>dropZone.classList.add('dragover'));
+});
+['dragleave','drop'].forEach(evt=>{
+dropZone.addEventListener(evt, ()=>dropZone.classList.remove('dragover'));
+});
+dropZone.addEventListener('drop', e=>{
+const files = e.dataTransfer.files;
+if(files && files.length){ fileInput.files = files; }
+});
 }
 
 /* 初始化 */
-setView('text'); updateStats(); updateFrameControls();
+setView('text'); updateFrameControls();
 </script>
 
 <!-- 第三方统计（原样保留） -->
@@ -543,3 +450,4 @@ setView('text'); updateStats(); updateFrameControls();
 <script>LA.init({id:"JRHGRBPWC7lJIaXq", ck:"JRHGRBPWC7lJIaXq"});</script>
 </body>
 </html>
+
