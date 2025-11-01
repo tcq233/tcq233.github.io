@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
  <head> 
@@ -492,7 +493,6 @@ function isRowDuplicate(name, hyperlink, year, dataType) {
    <div class="input-container"> 
     <input type="text" id="filterInput" onkeyup="filterTable()" placeholder="Search for Data.." /> 
     <button class="clear-btn" onclick="clearInput()">✕</button> 
-    <button class="btn" onclick="startSpeechRecognition()"><i class="fas fa-microphone icon"></i></button> 
 
 
 
@@ -507,16 +507,9 @@ function isRowDuplicate(name, hyperlink, year, dataType) {
       </button>
 
     <button class="btn" title="download html"  onclick="downloadPage()"><i class="fab fa-chrome"></i></button>
-    <button class="btn" title="edit"onclick="window.open('https://github.com/ChatPuck/chatpuck.github.io/blob/main/static/xlsx.html')"><i class="fas fa-cog"></i></button> 
+    <button class="btn" title="edit"onclick="window.open('https://github.com/realfaketop/html/blob/main/index.html')"><i class="fas fa-cog"></i></button> 
 
-<!--     
-        <button class="btn" title="add data"  onclick="addRow()"><i class="fas fa-plus icon"></i></button>
-    <button class="btn" title="add data"  onclick="addRow()"><i class="fas fa-plus icon"></i></button>
-        <button class="btn download-xlsx-btn" title="download xlsx"  onclick="downloadXLSX()"><i class="fa fa-download"></i></button> 
-<button class="btn" onclick="window.open('https://github.com/feeday/blog/blob/main/static/xlsx/index.html', '_blank')">
-  <i class="fas fa-file-excel icon"></i>
-</button>
-    -->
+
 
    </div> 
    <table id="myTable"> 
@@ -528,20 +521,85 @@ function isRowDuplicate(name, hyperlink, year, dataType) {
       <th onclick="sortTable(3)">Hyperlink</th> 
       <th>Action</th> 
      </tr> 
-     <tr> 
-      <td><a target="_blank" href="https://github.com/deepseek-ai/DeepSeek-R1">DeepSeek-R1</a></td> 
-      <td>202501</td> 
-      <td>Code-LLM</td> 
-      <td><a target="_blank" href="https://github.com/deepseek-ai/DeepSeek-R1">https://github.com/deepseek-ai/DeepSeek-R1</a></td> 
+
+          <tr> 
+      <td><a target="_blank" href="https://chatgpt.com/">ChatGPT</a></td> 
+      <td>202303</td> 
+      <td>Web-AIGC</td> 
+      <td><a target="_blank" href="https://chatgpt.com/">https://chatgpt.com</a></td> 
       <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
      </tr> 
+
+     
+
       <tr> 
-      <td><a target="_blank" href="https://chat.scnet.cn">DeepSeek-R1</a></td> 
-      <td>202502</td> 
-      <td>Web-LLM</td> 
-      <td><a target="_blank" href="https://chat.scnet.cn">https://chat.scnet.cn</a></td> 
+      <td><a target="_blank" href="https://translate.google.com">Translate</a></td> 
+      <td>200604</td> 
+      <td>Web-Text</td> 
+      <td><a target="_blank" href="https://translate.google.com/">https://translate.google.com</a></td> 
       <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
-     </tr>
+     </tr> 
+
+           <tr> 
+      <td><a target="_blank" href="https://colab.research.google.com/">Colab</a></td> 
+      <td>201701</td> 
+      <td>Web-AIGC</td> 
+      <td><a target="_blank" href="https://colab.research.google.com/">https://colab.research.google.com</a></td> 
+      <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
+     </tr> 
+     
+      <tr> 
+      <td><a target="_blank" href="https://www.pexels.com/">Pexels</a></td> 
+      <td>201401</td> 
+      <td>Web-Photo</td> 
+      <td><a target="_blank" href="https://www.pexels.com/">https://www.pexels.com</a></td> 
+      <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
+     </tr> 
+     
+      <tr> 
+      <td><a target="_blank" href="https://huggingface.co/spaces/Omnibus/AI-or-Not">AI-or-Not</a></td> 
+      <td>202310</td> 
+      <td>Deepfake-AIGC</td> 
+      <td><a target="_blank" href="https://huggingface.co/spaces/Omnibus/AI-or-Not">https://huggingface.co/spaces/Omnibus/AI-or-Not</a></td> 
+      <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
+     </tr> 
+
+      <tr> 
+      <td><a target="_blank" href="https://matrix.tencent.com/ai-detect/">AI-Detect</a></td> 
+      <td>202501</td> 
+      <td>Deepfake-AIGC</td> 
+      <td><a target="_blank" href="https://matrix.tencent.com/ai-detect/">https://matrix.tencent.com/ai-detect</a></td> 
+      <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
+     </tr> 
+
+
+
+     
+           <tr> 
+      <td><a target="_blank" href="https://x.com/i/grok">Grok</a></td> 
+      <td>202311</td> 
+      <td>Web-AIGC</td> 
+      <td><a target="_blank" href="https://x.com/i/grok">https://x.com/i/grok</a></td> 
+      <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
+     </tr> 
+
+              <tr> 
+      <td><a target="_blank" href="https://gemini.google.com/">Gemini</a></td> 
+      <td>202303</td> 
+      <td>Web-AIGC</td> 
+      <td><a target="_blank" href="https://gemini.google.com/">https://gemini.google.com</a></td> 
+      <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
+     </tr> 
+
+                 <tr> 
+      <td><a target="_blank" href="https://cloudstudio.net/">CloudStudio</a></td> 
+      <td>202303</td> 
+      <td>Web-AIGC</td> 
+      <td><a target="_blank" href="https://cloudstudio.net/">https://cloudstudio.net</a></td> 
+      <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
+     </tr> 
+     
+     
            <tr> 
       <td><a target="_blank" href="https://www.superclueai.com">SuperCLUE</a></td> 
       <td>202502</td> 
@@ -566,33 +624,27 @@ function isRowDuplicate(name, hyperlink, year, dataType) {
       <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
      </tr>
            <tr> 
-      <td><a target="_blank" href="https://www.tradingview.com/markets/?aff_id=149508">TradingView</a></td> 
-      <td>202502</td> 
-      <td>Deal-Price</td> 
-      <td><a target="_blank" href="https://www.tradingview.com/markets/?aff_id=149508">https://www.tradingview.com/markets</a></td> 
+      <td><a target="_blank" href="https://youtube.iiilab.com/">Youtube-Play</a></td> 
+      <td>201710</td> 
+      <td>Web-Download</td> 
+      <td><a target="_blank" href="https://youtube.iiilab.com/">https://youtube.iiilab.com</a></td> 
       <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
      </tr>
     
      <tr> 
-        <td><a target="_blank" href="https://www.w3schools.com/icons/icons_reference.asp">Font Awesome 5</a></td> 
+        <td><a target="_blank" href="https://app.pixverse.ai/">PixVerse</a></td> 
         <td>201707</td> 
         <td>Web-Image</td> 
-        <td><a target="_blank" href="https://www.w3schools.com/icons/icons_reference.asp">https://www.w3schools.com/icons/icons_reference.asp</a></td> 
+        <td><a target="_blank" href="https://app.pixverse.ai/">https://app.pixverse.ai</a></td> 
         <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
        </tr>
-      <tr> 
-      <td><a target="_blank" href="https://chatgpt.com/">ChatGPT</a></td> 
-      <td>202303</td> 
-      <td>Web-LLM</td> 
-      <td><a target="_blank" href="https://chatgpt.com/">https://chatgpt.com</a></td> 
-      <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
-     </tr> 
+
 
       <tr> 
-      <td><a target="_blank" href="https://jimeng.jianying.com/ai-tool/home">Jimeng</a></td> 
+      <td><a target="_blank" href="https://dreamina.capcut.com/ai-tool/home">Jimeng</a></td> 
       <td>202502</td> 
       <td>Web-AIGC</td> 
-      <td><a target="_blank" href="https://jimeng.jianying.com/ai-tool/home">https://jimeng.jianying.com/ai-tool/home</a></td> 
+      <td><a target="_blank" href="https://dreamina.capcut.com/ai-tool/home">https://dreamina.capcut.com/ai-tool/home</a></td> 
       <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
      </tr> 
 
@@ -621,7 +673,7 @@ function isRowDuplicate(name, hyperlink, year, dataType) {
      
       <tr> 
       <td><a target="_blank" href="https://chat18.aichatos18.com/">AIchatOS2</a></td> 
-      <td>202502</td> 
+      <td>202510</td> 
       <td>Web-LLM</td> 
       <td><a target="_blank" href="https://chat18.aichatos18.com/">https://chat18.aichatos18.com</a></td> 
       <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td> 
@@ -657,5 +709,6 @@ function isRowDuplicate(name, hyperlink, year, dataType) {
    <span id="delay" style="box-sizing: border-box; margin: 0; padding: 5px 10px; font-size: 12px; line-height: 1.71428em; color: #999; display: inline-block; text-align: center; border: 1px solid #ccc; border-left: none;"><script id="LA-DATA-WIDGET" crossorigin="anonymous" charset="UTF-8" src="https://v6-widget.51.la/v6/JRHGRBPWC7lJIaXq/quote.js?theme=0&amp;f=12&amp;display=0,0,1,1,0,0,0,0"></script></span> 
    <span id="performance-result" style="box-sizing: border-box; margin: 0; padding: 5px 10px; font-size: 12px; line-height: 1.71428em; color: #999; display: inline-block; text-align: center; border: 1px solid #ccc; border-right: none;">页面加载完成时间: -- ms</span> 
   </div>   
- </body>
+ <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"version":"2024.11.0","token":"bd9590762ba6424e8977f94e04ae48a8","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
 </html>
