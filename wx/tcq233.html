@@ -1,0 +1,144 @@
+<!-- This Code From Network,For Personal Study Only Use,If there is any infringement,Please Contact 0xf197#gmail.com. -->
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>─=≡Σ((( つ•̀ω•́)つ</title>
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+
+<link rel="stylesheet" href="/css/m.css">
+
+<style>
+body {
+margin: 0;
+padding: 0;
+font-size: 14px;
+font-family: "microsoft yahei", Arial, Verdana, Helvetica, sans-serif;
+background: #f7f8fa;
+overflow-x: hidden;
+}
+
+/* iframe 区域：高度由 JS 动态设定 */
+#msgFrame {
+width: 100%;
+border: none;
+display: block;
+}
+
+/* ⭐底部悬浮栏⭐ */
+.floating-bar {
+position: fixed;
+bottom: 0;
+left: 0;
+right: 0;
+height: 80px;
+background: #fff;
+border-top: 1px solid #eee;
+display: flex;
+align-items: center;
+justify-content: center;
+z-index: 999;
+}
+
+/* 中间内容（居中对齐） */
+.footer-inner {
+display: flex;
+align-items: center;
+justify-content: center;
+border: 1px solid #ccc;
+border-radius: 6px;
+overflow: hidden;
+}
+
+/* 信息框（无断层边框） */
+.info-box {
+padding: 5px 12px;
+font-size: 12px;
+line-height: 1.7em;
+color: #666;
+background: #fff;
+border-right: 1px solid #ccc;
+white-space: nowrap;
+}
+
+.info-box:last-child {
+border-right: none;
+}
+
+/* 51.LA 容器 */
+#delay {
+padding: 0;
+margin: 0;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 主 iframe 留言墙 -->
+<iframe
+id="msgFrame"
+src="https://regurl.cn/xzt/public/"
+scrolling="yes"
+allowfullscreen>
+</iframe>
+
+<!-- ⭐底部悬浮区域⭐ -->
+<div class="floating-bar">
+
+<div class="footer-inner">
+
+<span class="info-box">
+<span id="delay">
+<!-- 51.LA 不放在 span 内，否则破坏 DOM -->
+</span>
+</span>
+
+<span id="performance-result" class="info-box">
+页面加载时间: --
+</span>
+
+</div>
+
+</div>
+
+<!-- 动态计算 iframe 高度（适配所有手机） -->
+<script>
+function adjustHeight() {
+const barHeight = document.querySelector('.floating-bar').offsetHeight;
+const iframe = document.getElementById('msgFrame');
+iframe.style.height = (window.innerHeight - barHeight) + "px";
+}
+
+window.addEventListener('load', adjustHeight);
+window.addEventListener('resize', adjustHeight);
+</script>
+
+<!-- 页面加载测速（不包含 iframe） -->
+<script>
+var start = Date.now();
+document.addEventListener("DOMContentLoaded", function () {
+var cost = Date.now() - start;
+document.getElementById("performance-result").innerHTML =
+"页面加载时间: " + cost + "ms";
+});
+</script>
+
+<!-- ⭐51.LA 访客统计（完全独立，安全插入）⭐ -->
+<script
+id="LA-DATA-WIDGET"
+crossorigin="anonymous"
+charset="UTF-8"
+src="https://v6-widget.51.la/v6/JRHGRBPWC7lJIaXq/quote.js?theme=0&f=12&display=0,0,1,1,0,0,0,0">
+</script>
+
+</body>
+</html>
+
