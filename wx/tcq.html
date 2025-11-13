@@ -22,7 +22,7 @@ body {
   overflow-x:hidden;
 }
 
-/* 顶部空白留给 iframe */
+/* 顶部空白 */
 .top-gap {
   height: 10px;
 }
@@ -35,62 +35,53 @@ body {
   display:block;
 }
 
-/* ⭐底部悬浮栏⭐ */
+/* ⭐居中悬浮栏⭐ */
 .floating-bar {
   position: fixed;
-  bottom: 0; 
-  left: 0; 
-  right: 0;
+  bottom: 10px;                 /* 0 也可 */
+  left: 50%;
+  transform: translateX(-50%);  /* ⭐整体居中关键 */
   height: 60px;
   background: #fff;
-  border-top: 1px solid #eee;
+  border: 1px solid #eee;
   display: flex;
   align-items: center;
   padding: 0 10px;
   z-index: 999;
-}
 
-/* 左侧文本区域：可压缩 */
-.floating-left {
-  flex: 1;
-  display: flex;
-  white-space: nowrap;
-  overflow: hidden;
-  align-items: center;
+  width: fit-content;           /* ⭐内容自适应宽度 */
+  max-width: 90%;               /* 防止手机屏幕太小溢出 */
+  border-radius: 10px;          /* 可移除 */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* 可移除 */
 }
 
 /* 信息框 */
-.info-box {
+#delay,
+#performance-result {
+  box-sizing: border-box;
+  margin: 0;
   padding: 5px 10px;
   font-size: 12px;
-  color: #666;
+  line-height: 1.71428em;
+  color: #999;
+  display: inline-block;
+  text-align: center;
   border: 1px solid #ccc;
+}
+
+#delay {
   border-left: none;
+}
+#performance-result {
   border-right: none;
-  white-space: nowrap;
 }
 
-/* 右侧图片按钮 */
-.floating-img {
-  flex-shrink: 0; /* 图片不被挤压 */
-  margin-left: 10px;
-}
-
+/* 图片按钮 */
 .floating-img img {
-  height: 42px;  /* 保证完整显示 */
+  height: 42px;
   width: auto;
   border-radius: 6px;
   display: block;
-}
-
-/* 顶部 banner */
-.banner {
-  text-align:center;
-  margin: 12px 0;
-}
-
-.banner img {
-  width: 100%;
 }
 </style>
 </head>
@@ -107,17 +98,13 @@ body {
   allowfullscreen>
 </iframe>
 
-<!-- ⭐底部悬浮区域⭐ -->
+<!-- ⭐底部悬浮栏⭐ -->
 <div class="floating-bar">
-
- <div style="display: flex; justify-content: center; align-items: center;">
-<span id="delay" style="box-sizing: border-box; margin: 0; padding: 5px 10px; font-size: 12px; line-height: 1.71428em; color: #999; display: inline-block; text-align: center; border: 1px solid #ccc; border-left: none;">
-<script id="LA-DATA-WIDGET" crossorigin="anonymous" charset="UTF-8" src="https://v6-widget.51.la/v6/JRHGRBPWC7lJIaXq/quote.js?theme=0&f=12&display=0,0,1,1,0,0,0,0"></script>
-</span>
-<span id="performance-result" style="box-sizing: border-box; margin: 0; padding: 5px 10px; font-size: 12px; line-height: 1.71428em; color: #999; display: inline-block; text-align: center; border: 1px solid #ccc; border-right: none;">页面加载完成时间: -- ms</span>
-</div>
-
-
+    <span id="delay">
+      <script id="LA-DATA-WIDGET" crossorigin="anonymous" charset="UTF-8"
+        src="https://v6-widget.51.la/v6/JRHGRBPWC7lJIaXq/quote.js?theme=0&f=12&display=0,0,1,1,0,0,0,0"></script>
+    </span>
+    <span id="performance-result">页面加载时间: -- ms</span>
 </div>
 
 <!-- 页面加载测速 -->
