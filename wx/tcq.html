@@ -38,31 +38,49 @@ body {
 /* ⭐底部悬浮栏⭐ */
 .floating-bar {
   position: fixed;
-  bottom: 0;
-  left: 0;
+  bottom: 0; 
+  left: 0; 
   right: 0;
   height: 60px;
   background: #fff;
   border-top: 1px solid #eee;
   display: flex;
-  justify-content: space-around;
   align-items: center;
+  padding: 0 10px;
   z-index: 999;
 }
 
-/* 底部按钮样式 */
-.floating-btn {
-  background: #409eff;
-  color: #fff;
-  padding: 10px 18px;
-  border-radius: 30px;
-  font-size: 14px;
-  text-decoration: none;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+/* 左侧文本区域：可压缩 */
+.floating-left {
+  flex: 1;
+  display: flex;
+  white-space: nowrap;
+  overflow: hidden;
+  align-items: center;
 }
 
-.floating-btn:hover {
-  background:#337ecc;
+/* 信息框 */
+.info-box {
+  padding: 5px 10px;
+  font-size: 12px;
+  color: #666;
+  border: 1px solid #ccc;
+  border-left: none;
+  border-right: none;
+  white-space: nowrap;
+}
+
+/* 右侧图片按钮 */
+.floating-img {
+  flex-shrink: 0; /* 图片不被挤压 */
+  margin-left: 10px;
+}
+
+.floating-img img {
+  height: 42px;  /* 保证完整显示 */
+  width: auto;
+  border-radius: 6px;
+  display: block;
 }
 
 /* 顶部 banner */
@@ -91,10 +109,38 @@ body {
 
 <!-- ⭐底部悬浮区域⭐ -->
 <div class="floating-bar">
-  <a href="https://tcq20256.github.io/wx/">
+
+  <!-- 左侧 信息 + 加载时间 -->
+  <div class="floating-left">
+
+    <span id="delay" class="info-box">
+      <script id="LA-DATA-WIDGET" crossorigin="anonymous" charset="UTF-8" 
+        src="https://v6-widget.51.la/v6/JRHGRBPWC7lJIaXq/quote.js?theme=0&f=12&display=0,0,1,1,0,0,0,0">
+      </script>
+    </span>
+
+    <span id="performance-result" class="info-box">
+      页面加载完成时间: -- ms
+    </span>
+  </div>
+
+  <!-- 右侧按钮 图片完整显示 -->
+  <a class="floating-img" href="https://tcq20256.github.io/wx/">
     <img src="https://tool.lu/netcard/" alt=""/>
   </a>
+
 </div>
+
+<!-- 页面加载测速 -->
+<script>
+var start = new Date().getTime();
+window.addEventListener('load', function () {
+  var end = new Date().getTime();
+  var time = end - start;
+  document.getElementById('performance-result').innerHTML =
+    '页面加载时间: ' + time + 'ms';
+});
+</script>
 
 </body>
 </html>
