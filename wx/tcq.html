@@ -1,129 +1,106 @@
 <!-- This Code From Network,For Personal Study Only Use,If there is any infringement,Please Contact 0xf197#gmail.com. -->
-<!-- 
-* 17素材vip建站专区模块代码
-* 详尽信息请看官网：http://www.17sucai.com/pins/vip
-*
-* Copyright , 温州易站网络科技有限公司版权所有
-*
-* 请尊重原创，未经允许请勿转载。
-* 在保留版权的前提下可应用于个人或商业用途
---> 
 
-<html lang="en">
- <head> 
-  <meta charset="UTF-8" /> 
-  <title>─=≡Σ((( つ•̀ω•́)つ</title> 
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-  <meta content="yes" name="apple-mobile-web-app-capable" /> 
-  <meta content="black" name="apple-mobile-web-app-status-bar-style" /> 
-  <meta content="telephone=no" name="format-detection" />
-  <script charset="UTF-8" src="/js/wx.js"></script>
-  <link href="/css/m.css" rel="stylesheet" type="text/css" /> 
-  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>─=≡Σ((( つ•̀ω•́)つ</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
 
-  <style type="text/css">
+<link rel="stylesheet" href="/css/m.css">
+
+<style>
 body {
-  margin: 0; padding: 0;
-  font-size: 14px; font-family: "microsoft yahei",'Arial','Verdana','Helvetica', sans-serif;
+  margin:0;
+  padding:0;
+  font-size:14px;
+  font-family: "microsoft yahei",Arial,Verdana,Helvetica,sans-serif;
+  background:#f7f8fa;
+  overflow-x:hidden;
 }
-.bar {
-  position: fixed; top: 0; left: 0; right: 0;
-  height: 44px; padding: 0 10px;
-  background-color: #fff; opacity: 1;
-  z-index: 10;
+
+/* 顶部空白留给 iframe */
+.top-gap {
+  height: 10px;
 }
-.bar form {
-  display: block; padding: 0; margin: 0;
+
+/* iframe 区域 */
+#msgFrame {
+  width:100%;
+  height: calc(100vh - 70px);
+  border: none;
+  display:block;
 }
-.search-row {
-  position: relative;
-  height: 30px; padding: 7px 0;
+
+/* ⭐底部悬浮栏⭐ */
+.floating-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: #fff;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 999;
 }
-.search-row input[type=search] {
-  position: absolute; top: 7px;
-  height: 30px; line-height: 21px; width: 100%; padding: 10px 15px 10px 30px;
-  border: 0; border-radius: 6px; outline: 0; background-color: rgba(0,0,0,0.1);
-  font-size: 16px; text-align: center;
-  z-index: 100;
+
+/* 底部按钮样式 */
+.floating-btn {
+  background: #409eff;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 30px;
+  font-size: 14px;
+  text-decoration: none;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
 }
-.search-row .placeholder {
-  position: absolute; top: 2px; left: 0; right: 0;
-  display: inline-block; height: 34px; line-height: 34px;
-  border: 0; border-radius: 6px;
-  font-size: 16px; text-align: center; color: #999;
-  z-index: 1;
+
+.floating-btn:hover {
+  background:#337ecc;
 }
-.search-row .placeholder .iconfont {
-  display: inline-block; width: 19px; line-height: 24px; padding: 10px 0; 
-  font-size: 21px; color: #666;
+
+/* 顶部 banner */
+.banner {
+  text-align:center;
+  margin: 12px 0;
 }
-.search-row .placeholder .text {
-  line-height: 40px;
-  vertical-align: top;
+
+.banner img {
+  width: 100%;
 }
-.active:before {
-  position: absolute; top: 11px; left: 5px; right: auto;
-  display: block; margin-right: 0;
-  font-size: 21px;
-}
-.active input[type=search] {
-  text-align: left
-}
-.active .placeholder{
-  display: none
-}
-</style> 
+</style>
+</head>
 
- </head> <div style="height:5px;"></div>
-<body style="overflow:-Scroll;overflow-y:hidden"> 
+<body>
 
+<div class="top-gap"></div>
 
+<!-- 主 iframe 留言墙 -->
+<iframe
+  id="msgFrame"
+  src="https://regurl.cn/xzt/public/"
+  scrolling="yes"
+  allowfullscreen>
+</iframe>
 
-<section class="aui-flexView"> 
-<section class="aui-scrollView"> 
-
-<div style="margin-top:50px;">
-  <div style="margin-left:0px">
-
-    <!-- ⭐⭐⭐ 修改后的 iframe（高度自适应，无 CSRF 问题） ⭐⭐⭐ -->
-    <iframe
-        id="msgFrame"
-        src="https://regurl.cn/xzt/public/"
-        width="100%"
-        style="height: calc(100vh - 60px); border: none;"
-        frameborder="0"
-        scrolling="yes"
-        allowfullscreen>
-    </iframe>
-
-  </div> 
-</div>
-
-<div style="height:4px;"></div>
-
-<a class="aui-flex-list-item"> </a>
-<div style="height:5px;"></div>
-
-
-
-
-<script>
-var start = new Date().getTime();
-window.addEventListener('load', function () {
-  var end = new Date().getTime();
-  var time = end - start;
-  var result = document.getElementById('performance-result');
-  result.innerHTML = '页面加载时间: ' + time + 'ms';
-});
-</script>
-
-</section> 
-<p style="text-align:center;"> 
-  <a href="https://tcq20256.github.io/wx/" >
-    <img class="img" src="https://tool.lu/netcard/" width="100%" alt=""/>
+<!-- 小卡片广告或跳转 -->
+<p class="banner">
+  <a href="https://tcq20256.github.io/wx/">
+    <img src="https://tool.lu/netcard/" alt=""/>
   </a>
 </p>
-</section>
+
+<!-- ⭐底部悬浮区域⭐ -->
+<div class="floating-bar">
+  <a class="floating-btn" href="https://regurl.cn/xzt/public/">留言墙</a>
+  <a class="floating-btn" href="https://blog.cpuck.com">返回博客</a>
+</div>
 
 </body>
 </html>
