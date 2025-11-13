@@ -18,22 +18,22 @@
   <meta content="black" name="apple-mobile-web-app-status-bar-style" /> 
   <meta content="telephone=no" name="format-detection" />
   <script charset="UTF-8" src="/js/wx.js"></script>
-   <link href="/css/m.css" rel="stylesheet" type="text/css" /> 
-<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <link href="/css/m.css" rel="stylesheet" type="text/css" /> 
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
 
   <style type="text/css">
 body {
-  margin: 0;  padding: 0;
-  font-size: 14px; font-family: "microsoft yahei",'Arial', 'Verdana','Helvetica', sans-serif;
+  margin: 0; padding: 0;
+  font-size: 14px; font-family: "microsoft yahei",'Arial','Verdana','Helvetica', sans-serif;
 }
 .bar {
-  position: fixed; top: 0; left: 0; right: 0; /* 决定了搜索框置顶 */
+  position: fixed; top: 0; left: 0; right: 0;
   height: 44px; padding: 0 10px;
- background-color: #fff; opacity: 1;   /*搜索框半透明效果 */
+  background-color: #fff; opacity: 1;
   z-index: 10;
 }
 .bar form {
-  display: block; padding: 0;margin: 0;
+  display: block; padding: 0; margin: 0;
 }
 .search-row {
   position: relative;
@@ -51,7 +51,7 @@ body {
   display: inline-block; height: 34px; line-height: 34px;
   border: 0; border-radius: 6px;
   font-size: 16px; text-align: center; color: #999;
-  z-index: 1;  
+  z-index: 1;
 }
 .search-row .placeholder .iconfont {
   display: inline-block; width: 19px; line-height: 24px; padding: 10px 0; 
@@ -61,7 +61,6 @@ body {
   line-height: 40px;
   vertical-align: top;
 }
-
 .active:before {
   position: absolute; top: 11px; left: 5px; right: auto;
   display: block; margin-right: 0;
@@ -73,83 +72,70 @@ body {
 .active .placeholder{
   display: none
 }
-
-
-
-	  
 </style> 
 
  </head> 
- <body style="overflow:-Scroll;overflow-y:hidden"> 
- <header class="bar">    
-		 <form name="keyword" class="search" id="search" action="https://m.weibo.cn/search" method="get"> 
+<body style="overflow:-Scroll;overflow-y:hidden"> 
+
+<header class="bar">    
+  <form name="keyword" class="search" id="search" action="https://m.weibo.cn/search" method="get"> 
     <div class="search-row"> 
-	     <input type="hidden" name="containerid" value="100103type=1" />
-   <input type="search" name="q" id="query" placeholder="点击输入关键字，搜索新浪微博！" required/>
-     <span class="placeholder "><span class="iconfont icon-sousuo"></span><span class="text"></span></span> 
+      <input type="hidden" name="containerid" value="100103type=1" />
+      <input type="search" name="q" id="query" placeholder="点击输入关键字，搜索新浪微博！" required/>
+      <span class="placeholder"><span class="iconfont icon-sousuo"></span><span class="text"></span></span> 
     </div> 
-  </header> 
-  <section class="aui-flexView"> 
-   <section class="aui-scrollView"> 
-   <div style="margin-top:50px; ">
-      <div style="margin-left:0px">
- <iframe width="100%"  height="788" src="https://regurl.cn/xzt/public/" frameborder="no"    framespacing="0" scrolling="yes" allow="autoplay; encrypted-media" allowfullscreen="true"></iframe> </div> 
-     	    <!--  228-188 <script>LA.init({id:"JRHGRBPWC7lJIaXq",ck:"JRHGRBPWC7lJIaXq"})</script>
-   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1964437526797765"
-     crossorigin="anonymous"></script>
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-format="fluid"
-     data-ad-layout-key="-hz+f-17-3w+bl"
-     data-ad-client="ca-pub-1964437526797765"
-     data-ad-slot="7042698023"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-	     <a href="https://wzq.tenpay.com/mp/v2/index.html#/information/index" class="aui-flex-list-item"> 
-      <div class="aui-flex-list-image"> 
-       <img src="/img/xs.png" alt="" />     
-      </div> 
-      <div class="aui-flex-list-text"> 
-       <h4>看资讯</h4> 
-       <p>腾讯证券</p> 
-      </div> <span class="aui-flex-list-right">00:00</span> <span class="aui-flex-list-mute"> <i class="icon icon-mute"></i> </span> </a>
-	   
-	   --> 
+</header> 
 
-   </div>
-   <div style="height:4px;"></div>  
+<section class="aui-flexView"> 
+<section class="aui-scrollView"> 
 
+<div style="margin-top:50px;">
+  <div style="margin-left:0px">
 
+    <!-- ⭐⭐⭐ 修改后的 iframe（高度自适应，无 CSRF 问题） ⭐⭐⭐ -->
+    <iframe
+        id="msgFrame"
+        src="https://regurl.cn/xzt/public/"
+        width="100%"
+        style="height: calc(100vh - 60px); border: none;"
+        frameborder="0"
+        scrolling="yes"
+        allowfullscreen>
+    </iframe>
 
+  </div> 
+</div>
 
+<div style="height:4px;"></div>
 
+<a class="aui-flex-list-item"> </a>
+<div style="height:5px;"></div>
 
-
-	   <a class="aui-flex-list-item"> </a>
-	      <div style="height:5px;"></div>
-	   <div style="margin-top: -10px;">
-
-		   <!-- 
-	   	 <iframe width="100%"  height="190" src="./test3.html" frameborder="no"    framespacing="0" scrolling="no" allow="autoplay; encrypted-media" allowfullscreen="true"></iframe> </div> --> 
+<div style="margin-top: -10px;">
 <div style="display: flex; justify-content: center; align-items: center;">
-<span id="delay" style="box-sizing: border-box; margin: 0; padding: 5px 10px; font-size: 12px; line-height: 1.71428em; color: #999; display: inline-block; text-align: center; border: 1px solid #ccc; border-left: none;"><script id="LA-DATA-WIDGET" crossorigin="anonymous" charset="UTF-8" src="https://v6-widget.51.la/v6/JRHGRBPWC7lJIaXq/quote.js?theme=0&f=12&display=0,0,1,1,0,0,0,0"></script></span>
+<span id="delay" style="box-sizing: border-box; margin: 0; padding: 5px 10px; font-size: 12px; line-height: 1.71428em; color: #999; display: inline-block; text-align: center; border: 1px solid #ccc; border-left: none;">
+<script id="LA-DATA-WIDGET" crossorigin="anonymous" charset="UTF-8" src="https://v6-widget.51.la/v6/JRHGRBPWC7lJIaXq/quote.js?theme=0&f=12&display=0,0,1,1,0,0,0,0"></script>
+</span>
 <span id="performance-result" style="box-sizing: border-box; margin: 0; padding: 5px 10px; font-size: 12px; line-height: 1.71428em; color: #999; display: inline-block; text-align: center; border: 1px solid #ccc; border-right: none;">页面加载完成时间: -- ms</span>
 </div>
-<script>
-  var start = new Date().getTime();
-  window.addEventListener('load', function () {
-    var end = new Date().getTime();
-    var time = end - start;
-    var result = document.getElementById('performance-result');
-    result.innerHTML = '页面加载时间: ' + time + 'ms';
-  });
 
-  // 获取显示实时数据的 DOM 元素
-  const delayDiv = document.getElementById('delay');
+<script>
+var start = new Date().getTime();
+window.addEventListener('load', function () {
+  var end = new Date().getTime();
+  var time = end - start;
+  var result = document.getElementById('performance-result');
+  result.innerHTML = '页面加载时间: ' + time + 'ms';
+});
 </script>
+
 </section> 
-<p style="text-align:center;"> <a href="https://regurl.cn/xzt/public/" ><img class="img" src="https://tool.lu/netcard/" width="100%"  alt=""/></a></p>
-  </section>
- </body>
+<p style="text-align:center;"> 
+  <a href="https://regurl.cn/xzt/public/" >
+    <img class="img" src="https://tool.lu/netcard/" width="100%" alt=""/>
+  </a>
+</p>
+</section>
+
+</body>
 </html>
