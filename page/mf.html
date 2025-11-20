@@ -1,0 +1,362 @@
+<!-- end list -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>3D 交互式魔方 (手机/电脑通用)</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #222;
+            font-family: sans-serif;
+            touch-action: none; /* 禁止浏览器默认的触摸行为（如滚动） */
+        }
+        #info {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            text-align: center;
+            color: #fff;
+            pointer-events: none;
+            font-size: 16px;
+            text-shadow: 1px 1px 2px black;
+            z-index: 10;
+        }
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="info">
+        拖动背景旋转视角<br>
+        拖动魔方旋转对应层
+    </div>
+    <div id="canvas-container"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script>
+        // --- 1. 初始化场景 ---
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x222222);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(6, 5, 8);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+
+        // --- 2. 构建魔方 ---
+        const cubes = []; // 存储27个小方块
+        const allGroup = new THREE.Group(); // 整个魔方的容器
+        scene.add(allGroup);
+
+        // 颜色定义: 右(x+), 左(x-), 上(y+), 下(y-), 前(z+), 后(z-)
+        // 对应 Three.js BoxGeometry 材质索引: 0:x+, 1:x-, 2:y+, 3:y-, 4:z+, 5:z-
+        const colors = [
+            0xff4500, // Orange (Right)
+            0xff0000, // Red (Left)
+            0xffffff, // White (Top)
+            0xffff00, // Yellow (Bottom)
+            0x00ff00, // Green (Front)
+            0x0000ff  // Blue (Back)
+        ];
+
+        const geometry = new THREE.BoxGeometry(0.95, 0.95, 0.95); //稍微留一点缝隙
+
+        function createMaterial(index) {
+            return new THREE.MeshBasicMaterial({ color: colors[index] });
+        }
+        
+        // 黑色内部材质
+        const blackMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
+
+        // 生成 3x3x3 网格
+        for (let x = -1; x <= 1; x++) {
+            for (let y = -1; y <= 1; y++) {
+                for (let z = -1; z <= 1; z++) {
+                    // 为每个面分配材质，只有暴露在最外面的面才有颜色，内部为黑色
+                    const materials = [
+                        x === 1 ? createMaterial(0) : blackMat,
+                        x === -1 ? createMaterial(1) : blackMat,
+                        y === 1 ? createMaterial(2) : blackMat,
+                        y === -1 ? createMaterial(3) : blackMat,
+                        z === 1 ? createMaterial(4) : blackMat,
+                        z === -1 ? createMaterial(5) : blackMat,
+                    ];
+
+                    const mesh = new THREE.Mesh(geometry, materials);
+                    mesh.position.set(x, y, z);
+                    mesh.userData = { isCube: true, originalPosition: new THREE.Vector3(x, y, z) }; // 标记
+                    allGroup.add(mesh);
+                    cubes.push(mesh);
+                }
+            }
+        }
+
+        // --- 3. 交互逻辑 (核心) ---
+        
+        // 状态变量
+        let isDragging = false;
+        let isRotatingLayer = false; // 是否正在旋转层
+        let startPointer = new THREE.Vector2();
+        let intersectCube = null; // 被点击的小方块
+        let intersectNormal = null; // 点击面的法线
+        
+        // 视角控制变量
+        let cameraAngleX = Math.PI / 4;
+        let cameraAngleY = Math.PI / 6;
+        let radius = 10;
+
+        // 旋转层控制
+        const raycaster = new THREE.Raycaster();
+        const pivot = new THREE.Object3D(); // 旋转轴心辅助对象
+        let activeGroup = []; // 当前正在旋转的那一层的小方块
+        let rotationAxis = ''; // 'x', 'y', 'z'
+        scene.add(pivot);
+
+        // 统一处理鼠标和触摸事件
+        function getPointer(event) {
+            if (event.touches) {
+                return { x: event.touches[0].clientX, y: event.touches[0].clientY };
+            }
+            return { x: event.clientX, y: event.clientY };
+        }
+
+        function onPointerDown(event) {
+            event.preventDefault();
+            isDragging = true;
+            const ptr = getPointer(event);
+            startPointer.set(ptr.x, ptr.y);
+
+            // 射线检测
+            const rect = renderer.domElement.getBoundingClientRect();
+            const mouse = new THREE.Vector2(
+                ((ptr.x - rect.left) / rect.width) * 2 - 1,
+                -((ptr.y - rect.top) / rect.height) * 2 + 1
+            );
+
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(cubes);
+
+            if (intersects.length > 0) {
+                // 点击到了魔方
+                intersectCube = intersects[0].object;
+                intersectNormal = intersects[0].face.normal.clone();
+                // 将法线转换到世界坐标系（因为魔方可能被整体旋转过，这里为了简化，我们尽量保持allGroup不转，只转相机）
+                // 但为了逻辑严谨，我们使用局部坐标判断点击了哪个面
+                // 实际上，因为我们是转动相机，世界坐标下的法线方向是不变的(相对于方块自己)
+            } else {
+                intersectCube = null;
+            }
+        }
+
+        function onPointerMove(event) {
+            if (!isDragging) return;
+            event.preventDefault();
+            const ptr = getPointer(event);
+            const deltaX = ptr.x - startPointer.x;
+            const deltaY = ptr.y - startPointer.y;
+
+            // 最小移动阈值，防止误触
+            if (!isRotatingLayer && Math.sqrt(deltaX * deltaX + deltaY * deltaY) < 10) return;
+
+            if (intersectCube && !isRotatingLayer) {
+                // --- 判定是否开始旋转层 ---
+                // 需要根据滑动的方向和点击的面来决定转哪个轴
+                // 简单算法：将屏幕滑动向量投影到3D空间，或者根据主要滑动方向(水平/垂直)结合点击面判断
+                
+                // 这是一个简化的判定逻辑：
+                // 1. 获取点击面的法线（判断点在哪个面上：前/后/上/下/左/右）
+                // 2. 判断屏幕滑动主要是X轴还是Y轴
+                
+                // 转换法线到世界空间（在这个demo中cubes没有父级旋转，所以直接用）
+                // 但如果之前转过层，cubes的position和rotation都变了。
+                // 最稳健的方法是看intersectNormal主要指向哪个轴
+                
+                // 为了简化代码，我们假设相机主要看这几个面。
+                // 更好的方法：将滑动向量映射到相机的上/右向量，结合点击面推断。
+                
+                // 这里的逻辑：根据点击面的法线，排除该轴。剩下的两个轴，根据屏幕滑动方向决定。
+                // 例如：点击了 前面(Z+)，此时可以绕 X轴(上下滑) 或 Y轴(左右滑) 旋转。
+                
+                // 这种映射比较复杂，我们采用一种简化的 "试探" 策略：
+                // 锁定一次旋转操作直到松手
+                
+                let absX = Math.abs(intersectCube.position.x);
+                let absY = Math.abs(intersectCube.position.y);
+                let absZ = Math.abs(intersectCube.position.z);
+
+                // 确定点击的是哪个“逻辑面”（考虑到之前可能转过，位置会有浮点误差，取整）
+                // 实际上由于我们是真实旋转Mesh，position会变。
+                
+                // 确定旋转轴
+                let axis = null;
+                
+                // 简单映射：
+                // 如果主要在水平方向滑动 (abs(deltaX) > abs(deltaY))
+                //    如果点击的是 Top/Bottom 面 -> 绕 Z 轴转
+                //    如果点击的是 Front/Back 面 -> 绕 Y 轴转
+                //    如果点击的是 Left/Right 面 -> 绕 Y 轴转
+                // 如果主要在垂直方向滑动
+                //    如果点击的是 Top/Bottom 面 -> 绕 X 轴转
+                //    如果点击的是 Front/Back 面 -> 绕 X 轴转
+                //    如果点击的是 Left/Right 面 -> 绕 Z 轴转
+                
+                // 注意：这取决于视角。当前视角是斜视。
+                // 这是一个简易版本，可能在某些视角下反向。
+                
+                // 获取点击面法线的最大分量
+                // 为了兼容旋转后的状态，我们使用world rotation matrix变换法线
+                let n = intersectNormal.clone().applyQuaternion(intersectCube.quaternion).round();
+                
+                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    // 水平滑动
+                    if (Math.abs(n.y) > 0.5) axis = 'z'; // 点的上下，左右滑 -> 绕Z
+                    else if (Math.abs(n.z) > 0.5) axis = 'y'; // 点的前后，左右滑 -> 绕Y
+                    else if (Math.abs(n.x) > 0.5) axis = 'y'; // 点的左右，左右滑 -> 绕Y (其实是切片)
+                } else {
+                    // 垂直滑动
+                    if (Math.abs(n.y) > 0.5) axis = 'x'; // 点的上下，上下滑 -> 绕X
+                    else if (Math.abs(n.z) > 0.5) axis = 'x'; // 点的前后，上下滑 -> 绕X
+                    else if (Math.abs(n.x) > 0.5) axis = 'z'; // 点的左右，上下滑 -> 绕Z
+                }
+
+                if (axis) {
+                    startLayerRotation(intersectCube, axis);
+                    isRotatingLayer = true;
+                }
+                
+                // 重置起点，防止瞬间跳变
+                startPointer.set(ptr.x, ptr.y);
+
+            } else if (isRotatingLayer) {
+                // --- 正在旋转层 ---
+                // 计算旋转角度：根据鼠标移动距离
+                const sensitivity = 0.01;
+                let angle = 0;
+                
+                // 根据轴不同，映射鼠标移动
+                if (rotationAxis === 'y') angle = deltaX * sensitivity;
+                else if (rotationAxis === 'x') angle = deltaY * sensitivity;
+                else if (rotationAxis === 'z') angle = (deltaX + deltaY) * 0.5 * sensitivity; // Z轴比较特殊，斜向
+
+                pivot.rotation[rotationAxis] += angle;
+                
+                startPointer.set(ptr.x, ptr.y);
+
+            } else {
+                // --- 旋转视角 (Orbit) ---
+                const rotateSpeed = 0.005;
+                cameraAngleY -= deltaX * rotateSpeed; // 左右拖动改变方位角
+                cameraAngleX -= deltaY * rotateSpeed; // 上下拖动改变高度角
+
+                // 限制垂直角度，防止死锁
+                cameraAngleX = Math.max(0.1, Math.min(Math.PI - 0.1, cameraAngleX));
+                
+                updateCamera();
+                startPointer.set(ptr.x, ptr.y);
+            }
+        }
+
+        function onPointerUp(event) {
+            isDragging = false;
+            if (isRotatingLayer) {
+                snapLayer();
+                isRotatingLayer = false;
+                activeGroup = [];
+                intersectCube = null;
+            }
+        }
+
+        // --- 核心逻辑：层的吸附与重组 ---
+        function startLayerRotation(cube, axis) {
+            rotationAxis = axis;
+            activeGroup = [];
+            
+            // 找出所有在同一层的小方块
+            // 判定标准：在该轴上的坐标与被点击方块的坐标接近
+            const coord = cube.position[axis];
+            
+            cubes.forEach(c => {
+                if (Math.abs(c.position[axis] - coord) < 0.1) {
+                    activeGroup.push(c);
+                }
+            });
+
+            // 将这些方块添加到 pivot 对象中，方便整体旋转
+            pivot.rotation.set(0, 0, 0);
+            pivot.position.set(0, 0, 0);
+            
+            // 重要：Three.js 中将物体换父级（attach）
+            activeGroup.forEach(c => {
+                pivot.attach(c);
+            });
+        }
+
+        function snapLayer() {
+            // 计算最近的90度
+            const currentRot = pivot.rotation[rotationAxis];
+            const targetRot = Math.round(currentRot / (Math.PI / 2)) * (Math.PI / 2);
+            
+            // 简单的动画效果：直接设置过去（为了代码简洁，不写缓动库了）
+            // 实际游戏中这里应该有一个补间动画
+            pivot.rotation[rotationAxis] = targetRot;
+            
+            // 更新世界矩阵
+            pivot.updateMatrixWorld();
+            
+            // 将方块放回 allGroup，保留变换
+            // 使用 slice() 复制数组，因为 attach 会修改 activeGroup
+            const tempGroup = activeGroup.slice();
+            tempGroup.forEach(c => {
+                scene.attach(c); // 重新挂载回场景根节点（或者 allGroup），并保持世界坐标不变
+                
+                // 修正坐标浮点误差，保证下次能对齐
+                c.position.x = Math.round(c.position.x);
+                c.position.y = Math.round(c.position.y);
+                c.position.z = Math.round(c.position.z);
+                c.updateMatrix();
+            });
+        }
+
+        function updateCamera() {
+            camera.position.x = radius * Math.sin(cameraAngleX) * Math.sin(cameraAngleY);
+            camera.position.y = radius * Math.cos(cameraAngleX);
+            camera.position.z = radius * Math.sin(cameraAngleX) * Math.cos(cameraAngleY);
+            camera.lookAt(0, 0, 0);
+        }
+
+        // 事件监听 (兼容 PC 和 Mobile)
+        // 现代浏览器通常支持 pointer events，涵盖了 mouse 和 touch
+        window.addEventListener('pointerdown', onPointerDown);
+        window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerup', onPointerUp);
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // 动画循环
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+        
+        updateCamera();
+        animate();
+
+    </script>
+</body>
+</html>
+
