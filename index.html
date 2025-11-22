@@ -1,0 +1,592 @@
+<!-- This Code From Network,For Personal Study Only Use,If there is any infringement,Please Contact 0xf197#gmail.com. -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="shortcut icon" href="https://github.githubassets.com/favicons/favicon.svg">
+<title>─=≡Σ((( つ•̀ω•́)つ</title>
+  <script>
+  var ua = navigator.userAgent.toLowerCase();
+  var isMobile = /android|iphone|ipad|ipod|windows phone|blackberry|mobile/i.test(ua);
+
+  if (isMobile) {
+    // 如果是非PC（移动设备），跳转到指定地址
+    window.location.href = "/xlsx/";
+  }
+</script>
+
+<link rel="stylesheet" id="pure-highlightjs-style-css"
+href="/css/atelier-cave-light.css" type="text/css" media="all">
+<link rel="stylesheet" id="pure-highlightjs-css-css"
+href="/css/pure-highlight.css" type="text/css" media="all">
+<link rel="stylesheet" id="wpfront-scroll-top-css"
+href="/css/wpfront-scroll-top.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="ez-icomoon-css" href="/css/style.min.css"
+type="text/css" media="all">
+<link rel="stylesheet" id="ez-toc-css" href="/css/screen.min.css"
+type="text/css" media="all">
+<script>
+function forceRefresh() {
+window.location.reload(true); // 强制刷新当前页面
+}
+</script>
+<script>
+var start = new Date().getTime();
+window.addEventListener('load', function () {
+var end = new Date().getTime();
+var time = end - start;
+var result = document.getElementById('performance-result');
+result.innerHTML = '页面加载时间: ' + time + 'ms';
+});
+
+// 获取显示实时数据的 DOM 元素
+const delayDiv = document.getElementById('delay');
+</script>
+
+<script type="text/javascript">
+window._wpemojiSettings = { "baseUrl": "https:\/\/s.w.org\/images\/core\/emoji\/2.4\/72x72\/", "ext": ".png", "svgUrl": "https:\/\/s.w.org\/images\/core\/emoji\/2.4\/svg\/", "svgExt": ".svg", "source": { "concatemoji": "http:\/\/cpuck.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.4" } };
+!function (a, b, c) { function d(a, b) { var c = String.fromCharCode; l.clearRect(0, 0, k.width, k.height), l.fillText(c.apply(this, a), 0, 0); var d = k.toDataURL(); l.clearRect(0, 0, k.width, k.height), l.fillText(c.apply(this, b), 0, 0); var e = k.toDataURL(); return d === e } function e(a) { var b; if (!l || !l.fillText) return !1; switch (l.textBaseline = "top", l.font = "600 32px Arial", a) { case "flag": return !(b = d([55356, 56826, 55356, 56819], [55356, 56826, 8203, 55356, 56819])) && (b = d([55356, 57332, 56128, 56423, 56128, 56418, 56128, 56421, 56128, 56430, 56128, 56423, 56128, 56447], [55356, 57332, 8203, 56128, 56423, 8203, 56128, 56418, 8203, 56128, 56421, 8203, 56128, 56430, 8203, 56128, 56423, 8203, 56128, 56447]), !b); case "emoji": return b = d([55357, 56692, 8205, 9792, 65039], [55357, 56692, 8203, 9792, 65039]), !b }return !1 } function f(a) { var c = b.createElement("script"); c.src = a, c.defer = c.type = "text/javascript", b.getElementsByTagName("head")[0].appendChild(c) } var g, h, i, j, k = b.createElement("canvas"), l = k.getContext && k.getContext("2d"); for (j = Array("flag", "emoji"), c.supports = { everything: !0, everythingExceptFlag: !0 }, i = 0; i < j.length; i++)c.supports[j[i]] = e(j[i]), c.supports.everything = c.supports.everything && c.supports[j[i]], "flag" !== j[i] && (c.supports.everythingExceptFlag = c.supports.everythingExceptFlag && c.supports[j[i]]); c.supports.everythingExceptFlag = c.supports.everythingExceptFlag && !c.supports.flag, c.DOMReady = !1, c.readyCallback = function () { c.DOMReady = !0 }, c.supports.everything || (h = function () { c.readyCallback() }, b.addEventListener ? (b.addEventListener("DOMContentLoaded", h, !1), a.addEventListener("load", h, !1)) : (a.attachEvent("onload", h), b.attachEvent("onreadystatechange", function () { "complete" === b.readyState && c.readyCallback() })), g = c.source || {}, g.concatemoji ? f(g.concatemoji) : g.wpemoji && g.twemoji && (f(g.twemoji), f(g.wpemoji))) }(window, document, window._wpemojiSettings);
+</script>
+<style type="text/css">
+img.wp-smiley,
+img.emoji {
+display: inline !important;
+border: none !important;
+box-shadow: none !important;
+height: 1em !important;
+width: 1em !important;
+margin: 0 .07em !important;
+vertical-align: -0.1em !important;
+background: none !important;
+padding: 0 !important;
+}
+</style>
+
+<style id="ez-toc-inline-css" type="text/css">
+div#ez-toc-container p.ez-toc-title {
+font-size: 120%;
+}
+
+div#ez-toc-container p.ez-toc-title {
+font-weight: 100;
+}
+
+div#ez-toc-container ul li {
+font-size: 95%;
+}
+
+div#ez-toc-container {
+width: 100%;
+}
+</style>
+
+<link rel="stylesheet" id="simplelin-style-css" href="/css/style.css" type="text/css" media="all">
+
+</head>
+
+<body class="page-template page-template-html page-template-html-php page page-id-4402">
+
+<nav id="site-navigation" class="main-navigation" role="navigation">
+
+<div class="container">
+<button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false">Menu</button>
+<div class="menu-s3-container">
+<ul id="primary-menu" class="menu nav-menu" aria-expanded="false">
+<li id="menu-item-4299"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4299"
+aria-haspopup="true"><a
+target="_blank" href="https://earth.nullschool.net/zh-cn/">全球风向</a>
+<ul class="sub-menu">
+<li id="menu-item-4299"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4299"
+aria-haspopup="true"><a target="_blank"
+href="http://www.iresearch.com.cn/Research/IndustryList.shtml">研究报告</a>
+<ul class="sub-menu">
+<li id="menu-item-4299"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4299">
+<a target="_blank" href="http://www.gov.cn/zhengce/xxgkzl.htm">政府信息</a></li>
+<li id="menu-item-4401"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4401">
+<a target="_blank" href="http://gjzwfw.www.gov.cn/">政务平台</a></li>
+<li id="menu-item-4024"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4024">
+<a target="_blank"
+href="http://cif.mofcom.gov.cn/cif/html/dataCenter/index.html?jgnfcprd">商务预报</a>
+</li>
+<li id="menu-item-4023"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4023">
+<a target="_blank" href="https://data.eastmoney.com/cjsj/gdp.html">经济数据</a></li>
+<li id="menu-item-4404"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4404">
+<a target="_blank"
+href="http://www.stats.gov.cn/xxgk/sjfb/zxfb2020/202301/t20230117_1892129.html">收入支出</a>
+</li>
+<li id="menu-item-4299"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4299"
+aria-haspopup="true"><a target="_blank"
+href="https://ipcrs.pbccrc.org.cn/">个人信用</a>
+<ul class="sub-menu">
+<li id="menu-item-4303"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4303">
+<a target="_blank" href="https://www.chsi.com.cn/xlcx/">学历信息</a></li>
+<li id="menu-item-4302"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4302">
+<a target="_blank" href="http://zscx.osta.org.cn/">职业证书</a></li>
+<li id="menu-item-4304"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4304">
+<a target="_blank"
+href="https://gaokao.afanti100.com/university.html">大学院校</a></li>
+</ul>
+</ul>
+</li>
+
+</li>
+<li id="menu-item-4014"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4014"><a target="_blank" href="https://www.topcpu.net/">硬件算力</a></li>
+<li id="menu-item-4017"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4017"><a
+target="_blank" href="http://www.shipxy.com/">船舶定位</a></li>
+<li id="menu-item-4018"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4018"><a
+target="_blank" href="https://zh.flightaware.com/live/">航班定位</a></li>
+
+<li id="menu-item-4265" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4265">
+<a target="_blank" href="https://www.kaggle.com/datasets">数据集合</a></li>
+<li id="menu-item-4265" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4265">
+<a target="_blank" href="https://huggingface.co/spaces?sort=likes">抱脸模型</a></li>
+<li id="menu-item-4265" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4265">
+<a target="_blank" href="https://replicate.com/explore">模型分类</a></li>
+</ul>
+</li>
+
+
+
+<li id="menu-item-4001" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4001"
+aria-haspopup="true"><a target="_blank" href="/page/gpu/">测显卡</a>
+<ul class="sub-menu">
+<li id="menu-item-4348"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4348"><a
+target="_blank" href="https://sketchfab.com/store/3d-models/people?ref=header">三维模型</a>
+
+<ul class="sub-menu">
+<li id="menu-item-4028"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4028"><a
+target="_blank" href="https://www.gaoding.com/templates/ch349">图稿设计</a></li>
+<li id="menu-item-4029"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4029"><a
+target="_blank" href="https://hdrihaven.com/hdris/">环境贴图</a></li>
+<li id="menu-item-4213"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4213"><a
+target="_blank" href="http://www.aigei.com/3d/map/">材质贴图</a></li>
+<li id="menu-item-4346"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4346"><a
+target="_blank" href="https://www.eso.org/public/images/">星空素材</a></li>
+<li id="menu-item-4347"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4347"><a
+target="_blank"
+href="https://creativepark.canon/sc/categories/CAT-ST01-0072/index.html">折纸模型</a>
+</li>
+<li id="menu-item-4377"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4377"><a
+target="_blank" href="https://www.animatedknots.com/complete-knot-list">绳结图解</a>
+</li>
+<li id="menu-item-4377"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4377"><a
+target="_blank" href="https://www.pexels.com/zh-cn/">公共视频</a>
+</li>
+</ul>
+</li>
+
+<li id="menu-item-4265"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4265"><a
+target="_blank" href="https://cps-check.com/cn/polling-rate-check">鼠标测试</a></li>
+<li id="menu-item-4026"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4026"><a
+target="_blank" href="https://keyboard.bmcx.com/">键盘测试</a></li>
+<li id="menu-item-4043"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4043"><a
+target="_blank" href="https://gamepad-tester.com/">手柄测试</a></li>
+<li id="menu-item-4026"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4026"><a
+target="_blank" href="https://hardwaretester.com/microphone">话筒测试</a></li>
+<li id="menu-item-4265" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4265">
+<a target="_blank" href="https://xiangyuecn.github.io/Recorder/">录音测试</a></li>
+
+
+</ul>
+</li>
+
+
+
+<li id="menu-item-4001" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4001"
+aria-haspopup="true"><a target="_blank" href="https://c.runoob.com/front-end/61">写网页</a>
+<ul class="sub-menu">
+<li id="menu-item-4001"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4001"
+aria-haspopup="true"><a target="_blank" href="https://mp.weixin.qq.com/">微信后台</a>
+<ul class="sub-menu">
+<li id="menu-item-4001"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4001"><a
+target="_blank" href="https://github.com/tcq20256/tcq20256.github.io/blob/main/page/index.html">修改网页</a></li>
+<li id="menu-item-4037"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4037"><a
+target="_blank" href="https://vercel.com/">免费网页</a></li>
+<li id="menu-item-4019"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4019"><a
+target="_blank" href="https://www.icloud.com/">苹果账号</a></li>
+<li id="menu-item-4001"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4001"><a
+target="_blank"
+href="https://console.cloud.tencent.com/domain/all-domain/all">腾讯域名</a></li>
+<li id="menu-item-4001"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4001"><a
+target="_blank"
+href="https://dash.cloudflare.com/">域名解析</a></li>
+<li id="menu-item-4001"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4001"><a
+target="_blank" href="https://github.com/settings/tokens?type=beta">仓库密钥</a>
+</li>
+
+
+
+</ul>
+</li>
+<li id="menu-item-4712"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4712"><a
+target="_blank" href="https://www.huya.com/g/2135">虎牙影视</a></li>
+<li id="menu-item-4712"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4712"><a
+target="_blank" href="https://www.iyf.tv/list/movie">壹帆影视</a></li>
+
+<li id="menu-item-4291"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4291"><a
+target="_blank" href="https://www.yangshipin.cn/tv/home?pid=600001811">央视直播</a></li>
+<li id="menu-item-4265"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4265"><a
+target="_blank" href="https://www.radio.cn/pc-portal/erji/radioStation.html">电台广播</a>
+</li>
+<li id="menu-item-4263"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4263"><a
+target="_blank" href="https://www.ximalaya.com/youshengshu/updates/">有声故事</a></li>
+<li id="menu-item-4263"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4263"><a
+target="_blank" href="https://music.163.com/#/playlist?id=12245798653">网易音乐</a></li>
+
+
+
+</ul>
+</li>
+
+
+
+<li id="menu-item-4007" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4007">
+<a target="_blank" href="/page/mspaint/">画图版</a>
+<ul class="sub-menu">
+</li>
+
+<li id="menu-item-4291" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4291">
+<a target="_blank" href="https://www.autodraw.com/">位图生成器</a></li>
+<li id="menu-item-4265" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4265">
+<a target="_blank" href="https://www.colorhexa.com/">颜色查询器</a></li>
+<li id="menu-item-4263" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4263">
+<a target="_blank" href="https://civitai.com/">模型分享站</a></li>
+<li id="menu-item-4263" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4263">
+<a target="_blank" href="https://www.photopea.com/">图层编辑器</a></li>
+<li id="menu-item-4263" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4263">
+<a target="_blank" href="https://huggingface.co/spaces/Sanster/Lama-Cleaner-lama">图像去水印</a></li>
+<li id="menu-item-4263" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4263">
+<a target="_blank" href="https://omnibus-ai-or-not.hf.space/">图像鉴真假</a></li>
+
+
+
+</ul>
+</li>
+
+
+<li id="menu-item-4013" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4013">
+<a target="_blank" href="https://test.ustc.edu.cn/">测网速</a>
+<ul class="sub-menu">
+</li>
+<li id="menu-item-4264" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4264">
+<a target="_blank" href="https://www.toolnb.com/tools/getPort.html">端口测速</a></li>
+
+<li id="menu-item-4264" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4264">
+<a target="_blank" href="http://ping.pe/">测全球包</a></li>
+<li id="menu-item-4264" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4264">
+<a target="_blank" href="https://ping.chinaz.com/">测国内包</a></li>
+
+<li id="menu-item-4265" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4265">
+<a target="_blank" href="https://www.meiguodizhi.com/usa-address/alaska">地址生成</a></li>
+
+<li id="menu-item-4264" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4264">
+<a target="_blank" href="https://tool.browser.qq.com/audio_2_text.html">声转文字</a></li>
+<li id="menu-item-4265" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4265">
+<a target="_blank" href="https://ttsmaker.com/zh-cn">文生语音</a></li>
+
+
+
+</ul>
+</li>
+
+
+<li id="menu-item-4319" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4319">
+<a target="_blank" href="https://online-video-cutter.com/cn/video-editor">剪视频</a>
+<ul class="sub-menu">
+</li>
+ 
+<li id="menu-item-4016"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4016"><a
+target="_blank" href="https://store.steampowered.com/charts/mostplayed">热玩游戏</a></li>
+
+<li id="menu-item-4265" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4265">
+<a target="_blank" href="http://www.yishimei.cn/network/319.html">激活工具</a></li>
+<li id="menu-item-4265" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4265">
+<a target="_blank" href="https://iguge.net/">学术加速</a></li>
+
+<li id="menu-item-4265" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4265">
+<a target="_blank" href="https://www.gamer520.com/pc?order=hot">国区福利</a></li>
+<li id="menu-item-4265" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4265">
+<a target="_blank" href="https://byrutgame.org/top-torrent-games/">俄区福利</a></li>
+<li id="menu-item-4016"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4016"><a
+target="_blank" href="https://crxdl.com/">谷歌插件</a></li>   <li id="menu-item-4016"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4016"><a
+target="_blank" href="https://www.dytt8899.com/">电影天堂</a></li>
+</ul>
+</li>
+
+<li id="menu-item-4013" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4013">
+<a target="_blank" href="https://chat.openai.com/">生成式</a>
+<ul class="sub-menu">
+</li>
+
+<li id="menu-item-4264" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4264">
+<a target="_blank" href="https://www.midjourney.com/explore?tab=hot">合成图片</a>
+
+<ul class="sub-menu">
+<li id="menu-item-4001"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4001"
+aria-haspopup="true"><a target="_blank" href="https://modelscope.cn/models">魔搭模型</a></li>
+
+<li id="menu-item-4001"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4001"><a
+target="_blank" href="https://huggingface.co/spaces">抱脸空间</a></li>
+<li id="menu-item-4037"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4037"><a
+target="_blank" href="https://replicate.com/explore">项目模型</a></li>
+<li id="menu-item-4019"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4019"><a
+target="_blank" href="https://fal.ai/models">模型项目</a></li>
+
+</ul>
+
+</li>
+<li id="menu-item-4264" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4264">
+<a target="_blank" href="https://www.emailtick.com/zh">临时邮箱</a></li>
+
+
+
+<li id="menu-item-4264" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4264">
+<a target="_blank" href="https://fish.audio/zh-CN/app/discovery/">声音合成</a></li>
+<li id="menu-item-4265" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4265">
+<a target="_blank" href="https://elevenlabs.io/dubbing">语音转换</a></li>
+<li id="menu-item-4264" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4264">
+<a target="_blank" href="https://sync.so/">视频声音</a></li>
+<li id="menu-item-4265" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4265">
+<a target="_blank" href="https://faceswap.so/zh-cn/editor">图视人像</a></li>
+
+
+</ul>
+</li>
+
+<li id="menu-item-4406"
+class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-4402 current_page_item menu-item-4406">
+<a target="_blank" href="https://s.ly.com/P4JLG22yr">查航班</a></li>
+<li id="menu-item-4406"
+class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-4402 current_page_item menu-item-4406">
+<a target="_blank" href="https://colab.new/">云算力</a></li>
+<li id="menu-item-4012" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4012">
+<a target="_blank" href="https://cli.im/">二维码</a></li>
+  
+
+<li id="menu-item-4031"
+class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-4031"><a
+target="_blank" href="https://translate.google.com/">翻译</a></li>
+<li id="menu-item-4004" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4004">
+<a target="_blank" href="https://mail.qq.com/cgi-bin/loginpage">邮箱</a></li>
+<li id="menu-item-4011" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4011">
+<a  href="/">刷新</a></li>
+</ul>
+</li>
+
+
+</ul>
+</div>
+</div>
+</nav>
+
+
+<!-- .inside-header -->
+<!-- #masthead -->
+<div style="text-align:center;">
+  <!-- google ads
+   <div style="text-align:center;height:5px;"></div>
+  <div style="text-align:center;height:70px;margin-left:-20px;">
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1964437526797765"
+     crossorigin="anonymous"></script>
+
+<ins class="adsbygoogle"
+     style="display:inline-block;width:1100px;height:90px"
+     data-ad-client="ca-pub-1964437526797765"
+     data-ad-slot="4560830915"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script></div>  -->
+<div class="panel" style="margin-bottom:10px; margin-top:5px;margin-left:90px;margin-right:90px;">
+<iframe id="iframe" scrolling="no" src="/page/txt.html" frameborder="0" height="770px"
+width="1150px"></iframe>
+
+<!--  margin-top:-75px;    -->
+</div>
+</div>
+<script type="text/javascript">
+window.onload = function () {
+var input = document.getElementById('input');
+var output = document.getElementById('output');
+var parse = document.getElementById('parse');
+var decode = document.getElementById('decode');
+var reset = document.getElementById('reset');
+var error = document.getElementById('error');
+
+parse.onclick = function () {
+output.value = morse.parse(utils.trim(input.value));
+toggleError();
+}
+decode.onclick = function () {
+output.value = morse.decode(utils.trim(input.value));
+toggleError();
+}
+reset.onclick = function () {
+input.value = '';
+output.value = '';
+error.style.display = 'none';
+}
+
+function toggleError() {
+if (morse.error_flag) {
+error.style.display = 'block';
+} else {
+error.style.display = 'none';
+}
+}
+}
+</script>
+<div style="text-align:center;">
+↗↗↗↗↗↗↗↗↗↗↗↗↗↗↗↗↗↗↗↗
+<a href="https://www.goratings.org/zh/" target="_blank">围棋全球排行</a>&nbsp;
+<a href="https://github.com/songsenand/weiqi_board" target="_blank">围棋游戏来自</a>&nbsp;
+<a href="https://www.html5tricks.com/html5-css3-3d-rubik-cube.html" target="_blank">魔方游戏来自</a>&nbsp;
+<a href="https://rubiks-cube-solver.com/zh/#" target="_blank">魔方求解网站</a>
+&nbsp;
+&nbsp;
+↖↖↖↖↖↖↖↖↖↖↖↖↖↖↖↖↖↖↖↖
+</div>
+<div style="text-align: center; height: auto !important;">
+<iframe id="iframe" scrolling="no" src="/page/go/" frameborder="0" height="625px" width="650px"></iframe>
+<iframe id="iframe" scrolling="no" src="/page/css3-3d-rubik-cube/" frameborder="0" height="625px"
+width="510px"></iframe>
+
+
+<iframe id="iframe" scrolling="no" src="/page/m3u8.html" frameborder="0" height="530px"
+width="1170px"></iframe>
+
+</div> <div style="text-align:center;height:5px;">
+</div>
+<div style="text-align: center;   margin-top:-15px; height: auto !important;">
+<iframe id="iframe" scrolling="no"src="/page/rmb.html"frameborder="0" height="40px" width="1170px"></iframe></div>
+
+<div style="text-align:center;height:1px;">
+</div>
+
+
+
+<!-- #content -->
+<footer id="colophon" class="site-footer" role="contentinfo">
+<div class="site-info">
+<div class="container">
+<div class="credit">
+
+
+<span id="timer"></span> &  <a href="https://datxy.cn" target="_blank">Datxy</a></div>
+
+  <div class="credit"><a href="https://sms-activate.io/?ref=3511699" target="_blank" title="Theme for WordPress">SMS</a> & <a href="https://www.vultr.com/?ref=7427630" target="_blank">Vultr</a> & <a href="https://regurl.cn" target="_blank">RegDomain</a></div>
+
+                <div>Program by <a href="https://pages.github.com/" target="_blank">Github Pages</a> Theme <a
+                        href="https://wordpress.org/themes/simplelin/" target="_blank"
+                        title="Theme for WordPress">Simplelin</a></div>
+
+
+<script>
+const startTime = performance.now();
+window.addEventListener('load', function () {
+const endTime = performance.now();
+// 转为秒，保留三位小数
+const elapsed = ((endTime - startTime) / 1000).toFixed(3);
+document.getElementById('timer').textContent = elapsed;
+});
+</script>
+<script>
+var start = new Date().getTime();
+window.addEventListener('load', function () {
+var end = new Date().getTime();
+var time = end - start;
+var result = document.getElementById('performance-result');
+result.innerHTML = '页面加载时间: ' + time + 'ms';
+});
+
+// 获取显示实时数据的 DOM 元素
+const delayDiv = document.getElementById('delay');
+</script>
+<div style="display: flex; justify-content: center; align-items: center;">
+<span id="delay" style="box-sizing: border-box; margin: 0; padding: 5px 10px; font-size: 12px; line-height: 1.71428em; color: #999; display: inline-block; text-align: center; border: 1px solid #ccc; border-left: none;"><script id="LA-DATA-WIDGET" crossorigin="anonymous" charset="UTF-8" src="https://v6-widget.51.la/v6/JRHGRBPWC7lJIaXq/quote.js?theme=0&f=12&display=0,0,1,1,0,0,0,0"></script></span>
+<span id="performance-result" style="box-sizing: border-box; margin: 0; padding: 5px 10px; font-size: 12px; line-height: 1.71428em; color: #999; display: inline-block; text-align: center; border: 1px solid #ccc; border-right: none;">页面加载完成时间: -- ms</span>
+</div>
+
+
+</div><!-- .site-container -->
+</div><!-- .site-info -->
+</footer><!-- #colophon -->
+<!-- #page -->
+<div id="wpfront-scroll-top-container" style="opacity: 0; right: 20px; bottom: 20px; display: none;">
+<img src="/img/top.png" alt="" style="width: auto; height: auto;">
+</div>
+<script src="/js/osd.js"></script>
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/jquery-migrate.min.js"></script>
+<script
+type="text/javascript">function wpfront_scroll_top_init() { if (typeof wpfront_scroll_top == "function" && typeof jQuery !== "undefined") { wpfront_scroll_top({ "scroll_offset": 100, "button_width": 0, "button_height": 0, "button_opacity": 0.8, "button_fade_duration": 200, "scroll_duration": 400, "location": 1, "marginX": 20, "marginY": 20, "hide_iframe": false, "auto_hide": false, "auto_hide_after": 2, "button_action": "top", "button_action_element_selector": "", "button_action_container_selector": "html, body", "button_action_element_offset": 0 }); } else { setTimeout(wpfront_scroll_top_init, 100); } } wpfront_scroll_top_init();</script>
+<script type="text/javascript"
+src="/js/wpfront-scroll-top.min.js"></script>
+<script type="text/javascript" src="/js/navigation.js"></script>
+<script type="text/javascript" src="/js/skip-link-focus-fix.js"></script>
+<script type="text/javascript" src="/js/wp-embed.min.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function ($) {
+var $sidebar = $(".float"),
+$window = $(window),
+offset = $sidebar.offset(),
+topPadding = 20;
+$window.scroll(function () {
+if ($window.scrollTop() > offset.top) {
+$sidebar.stop().animate({
+marginTop: $window.scrollTop() - offset.top + topPadding
+});
+} else {
+$sidebar.stop().animate({
+marginTop: 0
+});
+}
+});
+});
+</script>
