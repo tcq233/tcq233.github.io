@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    
+    <title>RF-TOP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root { 
+            --bg-deep: #030303; 
+            --bg-panel: #0a0a0a;
+            --accent: #00ff41; 
+            --accent-dim: rgba(0, 255, 65, 0.1);
+            --danger: #ff2a2a;
+            --tech-blue: #00f0ff;
+            --border-color: #333;
+        }
+        
+        body { 
+            font-family: 'Share Tech Mono', monospace; 
+            background-color: var(--bg-deep); 
+            color: #d4d4d4; 
+            overflow: hidden; 
+            height: 100vh;
+            background-image: 
+                linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .scanlines {
+            position: fixed; inset: 0; pointer-events: none; z-index: 2;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+            background-size: 100% 4px;
+        }
+        
+        .tech-border {
+            position: relative;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        .tech-border::before { content: ''; position: absolute; top: -1px; left: -1px; width: 8px; height: 8px; border-top: 2px solid var(--accent); border-left: 2px solid var(--accent); border-top-left-radius: 4px; }
+        .tech-border::after { content: ''; position: absolute; bottom: -1px; right: -1px; width: 8px; height: 8px; border-bottom: 2px solid var(--accent); border-right: 2px solid var(--accent); border-bottom-right-radius: 4px; }
+
+        .cyber-btn {
+            position: relative;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-color);
+            color: #888;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            border-radius: 4px; 
+        }
+        .cyber-btn:hover:not(:disabled) {
+            background: var(--accent-dim); border-color: var(--accent); color: var(--accent);
+            box-shadow: 0 0 15px var(--accent-dim); text-shadow: 0 0 5px var(--accent);
+        }
+
+        .monitor-frame {
+            position: relative; width: 100%; height: 100%; background: #000; border: 1px solid #333;
+            border-radius: 4px; overflow: hidden;
+        }
+        .monitor-overlay {
+            position: absolute; inset: 0; pointer-events: none; z-index: 5;
+            box-shadow: inset 0 0 100px rgba(0,0,0,0.9); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 4px;
+        }
+        .monitor-label {
+            position: absolute; top: 10px; left: 10px; z-index: 10;
+            background: rgba(0,0,0,0.8); padding: 2px 8px;
+            font-size: 10px; color: var(--accent); border: 1px solid var(--accent); border-radius: 2px;
+        }
+        .bili-full { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+        .cyber-scroll::-webkit-scrollbar { width: 4px; }
+        .cyber-scroll::-webkit-scrollbar-thumb { background: var(--tech-blue); }
+        
+        .cyber-input { 
+            background: #000; border: 1px solid #333; color: var(--tech-blue); 
+            font-family: 'Share Tech Mono'; width: 100%; transition: 0.3s; border-radius: 4px;
+        }
+        .cyber-input:focus { outline: none; border-color: var(--tech-blue); box-shadow: 0 0 10px rgba(0,240,255,0.2); }
+
+        .nav-link:hover { color: var(--tech-blue); text-shadow: 0 0 5px var(--tech-blue); }
+        .nav-link i { margin-right: 4px; }
+
+        /* 移动端调整，确保右侧留言板有足够高度展现 */
+        @media (max-width: 1024px) {
+            .right-panel-container { min-height: 50vh; }
+        }
+    </style>
+</head>
+<body class="flex flex-col h-screen overflow-hidden relative selection:bg-green-500 selection:text-black">
+
+    <div class="scanlines"></div>
+
+    <header class="h-12 bg-black/80 border-b border-[#222] flex items-center justify-between px-6 z-20 shrink-0 backdrop-blur-sm">
+        <div class="flex items-center gap-3">
+            <i class="fas fa-biohazard text-green-500 animate-pulse text-lg"></i>
+            <span class="text-xl font-[Orbitron] font-black text-white tracking-widest">
+                RF<span class="text-green-500">-TOP</span>
+            </span>
+        </div>
+        
+        <div class="hidden md:flex gap-6 text-[10px] font-mono text-gray-500 tracking-wider">
+            <a href="https://github.com/feeday" target="_blank" class="nav-link transition"><i class="fab fa-github"></i>GITHUB</a>
+            <a href="https://www.bilibili.com/" target="_blank" class="nav-link transition"><i class="fab fa-bilibili"></i>BILIBILI</a> 
+            <a href="https://huggingface.co/spaces?category=video-generation&sort=likes" target="_blank" class="nav-link transition"><i class="fas fa-smile"></i>HUGGINGFACE</a>
+            <a href="https://arxiv.org/list/cs.AI/recent" target="_blank" class="nav-link transition"><i class="fas fa-book"></i>ARXIV</a>
+            <a href="https://matrix.tencent.com/ai-detect/" target="_blank" class="nav-link transition" title="Zhuque AI Detection"><i class="fas fa-shield-alt"></i>MATRIX</a>
+            <a href="https://artificialanalysis.ai/image/leaderboard/editing" target="_blank" class="nav-link transition" title="Image Editing Leaderboard"><i class="fas fa-ranking-star"></i>MODEL-I2I</a>
+            <a href="https://aigcarena.com/" target="_blank" class="nav-link transition" title="MagicArena"><i class="fas fa-bolt"></i>MODEL-PK</a>
+            <a href="https://mixboard.google.com/" target="_blank" class="nav-link transition" title="Nano Banana Pro"><i class="fas fa-wand-magic-sparkles"></i>Banana-Pro</a>
+            <a href="https://gemini.google.com/" target="_blank" class="nav-link transition" title="Gemini">
+                <i class="fas fa-robot"></i>Gemini
+            </a>
+        </div>
+
+        <div class="text-[10px] font-mono text-gray-500 flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-green-500 box-shadow-green"></span>
+            <span>SYSTEM: ONLINE</span>
+        </div>
+    </header>
+
+    <div class="flex-grow flex flex-col lg:flex-row overflow-hidden relative z-10 p-4 gap-4">
+        
+        <div class="lg:w-[65%] xl:w-[70%] h-[40vh] lg:h-auto flex flex-col gap-2 shrink-0 lg:shrink">
+            <div class="monitor-frame relative flex-grow tech-border">
+                <div class="monitor-label">LIVE FEED // RAW_DATA</div>
+                
+                <div class="absolute top-2 right-2 z-20 flex items-center gap-2">
+                    <a id="bili-source-btn" href="#" target="_blank" title="在新窗口打开原视频" 
+                       class="flex items-center gap-2 px-2 py-1 bg-black/80 border border-gray-700 rounded text-[10px] font-mono text-gray-400 hover:text-[#00f0ff] hover:border-[#00f0ff] transition backdrop-blur-sm group">
+                        <i class="fab fa-bilibili"></i>
+                        <span>SOURCE</span>
+                    </a>
+                </div>
+
+                <div class="monitor-overlay"></div>
+                
+                <div id="video-container" class="w-full h-full relative z-0">
+                    <div class="absolute inset-0 flex items-center justify-center text-gray-700 animate-pulse font-mono text-xs">
+                        ESTABLISHING UPLINK...
+                    </div>
+                </div>
+            </div>
+            
+            <div class="h-10 tech-border flex items-center justify-between px-4 bg-black/40 shrink-0">
+                <button id="btn-prev" onclick="changePage(-1)" class="text-xs text-gray-500 hover:text-white transition">
+                    <i class="fas fa-caret-left mr-1"></i> PREV
+                </button>
+                <div class="text-xs font-mono text-gray-600">
+                    FILE_INDEX: <span id="page-indicator" class="text-white">00 / 00</span>
+                </div>
+                <button id="btn-next" onclick="changePage(1)" class="text-xs text-gray-500 hover:text-white transition">
+                    NEXT <i class="fas fa-caret-right ml-1"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="right-panel-container lg:w-[35%] xl:w-[30%] flex-grow lg:flex-grow-0 flex flex-col gap-4 h-full relative overflow-hidden group">
+            
+            <div class="tech-border p-4 bg-black/40 text-center shrink-0">
+                <h2 class="text-[#00f0ff] font-[Orbitron] text-lg tracking-widest mb-1 flex items-center justify-center gap-2">
+                    <i class="fas fa-network-wired text-sm"></i> DATA_LOG
+                </h2>
+                <div class="h-0.5 w-1/3 bg-[#00f0ff] mx-auto opacity-50"></div>
+            </div>
+
+            <div class="tech-border flex-grow bg-black/40 flex flex-col relative overflow-hidden">
+                <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#333 1px, transparent 1px); background-size: 10px 10px; pointer-events: none;"></div>
+
+                <div id="comment-list" class="flex-grow overflow-y-auto p-4 space-y-4 cyber-scroll relative z-10">
+                    <div class="text-center text-gray-600 text-xs mt-10 font-mono animate-pulse">DOWNLOADING PACKETS...</div>
+                </div>
+                
+                <div class="p-4 border-t border-gray-800 bg-black/80 shrink-0 relative z-10">
+                    <form id="cyber-form" onsubmit="event.preventDefault(); postComment();">
+                        <div class="mb-3">
+                            <label class="text-[10px] text-gray-500 font-mono mb-1 block">AGENT_ID</label>
+                            <input type="text" id="username" name="username" placeholder="Anonymous" class="cyber-input px-2 py-1 text-xs" maxlength="15" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-[10px] text-gray-500 font-mono mb-1 block">MESSAGE_PACKET</label>
+                            <textarea id="message" name="content" placeholder="Input data..." class="cyber-input p-2 text-xs h-20 resize-none" required></textarea>
+                        </div>
+                        
+                        <button type="submit" id="send-btn" class="cyber-btn w-full py-2 text-xs border-[#00f0ff] text-[#00f0ff] hover:bg-[#00f0ff] hover:text-black">
+                            TRANSMIT
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = "https://cpuck.com/video/api";
+
+        const database = [
+            { id: '01', src: 'BV1Y34y1X7CK', desc: 'GEM邓紫棋《光年之外》-2018年NASA颁奖典礼' },
+            { id: '02', src: 'BV1My2YBsEcJ', desc: '可灵2.6-画面都是合成' }
+        ];
+
+        let currentIndex = 0;
+
+        window.onload = () => {
+            loadCase(0);
+            if (localStorage.getItem('rf_username')) document.getElementById('username').value = localStorage.getItem('rf_username');
+            
+            // 页面加载完成后自动拉取留言
+            loadComments();
+            
+            document.addEventListener('keydown', (e) => {
+                if(e.key === 'ArrowRight') changePage(1);
+                if(e.key === 'ArrowLeft') changePage(-1);
+            });
+        };
+
+        function changePage(direction) {
+            let newIndex = currentIndex + direction;
+            if (newIndex >= database.length) newIndex = 0;
+            if (newIndex < 0) newIndex = database.length - 1;
+            loadCase(newIndex);
+        }
+
+        function loadCase(index) {
+            currentIndex = index;
+            const currentData = database[currentIndex];
+            
+            document.getElementById('page-indicator').innerText = `${String(index + 1).padStart(2, '0')} / ${String(database.length).padStart(2, '0')}`;
+            
+            const sourceBtn = document.getElementById('bili-source-btn');
+            if (sourceBtn) {
+                sourceBtn.href = `https://www.bilibili.com/video/${currentData.src}`;
+            }
+
+            const container = document.getElementById('video-container');
+            container.innerHTML = `<iframe src="//player.bilibili.com/player.html?bvid=${currentData.src}&page=1&high_quality=1&danmaku=0&autoplay=1" class="bili-full" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts"></iframe>`;
+        }
+
+        // ==========================================
+        // 留言板逻辑
+        // ==========================================
+        function escapeHtml(s) {
+            if (!s) return '';
+            return s.replace(/[&<>"']/g, m => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[m]));
+        }
+
+        async function loadComments() {
+            const list = document.getElementById('comment-list');
+            
+            if (list.innerHTML.includes('DOWNLOADING')) {
+                 list.innerHTML = '<div class="text-center text-gray-600 text-xs mt-10 font-mono animate-pulse">DOWNLOADING PACKETS...</div>';
+            }
+
+            try {
+                const res = await fetch(`${API_BASE}/messages_list.php?page=1&approved=1`, {
+                     credentials: "include" 
+                });
+                const json = await res.json();
+                
+                if (json.ok) {
+                    list.innerHTML = '';
+                    const items = json.data.items;
+
+                    if (!items || items.length === 0) {
+                        list.innerHTML = '<div class="text-center text-gray-600 text-xs mt-10 font-mono">NO LOGS FOUND</div>';
+                        return;
+                    }
+                    
+                    items.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = 'mb-4 border-l border-gray-700 pl-3 pb-1 hover:border-[#00f0ff] transition-colors group';
+                        div.innerHTML = `
+                            <div class="flex justify-between items-baseline mb-1">
+                                <span class="text-xs font-bold text-gray-400 group-hover:text-[#00f0ff] font-[Orbitron]">${escapeHtml(item.username)}</span>
+                                <span class="text-[10px] text-gray-700 font-mono">${timeAgo(item.created_at)}</span>
+                            </div>
+                            <div class="text-xs text-gray-300 break-words font-mono leading-relaxed opacity-80">${escapeHtml(item.content)}</div>
+                        `;
+                        list.appendChild(div);
+                    });
+                } else {
+                    list.innerHTML = `<div class="text-red-500 text-xs font-mono text-center">ERROR: ${json.error}</div>`;
+                }
+            } catch (err) {
+                console.error(err);
+                list.innerHTML = '<div class="text-red-600 text-xs font-mono text-center">CONNECTION LOST</div>';
+            }
+        }
+
+        async function postComment() {
+            const userBox = document.getElementById('username');
+            const msgBox = document.getElementById('message');
+            const btn = document.getElementById('send-btn');
+            
+            if (!msgBox.value.trim()) return;
+            
+            btn.innerHTML = 'TRANSMITTING...';
+            btn.disabled = true;
+            
+            const form = document.getElementById('cyber-form');
+            const fd = new FormData(form); 
+
+            try {
+                const res = await fetch(`${API_BASE}/messages_create.php`, {
+                    method: 'POST',
+                    body: fd,
+                    credentials: "include"
+                });
+                
+                const json = await res.json();
+                
+                if (json.ok) {
+                    msgBox.value = '';
+                    localStorage.setItem('rf_username', userBox.value);
+                    
+                    if (json.data.status === "held") {
+                        alert("已提交，需审核后显示 // AWAITING AUDIT");
+                    } else {
+                        loadComments();
+                        // 滚动到底部（最新消息如果排在下方）
+                        const list = document.getElementById('comment-list');
+                        setTimeout(() => list.scrollTop = list.scrollHeight, 100);
+                    }
+                } else {
+                    alert('TRANSMISSION FAILED: ' + (json.error || 'Unknown Error'));
+                }
+            } catch (err) {
+                alert('NETWORK ERROR: CANNOT REACH SERVER');
+            } finally {
+                btn.innerHTML = 'TRANSMIT';
+                btn.disabled = false;
+            }
+        }
+
+        function timeAgo(dateString) {
+            if(!dateString) return '';
+            const date = new Date(dateString.replace(/-/g, '/'));
+            const seconds = Math.floor((new Date() - date) / 1000);
+            if (seconds < 60) return 'NOW';
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return minutes + 'M';
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return hours + 'H';
+            return Math.floor(hours / 24) + 'D';
+        }
+    </script>
+</body>
+</html>
