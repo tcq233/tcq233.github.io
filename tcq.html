@@ -39,7 +39,6 @@
             background-size: 100% 4px;
         }
         
-        /* 视频区域外框样式 */
         .tech-border {
             position: relative;
             background: rgba(10, 10, 10, 0.8);
@@ -51,7 +50,6 @@
         .tech-border::before { content: ''; position: absolute; top: -1px; left: -1px; width: 8px; height: 8px; border-top: 2px solid var(--accent); border-left: 2px solid var(--accent); border-top-left-radius: 4px; }
         .tech-border::after { content: ''; position: absolute; bottom: -1px; right: -1px; width: 8px; height: 8px; border-bottom: 2px solid var(--accent); border-right: 2px solid var(--accent); border-bottom-right-radius: 4px; }
 
-        /* 右侧留言面板专用样式 (还原抽屉UI) */
         .embedded-drawer {
             background: #050505;
             border: 1px solid var(--tech-blue);
@@ -199,10 +197,6 @@
                 
                 <div class="p-4 border-t border-gray-800 shrink-0 relative z-10 bg-[#050505]">
                     <form id="cyber-form" onsubmit="event.preventDefault(); postComment();">
-                        <div class="mb-3">
-                            <label class="text-[10px] text-gray-500 font-mono mb-1 block uppercase tracking-wider">Agent_ID</label>
-                            <input type="text" id="username" name="username" placeholder="Anonymous" class="cyber-input px-3 py-2 text-[13px]" maxlength="15" required>
-                        </div>
                         <div class="mb-4">
                             <label class="text-[10px] text-gray-500 font-mono mb-1 block uppercase tracking-wider">Message_Packet</label>
                             <textarea id="message" name="content" placeholder="Input data..." class="cyber-input px-3 py-2 text-[13px] h-20 resize-none" required></textarea>
@@ -230,9 +224,6 @@
 
         window.onload = () => {
             loadCase(0);
-            if (localStorage.getItem('rf_username')) document.getElementById('username').value = localStorage.getItem('rf_username');
-            
-            // 页面加载完成后自动拉取留言
             loadComments();
             
             document.addEventListener('keydown', (e) => {
@@ -273,6 +264,22 @@
             }[m]));
         }
 
+        // IP 脱敏处理 (例如: 192.168.1.100 -> 192.168.1.*)
+        function formatIp(ipStr) {
+            if (!ipStr) return 'UNKNOWN_IP';
+            if (ipStr.includes('.')) {
+                const parts = ipStr.split('.');
+                parts[parts.length - 1] = '*';
+                return parts.join('.');
+            }
+            if (ipStr.includes(':')) {
+                const parts = ipStr.split(':');
+                parts[parts.length - 1] = '*';
+                return parts.join(':');
+            }
+            return ipStr;
+        }
+
         async function loadComments() {
             const list = document.getElementById('comment-list');
             
@@ -297,11 +304,12 @@
                     
                     items.forEach(item => {
                         const div = document.createElement('div');
-                        // 移除了左侧边框，还原图片的上下无边框极简结构
                         div.className = 'group';
+                        const displayIp = formatIp(item.ip); // 使用脱敏后的 IP
+                        
                         div.innerHTML = `
                             <div class="flex justify-between items-baseline mb-1">
-                                <span class="text-[14px] font-bold text-gray-300 group-hover:text-[#00f0ff] transition-colors">${escapeHtml(item.username)}</span>
+                                <span class="text-[14px] font-bold text-gray-300 group-hover:text-[#00f0ff] transition-colors">${escapeHtml(displayIp)}</span>
                                 <span class="text-[10px] text-gray-600 font-mono">${timeAgo(item.created_at)}</span>
                             </div>
                             <div class="text-[13px] text-gray-400 break-words leading-relaxed">${escapeHtml(item.content)}</div>
@@ -318,7 +326,6 @@
         }
 
         async function postComment() {
-            const userBox = document.getElementById('username');
             const msgBox = document.getElementById('message');
             const btn = document.getElementById('send-btn');
             
@@ -329,6 +336,8 @@
             
             const form = document.getElementById('cyber-form');
             const fd = new FormData(form); 
+            // 手动追加一个默认 username 防止后端接口验证报错
+            fd.append('username', 'Anonymous'); 
 
             try {
                 const res = await fetch(`${API_BASE}/messages_create.php`, {
@@ -341,7 +350,6 @@
                 
                 if (json.ok) {
                     msgBox.value = '';
-                    localStorage.setItem('rf_username', userBox.value);
                     
                     if (json.data.status === "held") {
                         alert("已提交，需审核后显示 // AWAITING AUDIT");
