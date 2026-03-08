@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="no-referrer">
     
-    <title>─=≡Σ((( つ•̀ω•́)つ</title>
+    <title>RF-TOP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -39,6 +39,7 @@
             background-size: 100% 4px;
         }
         
+        /* 视频区域外框样式 */
         .tech-border {
             position: relative;
             background: rgba(10, 10, 10, 0.8);
@@ -49,6 +50,19 @@
         }
         .tech-border::before { content: ''; position: absolute; top: -1px; left: -1px; width: 8px; height: 8px; border-top: 2px solid var(--accent); border-left: 2px solid var(--accent); border-top-left-radius: 4px; }
         .tech-border::after { content: ''; position: absolute; bottom: -1px; right: -1px; width: 8px; height: 8px; border-bottom: 2px solid var(--accent); border-right: 2px solid var(--accent); border-bottom-right-radius: 4px; }
+
+        /* 右侧留言面板专用样式 (还原抽屉UI) */
+        .embedded-drawer {
+            background: #050505;
+            border: 1px solid var(--tech-blue);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
 
         .cyber-btn {
             position: relative;
@@ -89,16 +103,15 @@
         
         .cyber-input { 
             background: #000; border: 1px solid #333; color: var(--tech-blue); 
-            font-family: 'Share Tech Mono'; width: 100%; transition: 0.3s; border-radius: 4px;
+            font-family: 'Share Tech Mono'; width: 100%; transition: 0.3s; border-radius: 6px;
         }
         .cyber-input:focus { outline: none; border-color: var(--tech-blue); box-shadow: 0 0 10px rgba(0,240,255,0.2); }
 
         .nav-link:hover { color: var(--tech-blue); text-shadow: 0 0 5px var(--tech-blue); }
         .nav-link i { margin-right: 4px; }
 
-        /* 移动端调整，确保右侧留言板有足够高度展现 */
         @media (max-width: 1024px) {
-            .right-panel-container { min-height: 50vh; }
+            .right-panel-container { min-height: 55vh; }
         }
     </style>
 </head>
@@ -110,7 +123,7 @@
         <div class="flex items-center gap-3">
             <i class="fas fa-biohazard text-green-500 animate-pulse text-lg"></i>
             <span class="text-xl font-[Orbitron] font-black text-white tracking-widest">
-                TCQ<span class="text-green-500">-TOP</span>
+                RF<span class="text-green-500">-TOP</span>
             </span>
         </div>
         
@@ -170,27 +183,32 @@
             </div>
         </div>
 
-        <div class="right-panel-container lg:w-[35%] xl:w-[30%] flex-grow lg:flex-grow-0 flex flex-col gap-4 h-full relative overflow-hidden group">
+        <div class="right-panel-container lg:w-[35%] xl:w-[30%] flex-grow lg:flex-grow-0 flex flex-col h-full relative">
             
-            <div class="tech-border flex-grow bg-black/40 flex flex-col relative overflow-hidden">
-                <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#333 1px, transparent 1px); background-size: 10px 10px; pointer-events: none;"></div>
-
-                <div id="comment-list" class="flex-grow overflow-y-auto p-4 space-y-4 cyber-scroll relative z-10">
+            <div class="embedded-drawer w-full h-full">
+                <div class="p-4 border-b border-gray-800 flex justify-between items-center shrink-0">
+                    <h2 class="text-[#00f0ff] font-bold font-[Orbitron] tracking-widest text-sm flex items-center">
+                        <i class="fas fa-network-wired mr-2"></i>DATA_LOG
+                    </h2>
+                    <button class="text-gray-500 hover:text-white transition cursor-default"><i class="fas fa-times"></i></button>
+                </div>
+                
+                <div id="comment-list" class="flex-grow overflow-y-auto p-4 space-y-6 cyber-scroll relative z-10">
                     <div class="text-center text-gray-600 text-xs mt-10 font-mono animate-pulse">DOWNLOADING PACKETS...</div>
                 </div>
                 
-                <div class="p-4 border-t border-gray-800 bg-black/80 shrink-0 relative z-10">
+                <div class="p-4 border-t border-gray-800 shrink-0 relative z-10 bg-[#050505]">
                     <form id="cyber-form" onsubmit="event.preventDefault(); postComment();">
                         <div class="mb-3">
-                            <label class="text-[10px] text-gray-500 font-mono mb-1 block">AGENT_ID</label>
-                            <input type="text" id="username" name="username" placeholder="Anonymous" class="cyber-input px-2 py-1 text-xs" maxlength="15" required>
+                            <label class="text-[10px] text-gray-500 font-mono mb-1 block uppercase tracking-wider">Agent_ID</label>
+                            <input type="text" id="username" name="username" placeholder="Anonymous" class="cyber-input px-3 py-2 text-[13px]" maxlength="15" required>
                         </div>
-                        <div class="mb-3">
-                            <label class="text-[10px] text-gray-500 font-mono mb-1 block">MESSAGE_PACKET</label>
-                            <textarea id="message" name="content" placeholder="Input data..." class="cyber-input p-2 text-xs h-20 resize-none" required></textarea>
+                        <div class="mb-4">
+                            <label class="text-[10px] text-gray-500 font-mono mb-1 block uppercase tracking-wider">Message_Packet</label>
+                            <textarea id="message" name="content" placeholder="Input data..." class="cyber-input px-3 py-2 text-[13px] h-20 resize-none" required></textarea>
                         </div>
                         
-                        <button type="submit" id="send-btn" class="cyber-btn w-full py-2 text-xs border-[#00f0ff] text-[#00f0ff] hover:bg-[#00f0ff] hover:text-black">
+                        <button type="submit" id="send-btn" class="cyber-btn w-full py-2.5 text-xs font-bold border-[#00f0ff] text-[#00f0ff] hover:bg-[#00f0ff] hover:text-black">
                             TRANSMIT
                         </button>
                     </form>
@@ -279,13 +297,14 @@
                     
                     items.forEach(item => {
                         const div = document.createElement('div');
-                        div.className = 'mb-4 border-l border-gray-700 pl-3 pb-1 hover:border-[#00f0ff] transition-colors group';
+                        // 移除了左侧边框，还原图片的上下无边框极简结构
+                        div.className = 'group';
                         div.innerHTML = `
                             <div class="flex justify-between items-baseline mb-1">
-                                <span class="text-xs font-bold text-gray-400 group-hover:text-[#00f0ff] font-[Orbitron]">${escapeHtml(item.username)}</span>
-                                <span class="text-[10px] text-gray-700 font-mono">${timeAgo(item.created_at)}</span>
+                                <span class="text-[14px] font-bold text-gray-300 group-hover:text-[#00f0ff] transition-colors">${escapeHtml(item.username)}</span>
+                                <span class="text-[10px] text-gray-600 font-mono">${timeAgo(item.created_at)}</span>
                             </div>
-                            <div class="text-xs text-gray-300 break-words font-mono leading-relaxed opacity-80">${escapeHtml(item.content)}</div>
+                            <div class="text-[13px] text-gray-400 break-words leading-relaxed">${escapeHtml(item.content)}</div>
                         `;
                         list.appendChild(div);
                     });
@@ -328,7 +347,6 @@
                         alert("已提交，需审核后显示 // AWAITING AUDIT");
                     } else {
                         loadComments();
-                        // 滚动到底部（最新消息如果排在下方）
                         const list = document.getElementById('comment-list');
                         setTimeout(() => list.scrollTop = list.scrollHeight, 100);
                     }
