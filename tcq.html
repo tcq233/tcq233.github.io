@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="referrer" content="no-referrer">
     
-    <title>TCQ-TOP</title>
+    <title>RF-TOP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -210,15 +210,18 @@
     <script>
         const API_BASE = "https://cpuck.com/video/api";
 
-        const database = [
-            { id: '01', src: 'BV1Y34y1X7CK', desc: 'GEM邓紫棋《光年之外》-2018年NASA颁奖典礼' },
-            { id: '02', src: 'BV1My2YBsEcJ', desc: '可灵2.6-画面都是合成' }
-        ];
-
+        // 初始化为空数组，等待从 txt 加载
+        let database = [];
         let currentIndex = 0;
 
-        window.onload = () => {
-            loadCase(0);
+        window.onload = async () => {
+            // 先去读取 txt 里的视频列表
+            await loadDatabase();
+            
+            if (database.length > 0) {
+                loadCase(0);
+            }
+            
             loadComments();
             
             document.addEventListener('keydown', (e) => {
@@ -227,7 +230,50 @@
             });
         };
 
+        // ==========================================
+        // 动态读取 TXT 视频列表
+        // ==========================================
+        async function loadDatabase() {
+            try {
+                // 加个时间戳防止浏览器缓存 txt 文件
+                const res = await fetch('videos.txt?t=' + new Date().getTime());
+                if (!res.ok) throw new Error('找不到 videos.txt 文件');
+                
+                const text = await res.text();
+                
+                // 按行分割，去掉空格，过滤掉空行
+                const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+                
+                // 解析每一行
+                database = lines.map((line, index) => {
+                    let bvid = line;
+                    // 智能提取：如果是完整链接，用正则把 BV 号提取出来
+                    const match = line.match(/(BV[a-zA-Z0-9]+)/);
+                    if (match) bvid = match[1];
+
+                    return { 
+                        id: String(index + 1).padStart(2, '0'), 
+                        src: bvid, 
+                        desc: `TARGET_ID: ${bvid}` // 默认用 BV 号当描述
+                    };
+                });
+
+                if (database.length === 0) {
+                    throw new Error('txt文件是空的');
+                }
+                
+            } catch (err) {
+                console.warn('读取 txt 失败，使用内置默认数据', err);
+                // 兜底数据
+                database = [
+                    { id: '01', src: 'BV1Y34y1X7CK', desc: 'GEM邓紫棋《光年之外》-2018年NASA颁奖典礼' },
+                    { id: '02', src: 'BV1My2YBsEcJ', desc: '可灵2.6-画面都是合成' }
+                ];
+            }
+        }
+
         function changePage(direction) {
+            if (database.length === 0) return;
             let newIndex = currentIndex + direction;
             if (newIndex >= database.length) newIndex = 0;
             if (newIndex < 0) newIndex = database.length - 1;
@@ -235,6 +281,7 @@
         }
 
         function loadCase(index) {
+            if (database.length === 0) return;
             currentIndex = index;
             const currentData = database[currentIndex];
             
@@ -327,6 +374,7 @@
             
             const form = document.getElementById('cyber-form');
             const fd = new FormData(form); 
+            // 自动填充用户名，防止后端报错
             fd.append('username', 'Anonymous'); 
 
             try {
