@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="referrer" content="no-referrer">
     
-    <title>RF-TOP</title>
+    <title>─=≡Σ((( つ•̀ω•́)つ</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -118,7 +118,7 @@
         <div class="flex items-center gap-3">
             <i class="fas fa-biohazard text-green-500 animate-pulse text-lg"></i>
             <span class="text-xl font-[Orbitron] font-black text-white tracking-widest">
-                RF<span class="text-green-500">-TOP</span>
+                TCQ<span class="text-green-500">-TOP</span>
             </span>
         </div>
         
@@ -146,7 +146,7 @@
         
         <div class="h-[35vh] lg:h-auto lg:w-[65%] xl:w-[70%] flex flex-col gap-2 shrink-0 lg:shrink min-h-0">
             <div class="monitor-frame relative flex-grow tech-border min-h-0">
-                <div class="monitor-label">LIVE FEED // RAW_DATA</div>
+                
                 
                 <div class="absolute top-2 right-2 z-20 flex items-center gap-2">
                     <a id="bili-source-btn" href="#" target="_blank" title="在新窗口打开原视频" 
@@ -392,9 +392,11 @@
                     if (json.data.status === "held") {
                         alert("已提交，需审核后显示 // AWAITING AUDIT");
                     } else {
-                        loadComments();
+                        // 等待最新的留言列表加载完毕
+                        await loadComments();
+                        // 强制将滚动条滚动到最顶部 (0)
                         const list = document.getElementById('comment-list');
-                        setTimeout(() => list.scrollTop = list.scrollHeight, 100);
+                        list.scrollTop = 0;
                     }
                 } else {
                     alert('TRANSMISSION FAILED: ' + (json.error || 'Unknown Error'));
